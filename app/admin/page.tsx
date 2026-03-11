@@ -6,22 +6,27 @@ const cards = [
   {
     href: "/admin/submissions",
     title: "Submissions",
-    description: "View and manage email submissions."
-  },
-  {
-    href: "/admin/venues",
-    title: "Venues",
-    description: "Manage venue names and addresses."
-  },
-  {
-    href: "/admin/slots",
-    title: "Slots",
-    description: "Manage event time slots and states."
+    description: "View email submissions."
   },
   {
     href: "/admin/applications",
     title: "Applications",
-    description: "Manage submission-slot applications."
+    description: "View submission-slot applications."
+  },
+  {
+    href: "/admin/venues",
+    title: "Venues",
+    description: "View venue names and addresses."
+  },
+  {
+    href: "/admin/slots",
+    title: "Slots",
+    description: "View event time slots and states."
+  },
+  {
+    href: "/admin/lottery",
+    title: "Lottery",
+    description: "Run manual lotteries for closed slots."
   }
 ];
 
@@ -34,7 +39,7 @@ export default async function AdminDashboardPage() {
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <h1 className="text-2xl font-semibold text-slate-900">Admin Dashboard</h1>
-        <p className="mt-2 text-sm text-slate-600">Use the sections below to manage records.</p>
+        <p className="mt-2 text-sm text-slate-600">Use the sections below to view records and run lotteries.</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {cards.map((card) => (
@@ -52,4 +57,3 @@ export default async function AdminDashboardPage() {
     </main>
   );
 }
-

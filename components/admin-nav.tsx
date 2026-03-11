@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 type AdminNavProps = {
-  active?: "dashboard" | "submissions" | "venues" | "slots" | "applications";
+  active?: "dashboard" | "submissions" | "applications" | "venues" | "slots" | "lottery";
 };
 
 function navLinkClass(isActive: boolean): string {
@@ -21,14 +21,17 @@ export function AdminNav({ active }: AdminNavProps) {
         <Link className={navLinkClass(active === "submissions")} href="/admin/submissions">
           Submissions
         </Link>
+        <Link className={navLinkClass(active === "applications")} href="/admin/applications">
+          Applications
+        </Link>
         <Link className={navLinkClass(active === "venues")} href="/admin/venues">
           Venues
         </Link>
         <Link className={navLinkClass(active === "slots")} href="/admin/slots">
           Slots
         </Link>
-        <Link className={navLinkClass(active === "applications")} href="/admin/applications">
-          Applications
+        <Link className={navLinkClass(active === "lottery")} href="/admin/lottery">
+          Lottery
         </Link>
       </nav>
 
@@ -43,4 +46,3 @@ export function AdminNav({ active }: AdminNavProps) {
     </header>
   );
 }
-
