@@ -33,6 +33,11 @@ function slotLabel(slot: { startsAt: Date; endsAt: Date; venue: { name: string }
   return `${slot.venue.name} | ${slot.startsAt.toLocaleString()} - ${slot.endsAt.toLocaleString()}`;
 }
 
+function parsePreferenceRank(rawValue: string): number | null {
+  const parsed = Number.parseInt(rawValue, 10);
+  return parsed >= 1 && parsed <= 3 ? parsed : null;
+}
+
 async function createApplicationAction(formData: FormData) {
   "use server";
 
@@ -40,10 +45,12 @@ async function createApplicationAction(formData: FormData) {
 
   const submissionId = normalizeTextValue(formData, "submissionId");
   const slotId = normalizeTextValue(formData, "slotId");
+  const preferenceRankRaw = normalizeTextValue(formData, "preferenceRank");
+  const preferenceRank = parsePreferenceRank(preferenceRankRaw);
   const statusRaw = normalizeTextValue(formData, "status");
   const status = isStatus(statusRaw) ? statusRaw : SlotApplicationStatus.APPLIED;
 
-  if (!submissionId || !slotId) {
+  if (!submissionId || !slotId || !preferenceRank) {
     return;
   }
 
@@ -52,6 +59,7 @@ async function createApplicationAction(formData: FormData) {
       data: {
         submissionId,
         slotId,
+        preferenceRank,
         status
       }
     });
@@ -75,23 +83,96 @@ async function updateApplicationAction(formData: FormData) {
   const id = normalizeTextValue(formData, "id");
   const submissionId = normalizeTextValue(formData, "submissionId");
   const slotId = normalizeTextValue(formData, "slotId");
+  const preferenceRankRaw = normalizeTextValue(formData, "preferenceRank");
+  const preferenceRank = parsePreferenceRank(preferenceRankRaw);
   const statusRaw = normalizeTextValue(formData, "status");
   const status = isStatus(statusRaw) ? statusRaw : null;
 
-  if (!id || !submissionId || !slotId || !status) {
+  if (!id || !submissionId || !slotId || !preferenceRank || !status) {
     return;
   }
 
   try {
-    await prisma.submissionSlot.update({
-      where: { id },
-      data: {
-        submissionId,
-        slotId,
-        status
+    const didUpdate = await prisma.$transaction(async (tx) => {
+      const current = await tx.submissionSlot.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          submissionId: true,
+          preferenceRank: true
+        }
+      });
+
+      if (!current) {
+        return false;
       }
+
+      const rankConflict = await tx.submissionSlot.findFirst({
+        where: {
+          submissionId,
+          preferenceRank,
+          NOT: {
+            id
+          }
+        },
+        select: {
+          id: true
+        }
+      });
+
+      // If moving this row into an occupied rank within the same submission,
+      // swap ranks safely using a temporary rank inside one transaction.
+      if (
+        rankConflict &&
+        current.submissionId === submissionId &&
+        current.preferenceRank !== preferenceRank
+      ) {
+        let temporaryRank = 1000;
+        while (
+          await tx.submissionSlot.findFirst({
+            where: {
+              submissionId,
+              preferenceRank: temporaryRank
+            },
+            select: { id: true }
+          })
+        ) {
+          temporaryRank += 1;
+        }
+
+        await tx.submissionSlot.update({
+          where: { id },
+          data: {
+            preferenceRank: temporaryRank
+          }
+        });
+
+        await tx.submissionSlot.update({
+          where: { id: rankConflict.id },
+          data: {
+            preferenceRank: current.preferenceRank
+          }
+        });
+      } else if (rankConflict) {
+        // Cross-submission move into an occupied rank is invalid.
+        return false;
+      }
+
+      await tx.submissionSlot.update({
+        where: { id },
+        data: {
+          submissionId,
+          slotId,
+          preferenceRank,
+          status
+        }
+      });
+
+      return true;
     });
-    revalidatePath("/admin/applications");
+    if (didUpdate) {
+      revalidatePath("/admin/applications");
+    }
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -232,7 +313,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
           </button>
         </form>
 
-        <form action={createApplicationAction} className="mt-6 grid gap-3 rounded-lg border border-slate-200 p-4 md:grid-cols-4">
+        <form action={createApplicationAction} className="mt-6 grid gap-3 rounded-lg border border-slate-200 p-4 md:grid-cols-5">
           <select className={inputClassName} name="submissionId" required>
             <option value="">Select submission</option>
             {submissions.map((submission) => (
@@ -249,6 +330,15 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
               </option>
             ))}
           </select>
+          <input
+            className={inputClassName}
+            defaultValue="1"
+            max={3}
+            min={1}
+            name="preferenceRank"
+            required
+            type="number"
+          />
           <select className={inputClassName} defaultValue={SlotApplicationStatus.APPLIED} name="status" required>
             {statusOptions.map((status) => (
               <option key={status} value={status}>
@@ -270,6 +360,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
                 <th className="px-2 py-2">Submission Email</th>
                 <th className="px-2 py-2">Venue</th>
                 <th className="px-2 py-2">Slot Time</th>
+                <th className="px-2 py-2">Preference Rank</th>
                 <th className="px-2 py-2">Status</th>
                 <th className="px-2 py-2">Applied At</th>
                 <th className="px-2 py-2">Actions</th>
@@ -283,10 +374,11 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
                   <td className="px-2 py-3">
                     {application.slot.startsAt.toLocaleString()} - {application.slot.endsAt.toLocaleString()}
                   </td>
+                  <td className="px-2 py-3">{application.preferenceRank}</td>
                   <td className="px-2 py-3">{application.status}</td>
                   <td className="px-2 py-3">{application.appliedAt.toLocaleString()}</td>
                   <td className="px-2 py-3">
-                    <div className="flex min-w-[720px] items-start gap-2">
+                    <div className="flex min-w-[820px] items-start gap-2">
                       <form action={updateApplicationAction} className="flex flex-wrap items-center gap-2">
                         <input name="id" type="hidden" value={application.id} />
                         <select
@@ -308,6 +400,15 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
                             </option>
                           ))}
                         </select>
+                        <input
+                          className={inputClassName}
+                          defaultValue={application.preferenceRank}
+                          max={3}
+                          min={1}
+                          name="preferenceRank"
+                          required
+                          type="number"
+                        />
                         <select className={inputClassName} defaultValue={application.status} name="status" required>
                           {statusOptions.map((status) => (
                             <option key={status} value={status}>
@@ -330,7 +431,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
               ))}
               {applications.length === 0 ? (
                 <tr>
-                  <td className="px-2 py-4 text-slate-500" colSpan={6}>
+                  <td className="px-2 py-4 text-slate-500" colSpan={7}>
                     No applications found.
                   </td>
                 </tr>
@@ -342,4 +443,3 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
     </main>
   );
 }
-

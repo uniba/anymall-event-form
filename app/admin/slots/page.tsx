@@ -49,17 +49,30 @@ async function createSlotAction(formData: FormData) {
   await requireAdminSession();
 
   const venueId = normalizeTextValue(formData, "venueId");
+  const applicationBegin = parseDateTimeLocal(normalizeTextValue(formData, "applicationBegin"));
+  const applicationDeadline = parseDateTimeLocal(normalizeTextValue(formData, "applicationDeadline"));
   const state = normalizeTextValue(formData, "state");
   const startsAt = parseDateTimeLocal(normalizeTextValue(formData, "startsAt"));
   const endsAt = parseDateTimeLocal(normalizeTextValue(formData, "endsAt"));
 
-  if (!venueId || !startsAt || !endsAt || !isSlotState(state) || endsAt <= startsAt) {
+  if (
+    !venueId ||
+    !applicationBegin ||
+    !applicationDeadline ||
+    !startsAt ||
+    !endsAt ||
+    !isSlotState(state) ||
+    endsAt <= startsAt ||
+    applicationDeadline <= applicationBegin
+  ) {
     return;
   }
 
   await prisma.slot.create({
     data: {
       venueId,
+      applicationBegin,
+      applicationDeadline,
       startsAt,
       endsAt,
       state
@@ -75,11 +88,23 @@ async function updateSlotAction(formData: FormData) {
 
   const id = normalizeTextValue(formData, "id");
   const venueId = normalizeTextValue(formData, "venueId");
+  const applicationBegin = parseDateTimeLocal(normalizeTextValue(formData, "applicationBegin"));
+  const applicationDeadline = parseDateTimeLocal(normalizeTextValue(formData, "applicationDeadline"));
   const state = normalizeTextValue(formData, "state");
   const startsAt = parseDateTimeLocal(normalizeTextValue(formData, "startsAt"));
   const endsAt = parseDateTimeLocal(normalizeTextValue(formData, "endsAt"));
 
-  if (!id || !venueId || !startsAt || !endsAt || !isSlotState(state) || endsAt <= startsAt) {
+  if (
+    !id ||
+    !venueId ||
+    !applicationBegin ||
+    !applicationDeadline ||
+    !startsAt ||
+    !endsAt ||
+    !isSlotState(state) ||
+    endsAt <= startsAt ||
+    applicationDeadline <= applicationBegin
+  ) {
     return;
   }
 
@@ -87,6 +112,8 @@ async function updateSlotAction(formData: FormData) {
     where: { id },
     data: {
       venueId,
+      applicationBegin,
+      applicationDeadline,
       startsAt,
       endsAt,
       state
@@ -178,7 +205,7 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
           </button>
         </form>
 
-        <form action={createSlotAction} className="mt-6 grid gap-3 rounded-lg border border-slate-200 p-4 md:grid-cols-5">
+        <form action={createSlotAction} className="mt-6 grid gap-3 rounded-lg border border-slate-200 p-4 md:grid-cols-7">
           <select className={inputClassName} name="venueId" required>
             <option value="">Select venue</option>
             {venues.map((venue) => (
@@ -187,6 +214,8 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
               </option>
             ))}
           </select>
+          <input className={inputClassName} name="applicationBegin" required type="datetime-local" />
+          <input className={inputClassName} name="applicationDeadline" required type="datetime-local" />
           <input className={inputClassName} name="startsAt" required type="datetime-local" />
           <input className={inputClassName} name="endsAt" required type="datetime-local" />
           <select className={inputClassName} defaultValue={SlotState.ACCEPTING_APPLICATIONS} name="state" required>
@@ -209,6 +238,8 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
               <tr className="border-b border-slate-200 text-left text-slate-600">
                 <th className="px-2 py-2">ID</th>
                 <th className="px-2 py-2">Venue</th>
+                <th className="px-2 py-2">Application Begin</th>
+                <th className="px-2 py-2">Application Deadline</th>
                 <th className="px-2 py-2">Starts At</th>
                 <th className="px-2 py-2">Ends At</th>
                 <th className="px-2 py-2">State</th>
@@ -220,11 +251,13 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
                 <tr className="border-b border-slate-100 align-top" key={slot.id}>
                   <td className="px-2 py-3 font-mono text-xs">{slot.id}</td>
                   <td className="px-2 py-3">{slot.venue.name}</td>
+                  <td className="px-2 py-3">{slot.applicationBegin.toLocaleString()}</td>
+                  <td className="px-2 py-3">{slot.applicationDeadline.toLocaleString()}</td>
                   <td className="px-2 py-3">{slot.startsAt.toLocaleString()}</td>
                   <td className="px-2 py-3">{slot.endsAt.toLocaleString()}</td>
                   <td className="px-2 py-3">{slot.state}</td>
                   <td className="px-2 py-3">
-                    <div className="flex min-w-[600px] items-start gap-2">
+                    <div className="flex min-w-[860px] items-start gap-2">
                       <form action={updateSlotAction} className="flex flex-wrap items-center gap-2">
                         <input name="id" type="hidden" value={slot.id} />
                         <select className={inputClassName} defaultValue={slot.venueId} name="venueId" required>
@@ -234,6 +267,20 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
                             </option>
                           ))}
                         </select>
+                        <input
+                          className={inputClassName}
+                          defaultValue={toDateTimeInputValue(slot.applicationBegin)}
+                          name="applicationBegin"
+                          required
+                          type="datetime-local"
+                        />
+                        <input
+                          className={inputClassName}
+                          defaultValue={toDateTimeInputValue(slot.applicationDeadline)}
+                          name="applicationDeadline"
+                          required
+                          type="datetime-local"
+                        />
                         <input
                           className={inputClassName}
                           defaultValue={toDateTimeInputValue(slot.startsAt)}
@@ -270,7 +317,7 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
               ))}
               {slots.length === 0 ? (
                 <tr>
-                  <td className="px-2 py-4 text-slate-500" colSpan={6}>
+                  <td className="px-2 py-4 text-slate-500" colSpan={8}>
                     No slots found.
                   </td>
                 </tr>
@@ -282,4 +329,3 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
     </main>
   );
 }
-

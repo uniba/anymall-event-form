@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Anymall Lunch Event",
-  description: "Simple lunch event application form with email verification."
+  title: "Anymall Event Application",
+  description: "Simple event application form with email verification."
 };
 
 type RootLayoutProps = {

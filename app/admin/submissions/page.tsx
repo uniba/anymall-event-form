@@ -2,8 +2,9 @@ import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { AdminNav } from "@/components/admin-nav";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
-import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/admin-guard";
+import { prisma } from "@/lib/prisma";
+import { isValidKatakanaName, isValidSex, parseBirthday } from "@/lib/validation";
 
 type SubmissionsPageProps = {
   searchParams?: Promise<{ q?: string }>;
@@ -23,24 +24,32 @@ function normalizeTextValue(formData: FormData, key: string): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function toDateInputValue(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
 async function createSubmissionAction(formData: FormData) {
   "use server";
 
   await requireAdminSession();
 
+  const name = normalizeTextValue(formData, "name");
   const email = normalizeTextValue(formData, "email").toLowerCase();
-  const lineId = normalizeTextValue(formData, "lineId");
+  const gender = normalizeTextValue(formData, "gender");
+  const birthday = parseBirthday(normalizeTextValue(formData, "birthday"));
   const verified = formData.get("verified") === "on";
 
-  if (!email || !lineId) {
+  if (!isValidKatakanaName(name) || !email || !isValidSex(gender) || !birthday) {
     return;
   }
 
   try {
     await prisma.submission.create({
       data: {
+        name,
         email,
-        lineId,
+        gender,
+        birthday,
         verified,
         verifiedAt: verified ? new Date() : null
       }
@@ -63,11 +72,13 @@ async function updateSubmissionAction(formData: FormData) {
   await requireAdminSession();
 
   const id = normalizeTextValue(formData, "id");
+  const name = normalizeTextValue(formData, "name");
   const email = normalizeTextValue(formData, "email").toLowerCase();
-  const lineId = normalizeTextValue(formData, "lineId");
+  const gender = normalizeTextValue(formData, "gender");
+  const birthday = parseBirthday(normalizeTextValue(formData, "birthday"));
   const verified = formData.get("verified") === "on";
 
-  if (!id || !email || !lineId) {
+  if (!id || !isValidKatakanaName(name) || !email || !isValidSex(gender) || !birthday) {
     return;
   }
 
@@ -75,8 +86,10 @@ async function updateSubmissionAction(formData: FormData) {
     await prisma.submission.update({
       where: { id },
       data: {
+        name,
         email,
-        lineId,
+        gender,
+        birthday,
         verified,
         verifiedAt: verified ? new Date() : null
       }
@@ -152,14 +165,22 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
           </button>
         </form>
 
-        <form action={createSubmissionAction} className="mt-6 grid gap-3 rounded-lg border border-slate-200 p-4 md:grid-cols-5">
+        <form
+          action={createSubmissionAction}
+          className="mt-6 grid gap-3 rounded-lg border border-slate-200 p-4 md:grid-cols-6"
+        >
+          <input className={inputClassName} name="name" placeholder="Name (Katakana)" required type="text" />
           <input className={inputClassName} name="email" placeholder="Email" required type="email" />
-          <input className={inputClassName} name="lineId" placeholder="LINE ID" required type="text" />
+          <select className={inputClassName} defaultValue="male" name="gender" required>
+            <option value="male">male</option>
+            <option value="female">female</option>
+          </select>
+          <input className={inputClassName} name="birthday" required type="date" />
           <label className="flex items-center gap-2 text-sm text-slate-700">
             <input name="verified" type="checkbox" />
             Verified
           </label>
-          <div className="md:col-span-2 md:text-right">
+          <div className="md:text-right">
             <button className={buttonClassName} type="submit">
               Create
             </button>
@@ -171,8 +192,10 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-600">
                 <th className="px-2 py-2">ID</th>
+                <th className="px-2 py-2">Name</th>
                 <th className="px-2 py-2">Email</th>
-                <th className="px-2 py-2">lineId</th>
+                <th className="px-2 py-2">Gender</th>
+                <th className="px-2 py-2">Birthday</th>
                 <th className="px-2 py-2">Verified</th>
                 <th className="px-2 py-2">Created At</th>
                 <th className="px-2 py-2">Actions</th>
@@ -182,14 +205,23 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
               {submissions.map((submission) => (
                 <tr className="border-b border-slate-100 align-top" key={submission.id}>
                   <td className="px-2 py-3 font-mono text-xs">{submission.id}</td>
+                  <td className="px-2 py-3">{submission.name}</td>
                   <td className="px-2 py-3">{submission.email}</td>
-                  <td className="px-2 py-3">{submission.lineId}</td>
+                  <td className="px-2 py-3">{submission.gender}</td>
+                  <td className="px-2 py-3">{toDateInputValue(submission.birthday)}</td>
                   <td className="px-2 py-3">{submission.verified ? "Yes" : "No"}</td>
                   <td className="px-2 py-3">{submission.createdAt.toLocaleString()}</td>
                   <td className="px-2 py-3">
-                    <div className="flex min-w-[420px] items-start gap-2">
+                    <div className="flex min-w-[720px] items-start gap-2">
                       <form action={updateSubmissionAction} className="flex flex-wrap items-center gap-2">
                         <input name="id" type="hidden" value={submission.id} />
+                        <input
+                          className={inputClassName}
+                          defaultValue={submission.name}
+                          name="name"
+                          required
+                          type="text"
+                        />
                         <input
                           className={inputClassName}
                           defaultValue={submission.email}
@@ -197,12 +229,16 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
                           required
                           type="email"
                         />
+                        <select className={inputClassName} defaultValue={submission.gender} name="gender" required>
+                          <option value="male">male</option>
+                          <option value="female">female</option>
+                        </select>
                         <input
                           className={inputClassName}
-                          defaultValue={submission.lineId}
-                          name="lineId"
+                          defaultValue={toDateInputValue(submission.birthday)}
+                          name="birthday"
                           required
-                          type="text"
+                          type="date"
                         />
                         <label className="flex items-center gap-1 text-xs text-slate-700">
                           <input defaultChecked={submission.verified} name="verified" type="checkbox" />
@@ -223,7 +259,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
               ))}
               {submissions.length === 0 ? (
                 <tr>
-                  <td className="px-2 py-4 text-slate-500" colSpan={6}>
+                  <td className="px-2 py-4 text-slate-500" colSpan={8}>
                     No submissions found.
                   </td>
                 </tr>
