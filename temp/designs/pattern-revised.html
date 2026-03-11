@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnyMall Lunch Event</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 春の公園パレット */
+      --bg-primary: #F7F5F0;        /* ウォームリネン */
+      --bg-secondary: #EEF2E6;      /* ペールグリーン */
+      --bg-card: #FFFFFF;
+      --bg-accent-soft: #F0EDE4;    /* ペールベージュ */
+      --bg-hero: #E8EDDF;           /* 淡いセージ */
+
+      --green-primary: #7A9B6D;     /* 落ち着いた草色 */
+      --green-light: #A3B899;       /* ライトセージ */
+      --green-pale: #D4DFC8;        /* ペールセージ */
+      --beige-warm: #C9BFA8;        /* ウォームベージュ */
+      --brown-soft: #8B7E6A;        /* ソフトブラウン */
+
+      --text-primary: #3D3D3D;
+      --text-secondary: #5C5C5C;
+      --text-light: #888880;
+      --text-on-green: #FFFFFF;
+
+      --border-color: #DDD8CE;
+      --border-light: #E8E4DB;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 17px;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.9;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==============================
+       HEADER
+    ============================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(247, 245, 240, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      transition: box-shadow 0.3s;
+    }
+
+    .header.scrolled {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 28px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--green-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+    }
+
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .nav {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover {
+      color: var(--green-primary);
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text-primary);
+      margin: 5px 0;
+      transition: 0.3s;
+      border-radius: 2px;
+    }
+
+    /* ==============================
+       HERO
+    ============================== */
+    .hero {
+      margin-top: 72px;
+      padding: 80px 28px 72px;
+      background: linear-gradient(165deg, var(--bg-hero) 0%, #F2F0E6 50%, var(--bg-primary) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -120px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--green-pale) 0%, transparent 70%);
+      opacity: 0.5;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -60px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #E8DFC8 0%, transparent 70%);
+      opacity: 0.4;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {}
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(122, 155, 109, 0.12);
+      color: var(--green-primary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--green-primary);
+      border-radius: 50%;
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 2.6rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 2;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green-primary);
+      color: #fff;
+      text-decoration: none;
+      padding: 16px 36px;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .hero-cta:hover {
+      background: #6B8C5E;
+      transform: translateY(-1px);
+    }
+
+    .hero-cta svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-image-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(135deg, var(--green-pale) 0%, #D9CEB8 100%);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--brown-soft);
+      font-size: 0.9rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image-placeholder svg {
+      width: 64px;
+      height: 64px;
+      opacity: 0.5;
+    }
+
+    .hero-image-placeholder span {
+      opacity: 0.6;
+    }
+
+    .hero-info-pills {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-pill svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--green-primary);
+      flex-shrink: 0;
+    }
+
+    /* ==============================
+       SECTION COMMON
+    ============================== */
+    .section {
+      padding: 80px 28px;
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .section-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      color: var(--green-primary);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 2;
+    }
+
+    /* ==============================
+       ABOUT
+    ============================== */
+    .about {
+      background: var(--bg-card);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .about-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 36px 28px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .about-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .about-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 20px;
+      background: var(--green-pale);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: var(--green-primary);
+    }
+
+    .about-card h3 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .about-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+    }
+
+    /* ==============================
+       THEMES (Event Content)
+    ============================== */
+    .themes {
+      background: var(--bg-secondary);
+    }
+
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .theme-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 32px 28px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      border: 1px solid var(--border-light);
+      transition: box-shadow 0.3s, transform 0.2s;
+    }
+
+    .theme-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .theme-number {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      background: var(--green-pale);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--green-primary);
+    }
+
+    .theme-card h3 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .theme-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+    }
+
+    /* ==============================
+       VENUES
+    ============================== */
+    .venues {
+      background: var(--bg-primary);
+    }
+
+    .venue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .venue-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      transition: box-shadow 0.3s, transform 0.2s;
+    }
+
+    .venue-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .venue-image {
+      background: linear-gradient(135deg, var(--green-pale) 0%, #D6CEBA 100%);
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--brown-soft);
+      font-size: 0.85rem;
+      position: relative;
+    }
+
+    .venue-image svg {
+      width: 48px;
+      height: 48px;
+      opacity: 0.4;
+    }
+
+    .venue-image span {
+      opacity: 0.5;
+      font-size: 0.8rem;
+    }
+
+    .venue-area-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(6px);
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--green-primary);
+      letter-spacing: 0.05em;
+    }
+
+    .venue-body {
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .venue-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .venue-name-en {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.82rem;
+      color: var(--text-light);
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    .venue-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 2;
+      margin-bottom: 20px;
+    }
+
+    .venue-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .venue-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+    }
+
+    .venue-meta-item svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--green-light);
+      flex-shrink: 0;
+    }
+
+    .venue-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-primary);
+      color: #fff;
+      text-decoration: none;
+      padding: 13px 28px;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: background 0.3s, transform 0.2s;
+      align-self: flex-start;
+    }
+
+    .venue-cta:hover {
+      background: #6B8C5E;
+      transform: translateY(-1px);
+    }
+
+    .venue-cta svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* ==============================
+       PAST EVENTS (Toggle)
+    ============================== */
+    .past-events {
+      background: var(--bg-card);
+    }
+
+    .past-events-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: none;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px 32px;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      margin: 0 auto;
+      display: flex;
+      transition: border-color 0.3s, color 0.3s;
+      letter-spacing: 0.03em;
+    }
+
+    .past-events-toggle:hover {
+      border-color: var(--green-primary);
+      color: var(--green-primary);
+    }
+
+    .past-events-toggle svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+      transition: transform 0.3s;
+    }
+
+    .past-events-toggle.active svg {
+      transform: rotate(180deg);
+    }
+
+    .past-events-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, opacity 0.4s ease;
+      opacity: 0;
+    }
+
+    .past-events-content.show {
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    .past-events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .past-event-card {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--bg-secondary);
+      transition: transform 0.3s;
+    }
+
+    .past-event-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .past-event-image {
+      height: 180px;
+      background: linear-gradient(135deg, var(--green-pale) 0%, #D0C9B5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brown-soft);
+      font-size: 0.82rem;
+      opacity: 0.6;
+    }
+
+    .past-event-body {
+      padding: 20px;
+    }
+
+    .past-event-date {
+      font-size: 0.78rem;
+      color: var(--green-primary);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .past-event-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .past-event-location {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* ==============================
+       FOOTER
+    ============================== */
+    .footer {
+      background: #3D3D3D;
+      color: #ccc;
+      padding: 56px 28px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand .logo-text {
+      color: #fff;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      line-height: 1.9;
+      color: #999;
+    }
+
+    .footer h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: 0.03em;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #999;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--green-light);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #555;
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      font-size: 0.78rem;
+      color: #777;
+    }
+
+    /* ==============================
+       ANIMATIONS
+    ============================== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==============================
+       RESPONSIVE
+    ============================== */
+    @media (max-width: 1024px) {
+      html { font-size: 16px; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-visual {
+        max-width: 520px;
+      }
+
+      .venue-card {
+        grid-template-columns: 320px 1fr;
+      }
+
+      .about-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      html { font-size: 15px; }
+
+      .nav { display: none; }
+      .hamburger { display: block; }
+
+      .nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: var(--bg-primary);
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--border-light);
+        gap: 20px;
+      }
+
+      .hero {
+        padding: 60px 20px 56px;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .section {
+        padding: 56px 20px;
+      }
+
+      .section-title {
+        font-size: 1.6rem;
+      }
+
+      .venue-card {
+        grid-template-columns: 1fr;
+      }
+
+      .venue-image {
+        min-height: 220px;
+      }
+
+      .venue-body {
+        padding: 28px 24px;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .themes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .past-events-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 1.7rem;
+      }
+
+      .hero-info-pills {
+        flex-direction: column;
+      }
+
+      .venue-meta {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .past-events-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </div>
+        <span class="logo-text">AnyMall Lunch Event</span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#about">About</a>
+        <a href="#themes">コンテンツ</a>
+        <a href="#venues">会場一覧</a>
+        <a href="#past">過去のイベント</a>
+      </nav>
+
+      <button class="hamburger" id="hamburger" aria-label="メニュー">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">2026.5 - 12 開催</div>
+        <h1 class="hero-title">愛犬と過ごす、<br>特別なひととき。</h1>
+        <p class="hero-subtitle">
+          大切な愛犬との暮らしがもっと豊かになる、体験型イベント。
+          食事・健康・ライフスタイルを、専門家と一緒に楽しく学びませんか。
+        </p>
+        <a href="#venues" class="hero-cta">
+          会場を見る
+          <svg viewBox="0 0 24 24"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg>
+        </a>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-image-placeholder">
+          <svg viewBox="0 0 24 24" fill="currentColor" opacity="0.3">
+            <path d="M4.5 9.5C4.5 7.57 6.07 6 8 6c.74 0 1.43.23 2 .62A4.48 4.48 0 0 1 12 6c.74 0 1.43.23 2 .62A4.48 4.48 0 0 1 16 6c1.93 0 3.5 1.57 3.5 3.5 0 .92-.36 1.76-.94 2.38C19.44 12.56 20 13.46 20 14.5c0 1.38-.75 2.58-1.86 3.24-.14.08-.3.12-.46.12H6.32c-.16 0-.32-.04-.46-.12C4.75 17.08 4 15.88 4 14.5c0-1.04.56-1.94 1.44-2.62A3.44 3.44 0 0 1 4.5 9.5zM12 21c-1.1 0-2-.9-2-2h4c0 1.1-.9 2-2 2z"/>
+          </svg>
+          <span>イベントイメージ写真</span>
+        </div>
+        <div class="hero-info-pills">
+          <div class="hero-pill">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            東京・大阪 5会場
+          </div>
+          <div class="hero-pill">
+            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+            全32回開催
+          </div>
+          <div class="hero-pill">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            招待制・各回約40名
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section about" id="about">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <div class="section-label">About</div>
+        <h2 class="section-title">ペットとの暮らしを、<br>もっと楽しむために。</h2>
+        <p class="section-desc">
+          AnyMall Lunch Eventは、A'ALDAの動物医療ネットワークが企画する招待制イベントです。
+          愛犬との生活に役立つ知識や体験を、リラックスした雰囲気のなかでお届けします。
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-card fade-in">
+          <div class="about-icon">
+            <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7z"/></svg>
+          </div>
+          <h3>食を楽しむ</h3>
+          <p>愛犬に合った食事の知識や手作りごはんの楽しさを、専門家と一緒に体験します。</p>
+        </div>
+        <div class="about-card fade-in">
+          <div class="about-icon">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+          </div>
+          <h3>健康を学ぶ</h3>
+          <p>犬種ごとの健康トラブルや長生きのコツを、獣医師の視点からわかりやすくお伝えします。</p>
+        </div>
+        <div class="about-card fade-in">
+          <div class="about-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+          <h3>絆を深める</h3>
+          <p>ペットと一緒に参加できる体験を通じて、日々の暮らしにもっと彩りを加えましょう。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THEMES ============ -->
+  <section class="section themes" id="themes">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <div class="section-label">Contents</div>
+        <h2 class="section-title">イベントコンテンツ</h2>
+        <p class="section-desc">
+          展示ではなく、日常に活かせる「体験」を大切にしています。<br>
+          各回テーマに沿ったプログラムをご用意しています。
+        </p>
+      </div>
+
+      <div class="themes-grid">
+        <div class="theme-card fade-in">
+          <div class="theme-number">01</div>
+          <div>
+            <h3>愛犬にあう食事の考え方</h3>
+            <p>犬種・年齢・体質に合わせた食事選びの基本を、栄養の専門家がやさしく解説します。</p>
+          </div>
+        </div>
+        <div class="theme-card fade-in">
+          <div class="theme-number">02</div>
+          <div>
+            <h3>はじめての手作りごはん</h3>
+            <p>手軽にできる愛犬用の手作りごはんを、実際に調理しながら一緒に学ぶワークショップです。</p>
+          </div>
+        </div>
+        <div class="theme-card fade-in">
+          <div class="theme-number">03</div>
+          <div>
+            <h3>犬種ごとの健康トラブル</h3>
+            <p>かかりやすい病気や日頃のケアについて、獣医師がわかりやすくお話しします。</p>
+          </div>
+        </div>
+        <div class="theme-card fade-in">
+          <div class="theme-number">04</div>
+          <div>
+            <h3>愛犬の長生きのために</h3>
+            <p>食事・運動・メンタルケアなど、愛犬が元気に長生きするためにできることをご紹介します。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VENUES ============ -->
+  <section class="section venues" id="venues">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <div class="section-label">Venues</div>
+        <h2 class="section-title">開催会場</h2>
+        <p class="section-desc">
+          東京・大阪の5会場で開催。お近くの会場からお申し込みください。
+        </p>
+      </div>
+
+      <div class="venue-list">
+
+        <!-- Venue 1 -->
+        <div class="venue-card fade-in">
+          <div class="venue-image">
+            <span class="venue-area-badge">東京</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span>会場写真</span>
+          </div>
+          <div class="venue-body">
+            <h3 class="venue-name">inumo芝公園 by Villa Fontaine</h3>
+            <div class="venue-name-en">inumo Shiba Park by Villa Fontaine</div>
+            <p class="venue-desc">芝公園の緑に囲まれた、ペットと一緒にくつろげる会場です。開放的な空間で愛犬との特別な時間をお過ごしいただけます。</p>
+            <div class="venue-meta">
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                東京・芝公園エリア
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                12:00 〜 15:00（約3時間）
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                約40〜50名
+              </div>
+            </div>
+            <a href="#" class="venue-cta">
+              このイベントに申し込む
+              <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Venue 2 -->
+        <div class="venue-card fade-in">
+          <div class="venue-image">
+            <span class="venue-area-badge">東京</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span>会場写真</span>
+          </div>
+          <div class="venue-body">
+            <h3 class="venue-name">Dplus麻布台</h3>
+            <div class="venue-name-en">Dplus Azabudai</div>
+            <p class="venue-desc">麻布台の洗練されたエリアにある、ペットフレンドリーな会場。落ち着いた雰囲気のなかで、ゆったりとイベントをお楽しみいただけます。</p>
+            <div class="venue-meta">
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                東京・麻布台エリア
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                12:00 〜 15:00（約3時間）
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                約40〜50名
+              </div>
+            </div>
+            <a href="#" class="venue-cta">
+              このイベントに申し込む
+              <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Venue 3 -->
+        <div class="venue-card fade-in">
+          <div class="venue-image">
+            <span class="venue-area-badge">大阪</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span>会場写真</span>
+          </div>
+          <div class="venue-body">
+            <h3 class="venue-name">Green Field Tennoji</h3>
+            <div class="venue-name-en">Green Field Tennoji</div>
+            <p class="venue-desc">天王寺エリアの緑豊かな環境で開催。広々としたスペースで、愛犬と一緒にのびのびとお過ごしいただけます。</p>
+            <div class="venue-meta">
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                大阪・天王寺エリア
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                12:00 〜 15:00（約3時間）
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                約40〜50名
+              </div>
+            </div>
+            <a href="#" class="venue-cta">
+              このイベントに申し込む
+              <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Venue 4 -->
+        <div class="venue-card fade-in">
+          <div class="venue-image">
+            <span class="venue-area-badge">大阪</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span>会場写真</span>
+          </div>
+          <div class="venue-body">
+            <h3 class="venue-name">Dyplus大阪北</h3>
+            <div class="venue-name-en">Dyplus Osaka Kita</div>
+            <p class="venue-desc">大阪北エリアのアクセスの良い会場。ペットと飼い主が一緒にくつろげる、温かみのある空間でイベントを開催します。</p>
+            <div class="venue-meta">
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                大阪・北エリア
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                12:00 〜 15:00（約3時間）
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                約40〜50名
+              </div>
+            </div>
+            <a href="#" class="venue-cta">
+              このイベントに申し込む
+              <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Venue 5 -->
+        <div class="venue-card fade-in">
+          <div class="venue-image">
+            <span class="venue-area-badge">東京</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span>会場写真</span>
+          </div>
+          <div class="venue-body">
+            <h3 class="venue-name">浜松町ビルディング</h3>
+            <div class="venue-name-en">Hamamatsucho Building</div>
+            <p class="venue-desc">浜松町駅からすぐの好立地。野村不動産本社ビル内の快適なイベントスペースで、充実した時間をお過ごしいただけます。</p>
+            <div class="venue-meta">
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                東京・浜松町エリア
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                12:00 〜 15:00（約3時間）
+              </div>
+              <div class="venue-meta-item">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                約40〜50名
+              </div>
+            </div>
+            <a href="#" class="venue-cta">
+              このイベントに申し込む
+              <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PAST EVENTS ============ -->
+  <section class="section past-events" id="past">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <div class="section-label">Gallery</div>
+        <h2 class="section-title">過去のイベント</h2>
+        <p class="section-desc">
+          これまでに開催したイベントの様子をご紹介します。
+        </p>
+      </div>
+
+      <button class="past-events-toggle" id="pastToggle" onclick="togglePastEvents()">
+        イベントの様子を見る
+        <svg viewBox="0 0 24 24"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg>
+      </button>
+
+      <div class="past-events-content" id="pastContent">
+        <div class="past-events-grid">
+          <div class="past-event-card fade-in">
+            <div class="past-event-image">イベント写真</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2026.05.10</div>
+              <div class="past-event-title">愛犬にあう食事の考え方</div>
+              <div class="past-event-location">inumo芝公園 by Villa Fontaine</div>
+            </div>
+          </div>
+          <div class="past-event-card fade-in">
+            <div class="past-event-image">イベント写真</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2026.05.24</div>
+              <div class="past-event-title">はじめての手作りごはん</div>
+              <div class="past-event-location">Dplus麻布台</div>
+            </div>
+          </div>
+          <div class="past-event-card fade-in">
+            <div class="past-event-image">イベント写真</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2026.06.07</div>
+              <div class="past-event-title">犬種ごとの健康トラブル</div>
+              <div class="past-event-location">Green Field Tennoji</div>
+            </div>
+          </div>
+          <div class="past-event-card fade-in">
+            <div class="past-event-image">イベント写真</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2026.06.21</div>
+              <div class="past-event-title">愛犬の長生きのために</div>
+              <div class="past-event-location">Dyplus大阪北</div>
+            </div>
+          </div>
+          <div class="past-event-card fade-in">
+            <div class="past-event-image">イベント写真</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2026.07.05</div>
+              <div class="past-event-title">愛犬にあう食事の付き合い方</div>
+              <div class="past-event-location">浜松町ビルディング</div>
+            </div>
+          </div>
+          <div class="past-event-card fade-in">
+            <div class="past-event-image">イベント写真</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2026.07.19</div>
+              <div class="past-event-title">手作りごはんワークショップ</div>
+              <div class="past-event-location">inumo芝公園 by Villa Fontaine</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo-text" style="font-family: 'Playfair Display', serif;">AnyMall Lunch Event</div>
+          <p>A'ALDAの動物医療ネットワークが企画する、ペットオーナーのための招待制体験型イベントです。</p>
+        </div>
+        <div>
+          <h4>会場</h4>
+          <ul class="footer-links">
+            <li><a href="#">inumo芝公園 by Villa Fontaine</a></li>
+            <li><a href="#">Dplus麻布台</a></li>
+            <li><a href="#">Green Field Tennoji</a></li>
+            <li><a href="#">Dyplus大阪北</a></li>
+            <li><a href="#">浜松町ビルディング</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>リンク</h4>
+          <ul class="footer-links">
+            <li><a href="#">AnyMallについて</a></li>
+            <li><a href="#">A'ALDA公式サイト</a></li>
+            <li><a href="#">プライバシーポリシー</a></li>
+            <li><a href="#">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 A'ALDA Inc. All rights reserved.</p>
+        <p>AnyMall Lunch Event</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script>
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // Hamburger menu
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('nav').classList.toggle('open');
+    });
+
+    // Past events toggle
+    function togglePastEvents() {
+      const content = document.getElementById('pastContent');
+      const toggle = document.getElementById('pastToggle');
+      const isOpen = content.classList.toggle('show');
+      toggle.classList.toggle('active', isOpen);
+      toggle.childNodes[0].textContent = isOpen ? 'イベントの様子を閉じる ' : 'イベントの様子を見る ';
+    }
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+          document.getElementById('nav').classList.remove('open');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

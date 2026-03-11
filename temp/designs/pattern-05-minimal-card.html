@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnyMall Lunch Event - Minimal Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Sans+JP:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       CSS RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      color: #333333;
+      background-color: #FFFFFF;
+      line-height: 1.8;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul, ol {
+      list-style: none;
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    .heading-en {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .heading-jp {
+      font-family: 'Noto Serif JP', serif;
+    }
+
+    /* ============================================
+       UTILITY
+       ============================================ */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: #333333;
+      margin-bottom: 16px;
+    }
+
+    .section-divider {
+      width: 40px;
+      height: 1px;
+      background-color: #C9A96E;
+      margin: 0 auto 48px;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* ============================================
+       HEADER / NAV
+       ============================================ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .header-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: #333333;
+    }
+
+    .header-logo span {
+      color: #C9A96E;
+      font-weight: 400;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .header-nav a {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: #666666;
+      transition: color 0.3s ease;
+      font-weight: 400;
+    }
+
+    .header-nav a:hover {
+      color: #C9A96E;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .mobile-menu-btn span {
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: #333333;
+      margin: 5px 0;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+      padding: 24px;
+      z-index: 999;
+    }
+
+    .mobile-nav.active {
+      display: block;
+    }
+
+    .mobile-nav a {
+      display: block;
+      padding: 12px 0;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      color: #666666;
+      border-bottom: 1px solid #F2E6E3;
+    }
+
+    .mobile-nav a:last-child {
+      border-bottom: none;
+    }
+
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #FAFAF7;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(242, 230, 227, 0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 30%, rgba(201, 169, 110, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      line-height: 1.6;
+      color: #333333;
+      margin-bottom: 24px;
+    }
+
+    .hero-subtitle {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.95rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: #888888;
+      margin-bottom: 48px;
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: #999999;
+    }
+
+    .hero-meta-item strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-scroll span {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #C9A96E;
+    }
+
+    .hero-scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, #C9A96E, transparent);
+      animation: scrollDown 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollDown {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* ============================================
+       ABOUT SECTION
+       ============================================ */
+    .about {
+      padding: 120px 0;
+      background: #FFFFFF;
+    }
+
+    .about-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .about-text {
+      font-size: 0.9rem;
+      line-height: 2.2;
+      color: #555555;
+      letter-spacing: 0.04em;
+      margin-bottom: 20px;
+    }
+
+    .about-features {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 56px;
+      flex-wrap: wrap;
+    }
+
+    .about-feature {
+      text-align: center;
+      flex: 0 0 auto;
+    }
+
+    .about-feature-icon {
+      width: 48px;
+      height: 48px;
+      border: 1px solid #C9A96E;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 1.1rem;
+    }
+
+    .about-feature-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      color: #333333;
+      margin-bottom: 4px;
+    }
+
+    .about-feature-desc {
+      font-size: 0.7rem;
+      color: #999999;
+      letter-spacing: 0.04em;
+    }
+
+    /* ============================================
+       VENUE SECTION - MINIMAL CARDS
+       ============================================ */
+    .venues {
+      padding: 120px 0;
+      background: #FAFAF7;
+    }
+
+    .venue-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .venue-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(201, 169, 110, 0.2);
+      padding: 40px 32px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow: hidden;
+    }
+
+    .venue-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #C9A96E;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .venue-card:hover {
+      background: #FAFAF7;
+      transform: scale(1.01);
+    }
+
+    .venue-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .venue-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .venue-area-badge {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      border: 1px solid #C9A96E;
+      padding: 3px 12px;
+    }
+
+    .venue-expand-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #C9A96E;
+      transition: transform 0.3s ease;
+    }
+
+    .venue-card.expanded .venue-expand-icon {
+      transform: rotate(45deg);
+    }
+
+    .venue-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: #333333;
+      margin-bottom: 8px;
+    }
+
+    .venue-name-en {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: #BBBBBB;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    .venue-summary {
+      font-size: 0.78rem;
+      color: #999999;
+      letter-spacing: 0.04em;
+    }
+
+    .venue-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.4s ease,
+                  margin-top 0.4s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+
+    .venue-card.expanded .venue-details {
+      max-height: 500px;
+      opacity: 1;
+      margin-top: 24px;
+    }
+
+    .venue-details-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(201, 169, 110, 0.15);
+      margin-bottom: 24px;
+    }
+
+    .venue-detail-row {
+      display: flex;
+      padding: 8px 0;
+      font-size: 0.78rem;
+      border-bottom: 1px solid rgba(201, 169, 110, 0.08);
+    }
+
+    .venue-detail-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .venue-detail-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      width: 80px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .venue-detail-value {
+      color: #555555;
+      flex: 1;
+    }
+
+    .venue-apply-btn {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 12px 40px;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: #FFFFFF;
+      background: #333333;
+      border: 1px solid #333333;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .venue-apply-btn:hover {
+      background: transparent;
+      color: #333333;
+    }
+
+    /* ============================================
+       CONTENT / THEMES SECTION
+       ============================================ */
+    .themes {
+      padding: 120px 0;
+      background: #FFFFFF;
+    }
+
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .theme-item {
+      text-align: center;
+      padding: 32px 16px;
+      border: 1px solid rgba(201, 169, 110, 0.12);
+      transition: all 0.3s ease;
+    }
+
+    .theme-item:hover {
+      border-color: rgba(201, 169, 110, 0.4);
+      background: #FAFAF7;
+    }
+
+    .theme-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: rgba(201, 169, 110, 0.3);
+      margin-bottom: 16px;
+    }
+
+    .theme-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: #333333;
+      margin-bottom: 12px;
+    }
+
+    .theme-desc {
+      font-size: 0.72rem;
+      color: #999999;
+      line-height: 1.8;
+    }
+
+    /* ============================================
+       EVENT INFO SECTION
+       ============================================ */
+    .event-info {
+      padding: 80px 0;
+      background: #FAFAF7;
+    }
+
+    .event-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .event-info-item {
+      text-align: center;
+      padding: 32px 24px;
+      background: #FFFFFF;
+      border: 1px solid rgba(201, 169, 110, 0.12);
+    }
+
+    .event-info-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      margin-bottom: 8px;
+    }
+
+    .event-info-value {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      color: #333333;
+    }
+
+    /* ============================================
+       PAST EVENTS SECTION
+       ============================================ */
+    .past-events {
+      padding: 120px 0;
+      background: #FFFFFF;
+    }
+
+    .past-events-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      background: none;
+      border: 1px solid rgba(201, 169, 110, 0.3);
+      padding: 14px 40px;
+      margin: 48px auto 0;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: #666666;
+      transition: all 0.3s ease;
+    }
+
+    .past-events-toggle:hover {
+      border-color: #C9A96E;
+      color: #C9A96E;
+    }
+
+    .past-events-toggle-icon {
+      display: inline-block;
+      transition: transform 0.3s ease;
+      font-size: 0.65rem;
+    }
+
+    .past-events-toggle.active .past-events-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .past-events-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.4s ease;
+      opacity: 0;
+    }
+
+    .past-events-content.active {
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    .past-events-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .past-event-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px;
+      border: 1px solid rgba(201, 169, 110, 0.1);
+      transition: background 0.3s ease;
+    }
+
+    .past-event-item:hover {
+      background: #FAFAF7;
+    }
+
+    .past-event-date {
+      flex-shrink: 0;
+      text-align: center;
+      min-width: 56px;
+    }
+
+    .past-event-month {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #C9A96E;
+    }
+
+    .past-event-day {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: #333333;
+      line-height: 1.2;
+    }
+
+    .past-event-info h4 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #333333;
+      margin-bottom: 4px;
+    }
+
+    .past-event-info p {
+      font-size: 0.72rem;
+      color: #999999;
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      padding: 80px 0 40px;
+      background: #333333;
+      color: #FFFFFF;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .footer-logo span {
+      color: #C9A96E;
+    }
+
+    .footer-org {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 8px;
+    }
+
+    .footer-desc {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.4);
+      max-width: 480px;
+      margin: 0 auto 40px;
+      line-height: 1.8;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.5);
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: #C9A96E;
+    }
+
+    .footer-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(201, 169, 110, 0.3);
+      margin: 0 auto 24px;
+    }
+
+    .footer-copyright {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .venue-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .themes-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-nav {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .hero-title {
+        font-size: 1.6rem;
+        letter-spacing: 0.1em;
+      }
+
+      .hero-meta {
+        gap: 24px;
+      }
+
+      .venue-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .venue-card {
+        padding: 32px 24px;
+      }
+
+      .themes-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .event-info-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .past-events-list {
+        grid-template-columns: 1fr;
+      }
+
+      .about-features {
+        gap: 32px;
+      }
+
+      .section-title {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 1.3rem;
+      }
+
+      .hero-subtitle {
+        font-size: 0.82rem;
+      }
+
+      .themes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .venue-card {
+        padding: 24px 20px;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       HEADER
+       ============================================ -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-logo heading-en">
+        AnyMall <span>Launch Event</span>
+      </div>
+      <nav class="header-nav">
+        <a href="#about">About</a>
+        <a href="#venues">Venues</a>
+        <a href="#themes">Contents</a>
+        <a href="#past-events">Past Events</a>
+      </nav>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニュー">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#about" onclick="closeMobileMenu()">About</a>
+    <a href="#venues" onclick="closeMobileMenu()">Venues</a>
+    <a href="#themes" onclick="closeMobileMenu()">Contents</a>
+    <a href="#past-events" onclick="closeMobileMenu()">Past Events</a>
+  </nav>
+
+  <!-- ============================================
+       HERO
+       ============================================ -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow heading-en">AnyMall Lunch Event 2026</p>
+      <h1 class="hero-title heading-jp">愛犬と、もっと豊かな毎日を。</h1>
+      <p class="hero-subtitle heading-jp">大切な家族のために、最良の選択を知る特別な体験</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <strong class="heading-en">Period</strong>
+          2026年5月 - 12月
+        </div>
+        <div class="hero-meta-item">
+          <strong class="heading-en">Events</strong>
+          全32回開催
+        </div>
+        <div class="hero-meta-item">
+          <strong class="heading-en">Capacity</strong>
+          各回40-50名様
+        </div>
+        <div class="hero-meta-item">
+          <strong class="heading-en">Style</strong>
+          完全招待制
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span class="heading-en">Scroll</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       ABOUT
+       ============================================ -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-inner">
+        <p class="section-label">About</p>
+        <h2 class="section-title text-center heading-jp">イベントについて</h2>
+        <div class="section-divider"></div>
+        <p class="about-text">
+          AnyMall Lunch Eventは、動物医療ネットワーク「A'ALDA」が主催する、<br>
+          愛犬家のための特別な体験型イベントです。
+        </p>
+        <p class="about-text">
+          ペット栄養学、手作りフード、犬種別の健康管理、長寿の秘訣など、<br>
+          大切な愛犬との暮らしをより豊かにするための知識と体験をお届けします。
+        </p>
+        <p class="about-text">
+          各回約3時間のプログラムを通じて、専門家による講演やワークショップ、<br>
+          参加者同士の交流をお楽しみいただけます。
+        </p>
+        <div class="about-features">
+          <div class="about-feature">
+            <div class="about-feature-icon">&#9825;</div>
+            <p class="about-feature-title">栄養学</p>
+            <p class="about-feature-desc">ペット栄養の最新知見</p>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">&#9733;</div>
+            <p class="about-feature-title">手作りフード</p>
+            <p class="about-feature-desc">愛情こめた手作りレシピ</p>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">&#9826;</div>
+            <p class="about-feature-title">犬種別ケア</p>
+            <p class="about-feature-desc">犬種に合わせた健康管理</p>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">&#10047;</div>
+            <p class="about-feature-title">長寿の秘訣</p>
+            <p class="about-feature-desc">健やかな毎日のために</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       VENUES - MINIMAL CARDS
+       ============================================ -->
+  <section class="venues" id="venues">
+    <div class="container">
+      <p class="section-label text-center">Venues</p>
+      <h2 class="section-title text-center heading-jp">開催会場</h2>
+      <div class="section-divider"></div>
+
+      <div class="venue-grid">
+
+        <!-- Venue 1 -->
+        <div class="venue-card" onclick="toggleVenueCard(this)">
+          <div class="venue-card-header">
+            <span class="venue-area-badge">Tokyo</span>
+            <span class="venue-expand-icon">+</span>
+          </div>
+          <h3 class="venue-name heading-jp">inumo芝公園 by Villa Fontaine</h3>
+          <p class="venue-name-en heading-en">inumo Shiba Park by Villa Fontaine</p>
+          <p class="venue-summary">芝公園に隣接した、愛犬と過ごせるラグジュアリーホテル併設の特別な空間</p>
+          <div class="venue-details">
+            <div class="venue-details-divider"></div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Area</span>
+              <span class="venue-detail-value">東京都港区 芝公園エリア</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Access</span>
+              <span class="venue-detail-value">都営三田線 芝公園駅より徒歩約5分</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Time</span>
+              <span class="venue-detail-value">12:00 - 15:00（約3時間）</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Capacity</span>
+              <span class="venue-detail-value">各回40〜50名様（完全招待制）</span>
+            </div>
+            <a href="#" class="venue-apply-btn">参加申し込み</a>
+          </div>
+        </div>
+
+        <!-- Venue 2 -->
+        <div class="venue-card" onclick="toggleVenueCard(this)">
+          <div class="venue-card-header">
+            <span class="venue-area-badge">Tokyo</span>
+            <span class="venue-expand-icon">+</span>
+          </div>
+          <h3 class="venue-name heading-jp">Dplus麻布台</h3>
+          <p class="venue-name-en heading-en">Dplus Azabudai</p>
+          <p class="venue-summary">麻布台ヒルズ近隣のモダンな多目的スペースで開催する洗練されたイベント</p>
+          <div class="venue-details">
+            <div class="venue-details-divider"></div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Area</span>
+              <span class="venue-detail-value">東京都港区 麻布台エリア</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Access</span>
+              <span class="venue-detail-value">東京メトロ日比谷線 神谷町駅より徒歩約5分</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Time</span>
+              <span class="venue-detail-value">12:00 - 15:00（約3時間）</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Capacity</span>
+              <span class="venue-detail-value">各回40〜50名様（完全招待制）</span>
+            </div>
+            <a href="#" class="venue-apply-btn">参加申し込み</a>
+          </div>
+        </div>
+
+        <!-- Venue 3 -->
+        <div class="venue-card" onclick="toggleVenueCard(this)">
+          <div class="venue-card-header">
+            <span class="venue-area-badge">Osaka</span>
+            <span class="venue-expand-icon">+</span>
+          </div>
+          <h3 class="venue-name heading-jp">Green Field Tennoji</h3>
+          <p class="venue-name-en heading-en">Green Field Tennoji</p>
+          <p class="venue-summary">天王寺の自然豊かな環境で、ペットとの特別なひとときを過ごせる会場</p>
+          <div class="venue-details">
+            <div class="venue-details-divider"></div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Area</span>
+              <span class="venue-detail-value">大阪市天王寺区 天王寺エリア</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Access</span>
+              <span class="venue-detail-value">JR・地下鉄 天王寺駅より徒歩約8分</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Time</span>
+              <span class="venue-detail-value">12:00 - 15:00（約3時間）</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Capacity</span>
+              <span class="venue-detail-value">各回40〜50名様（完全招待制）</span>
+            </div>
+            <a href="#" class="venue-apply-btn">参加申し込み</a>
+          </div>
+        </div>
+
+        <!-- Venue 4 -->
+        <div class="venue-card" onclick="toggleVenueCard(this)">
+          <div class="venue-card-header">
+            <span class="venue-area-badge">Osaka</span>
+            <span class="venue-expand-icon">+</span>
+          </div>
+          <h3 class="venue-name heading-jp">Dyplus大阪北</h3>
+          <p class="venue-name-en heading-en">Dyplus Osaka Kita</p>
+          <p class="venue-summary">大阪北エリアのスタイリッシュな空間で愛犬家コミュニティが集う場所</p>
+          <div class="venue-details">
+            <div class="venue-details-divider"></div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Area</span>
+              <span class="venue-detail-value">大阪市北区 梅田エリア</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Access</span>
+              <span class="venue-detail-value">JR大阪駅・梅田駅より徒歩約10分</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Time</span>
+              <span class="venue-detail-value">12:00 - 15:00（約3時間）</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Capacity</span>
+              <span class="venue-detail-value">各回40〜50名様（完全招待制）</span>
+            </div>
+            <a href="#" class="venue-apply-btn">参加申し込み</a>
+          </div>
+        </div>
+
+        <!-- Venue 5 (spanning full width) -->
+        <div class="venue-card" onclick="toggleVenueCard(this)" style="grid-column: 1 / -1;">
+          <div class="venue-card-header">
+            <span class="venue-area-badge">Tokyo</span>
+            <span class="venue-expand-icon">+</span>
+          </div>
+          <h3 class="venue-name heading-jp">浜松町ビルディング</h3>
+          <p class="venue-name-en heading-en">Hamamatsucho Building</p>
+          <p class="venue-summary">浜松町駅直結の利便性と格式を兼ね備えた、都心型イベント会場</p>
+          <div class="venue-details">
+            <div class="venue-details-divider"></div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Area</span>
+              <span class="venue-detail-value">東京都港区 浜松町エリア</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Access</span>
+              <span class="venue-detail-value">JR浜松町駅より徒歩約1分</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Time</span>
+              <span class="venue-detail-value">12:00 - 15:00（約3時間）</span>
+            </div>
+            <div class="venue-detail-row">
+              <span class="venue-detail-label">Capacity</span>
+              <span class="venue-detail-value">各回40〜50名様（完全招待制）</span>
+            </div>
+            <a href="#" class="venue-apply-btn">参加申し込み</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       CONTENT / THEMES
+       ============================================ -->
+  <section class="themes" id="themes">
+    <div class="container">
+      <p class="section-label text-center">Contents</p>
+      <h2 class="section-title text-center heading-jp">イベントコンテンツ</h2>
+      <div class="section-divider"></div>
+
+      <div class="themes-grid">
+        <div class="theme-item">
+          <p class="theme-number heading-en">01</p>
+          <h3 class="theme-name heading-jp">ペット栄養学講座</h3>
+          <p class="theme-desc">獣医師や栄養の専門家による、最新のペット栄養学に基づいた食事管理の知識をお伝えします。</p>
+        </div>
+        <div class="theme-item">
+          <p class="theme-number heading-en">02</p>
+          <h3 class="theme-name heading-jp">手作りフード<br>ワークショップ</h3>
+          <p class="theme-desc">愛犬のための手作りフードレシピを、プロの指導のもと実際に調理しながら学びます。</p>
+        </div>
+        <div class="theme-item">
+          <p class="theme-number heading-en">03</p>
+          <h3 class="theme-name heading-jp">犬種別<br>ヘルスケアセミナー</h3>
+          <p class="theme-desc">犬種ごとに異なる特性や注意すべき健康リスクについて、専門獣医師が詳しく解説します。</p>
+        </div>
+        <div class="theme-item">
+          <p class="theme-number heading-en">04</p>
+          <h3 class="theme-name heading-jp">長寿のための<br>ライフスタイル</h3>
+          <p class="theme-desc">愛犬と一日でも長く健やかに過ごすための生活習慣や環境づくりのヒントをご紹介します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       EVENT INFO
+       ============================================ -->
+  <section class="event-info">
+    <div class="container">
+      <p class="section-label text-center">Information</p>
+      <h2 class="section-title text-center heading-jp">開催概要</h2>
+      <div class="section-divider"></div>
+
+      <div class="event-info-grid">
+        <div class="event-info-item">
+          <p class="event-info-label heading-en">Period</p>
+          <p class="event-info-value">2026年5月〜12月</p>
+        </div>
+        <div class="event-info-item">
+          <p class="event-info-label heading-en">Total Events</p>
+          <p class="event-info-value">全32回開催予定</p>
+        </div>
+        <div class="event-info-item">
+          <p class="event-info-label heading-en">Duration</p>
+          <p class="event-info-value">各回 約3時間</p>
+        </div>
+        <div class="event-info-item">
+          <p class="event-info-label heading-en">Capacity</p>
+          <p class="event-info-value">40〜50名様</p>
+        </div>
+        <div class="event-info-item">
+          <p class="event-info-label heading-en">Admission</p>
+          <p class="event-info-value">完全招待制</p>
+        </div>
+        <div class="event-info-item">
+          <p class="event-info-label heading-en">Organizer</p>
+          <p class="event-info-value">A'ALDA</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       PAST EVENTS
+       ============================================ -->
+  <section class="past-events" id="past-events">
+    <div class="container">
+      <p class="section-label text-center">Archive</p>
+      <h2 class="section-title text-center heading-jp">過去のイベント</h2>
+      <div class="section-divider"></div>
+
+      <button class="past-events-toggle" onclick="togglePastEvents(this)">
+        過去のイベントを表示する
+        <span class="past-events-toggle-icon">&#9660;</span>
+      </button>
+
+      <div class="past-events-content" id="pastEventsContent">
+        <div class="past-events-list">
+          <div class="past-event-item">
+            <div class="past-event-date">
+              <p class="past-event-month heading-en">May</p>
+              <p class="past-event-day heading-en">15</p>
+            </div>
+            <div class="past-event-info">
+              <h4>ペット栄養学入門セミナー</h4>
+              <p>inumo芝公園 by Villa Fontaine / 参加者45名</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-date">
+              <p class="past-event-month heading-en">May</p>
+              <p class="past-event-day heading-en">22</p>
+            </div>
+            <div class="past-event-info">
+              <h4>手作りフードワークショップ</h4>
+              <p>Dplus麻布台 / 参加者42名</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-date">
+              <p class="past-event-month heading-en">Jun</p>
+              <p class="past-event-day heading-en">05</p>
+            </div>
+            <div class="past-event-info">
+              <h4>小型犬のためのヘルスケア講座</h4>
+              <p>Green Field Tennoji / 参加者48名</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-date">
+              <p class="past-event-month heading-en">Jun</p>
+              <p class="past-event-day heading-en">12</p>
+            </div>
+            <div class="past-event-info">
+              <h4>シニア犬との暮らし方セミナー</h4>
+              <p>Dyplus大阪北 / 参加者40名</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-date">
+              <p class="past-event-month heading-en">Jun</p>
+              <p class="past-event-day heading-en">26</p>
+            </div>
+            <div class="past-event-info">
+              <h4>犬種別フード選びのコツ</h4>
+              <p>浜松町ビルディング / 参加者50名</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-date">
+              <p class="past-event-month heading-en">Jul</p>
+              <p class="past-event-day heading-en">10</p>
+            </div>
+            <div class="past-event-info">
+              <h4>夏の愛犬ケア特別講座</h4>
+              <p>inumo芝公園 by Villa Fontaine / 参加者44名</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-logo heading-en">AnyMall <span>Launch Event</span></p>
+      <p class="footer-org">主催：A'ALDA（動物医療ネットワーク）</p>
+      <p class="footer-desc">
+        A'ALDAは、動物医療の発展と、ペットと飼い主がともに幸せに暮らせる社会の実現を目指す動物医療ネットワークです。
+      </p>
+      <div class="footer-links">
+        <a href="#">イベント概要</a>
+        <a href="#">会場一覧</a>
+        <a href="#">お問い合わせ</a>
+        <a href="#">プライバシーポリシー</a>
+      </div>
+      <div class="footer-divider"></div>
+      <p class="footer-copyright heading-en">&copy; 2026 A'ALDA. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       JAVASCRIPT
+       ============================================ -->
+  <script>
+    // Venue card expand/collapse
+    function toggleVenueCard(card) {
+      const wasExpanded = card.classList.contains('expanded');
+      // Close all cards first
+      document.querySelectorAll('.venue-card').forEach(c => {
+        c.classList.remove('expanded');
+      });
+      // Toggle the clicked card
+      if (!wasExpanded) {
+        card.classList.add('expanded');
+      }
+    }
+
+    // Past events toggle
+    function togglePastEvents(btn) {
+      btn.classList.toggle('active');
+      const content = document.getElementById('pastEventsContent');
+      content.classList.toggle('active');
+      if (btn.classList.contains('active')) {
+        btn.firstChild.textContent = '過去のイベントを閉じる ';
+      } else {
+        btn.firstChild.textContent = '過去のイベントを表示する ';
+      }
+    }
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const nav = document.getElementById('mobileNav');
+      nav.classList.toggle('active');
+    }
+
+    function closeMobileMenu() {
+      const nav = document.getElementById('mobileNav');
+      nav.classList.remove('active');
+    }
+
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 50) {
+        header.style.borderBottomColor = 'rgba(201, 169, 110, 0.25)';
+      } else {
+        header.style.borderBottomColor = 'rgba(201, 169, 110, 0.15)';
+      }
+    });
+  </script>
+
+</body>
+</html>

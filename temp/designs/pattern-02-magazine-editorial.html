@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnyMall Lunch Event | A'ALDA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      color: #2D2D2D;
+      background-color: #FEFCFA;
+      line-height: 1.8;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+    }
+
+    /* ===== Header / Navigation ===== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(254, 252, 250, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.3s ease;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 48px;
+      height: 80px;
+    }
+
+    .site-logo {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-logo .logo-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #2D2D2D;
+      letter-spacing: 0.06em;
+    }
+
+    .site-logo .logo-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 400;
+      color: #B8976A;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .header-nav a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: #666;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .header-nav a:hover {
+      color: #B8976A;
+    }
+
+    .header-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 1px;
+      background: #B8976A;
+      transition: width 0.3s ease;
+    }
+
+    .header-nav a:hover::after {
+      width: 100%;
+    }
+
+    .header-line {
+      position: absolute;
+      bottom: 0;
+      left: 48px;
+      right: 48px;
+      height: 1px;
+      background: rgba(184, 151, 106, 0.12);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 32px;
+      height: 24px;
+      position: relative;
+      z-index: 1001;
+    }
+
+    .mobile-menu-btn span {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: #2D2D2D;
+      position: absolute;
+      left: 0;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu-btn span:nth-child(1) { top: 2px; }
+    .mobile-menu-btn span:nth-child(2) { top: 50%; }
+    .mobile-menu-btn span:nth-child(3) { bottom: 2px; }
+
+    .mobile-menu-btn.active span:nth-child(1) {
+      top: 50%;
+      transform: rotate(45deg);
+    }
+
+    .mobile-menu-btn.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-menu-btn.active span:nth-child(3) {
+      bottom: 50%;
+      transform: rotate(-45deg);
+    }
+
+    /* ===== Hero Section - Editorial Style ===== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #FEFCFA;
+    }
+
+    .hero-editorial-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .hero-text-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 80px 80px 80px;
+      max-width: 700px;
+      margin-left: auto;
+    }
+
+    .hero-issue-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      color: #B8976A;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .hero-issue-label::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: #B8976A;
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 3.2rem;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #2D2D2D;
+      margin-bottom: 20px;
+      letter-spacing: 0.06em;
+    }
+
+    .hero-subtitle-en {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: #B8976A;
+      margin-bottom: 40px;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-description {
+      font-size: 0.88rem;
+      color: #777;
+      line-height: 2.2;
+      margin-bottom: 36px;
+      max-width: 440px;
+    }
+
+    .hero-meta-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hero-meta-list li {
+      font-size: 0.78rem;
+      color: #999;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-meta-list li::before {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 1px;
+      background: #B8976A;
+      flex-shrink: 0;
+    }
+
+    .hero-meta-list li strong {
+      color: #B8976A;
+      font-weight: 500;
+    }
+
+    .hero-image-side {
+      position: relative;
+      background: linear-gradient(
+        135deg,
+        #E8D5D0 0%,
+        #F0E0D8 40%,
+        #E8D5D0 70%,
+        #D8C5C0 100%
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-image-side::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255,255,255,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(184,151,106,0.08) 0%, transparent 40%);
+    }
+
+    .hero-image-placeholder {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .hero-image-placeholder .placeholder-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.12em;
+    }
+
+    .hero-image-placeholder .placeholder-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 48px;
+      left: 80px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: #B0A8A0;
+      text-transform: uppercase;
+    }
+
+    .hero-scroll-cue .cue-line {
+      width: 48px;
+      height: 1px;
+      background: #B8976A;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-scroll-cue .cue-line::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(184,151,106,0.5);
+      animation: scrollCueLine 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollCueLine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* ===== Thin Line Dividers ===== */
+    .editorial-divider {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .editorial-divider .divider-line {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(184, 151, 106, 0.2), transparent);
+    }
+
+    /* ===== Layout Container ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .section-padding {
+      padding: 120px 0;
+    }
+
+    /* ===== Section Headers - Editorial ===== */
+    .section-header-editorial {
+      margin-bottom: 72px;
+    }
+
+    .section-header-editorial .section-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #B8976A;
+      letter-spacing: 0.2em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-header-editorial .section-number::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: #B8976A;
+    }
+
+    .section-header-editorial h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #2D2D2D;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .section-header-editorial .section-subtitle-en {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #B8976A;
+      margin-bottom: 24px;
+    }
+
+    .section-header-editorial p.section-desc {
+      font-size: 0.88rem;
+      color: #888;
+      max-width: 560px;
+      line-height: 2.1;
+    }
+
+    /* ===== About Section - Editorial Layout ===== */
+    .about {
+      background: #FEFCFA;
+    }
+
+    .about-editorial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-text-column {
+      font-size: 0.9rem;
+      line-height: 2.4;
+      color: #555;
+    }
+
+    .about-text-column p {
+      margin-bottom: 28px;
+    }
+
+    .about-text-column p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-text-column .pull-quote {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #2D2D2D;
+      line-height: 2;
+      padding: 32px 0;
+      margin: 32px 0;
+      border-top: 1px solid rgba(184, 151, 106, 0.15);
+      border-bottom: 1px solid rgba(184, 151, 106, 0.15);
+      letter-spacing: 0.04em;
+    }
+
+    .about-sidebar {
+      padding-top: 8px;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 32px 16px;
+      border: 1px solid rgba(184, 151, 106, 0.1);
+    }
+
+    .stat-item .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      color: #B8976A;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .stat-item .stat-unit {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      color: #B8976A;
+      font-weight: 400;
+    }
+
+    .stat-item .stat-label {
+      font-size: 0.72rem;
+      color: #999;
+      margin-top: 8px;
+      letter-spacing: 0.06em;
+    }
+
+    .about-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .highlight-item {
+      padding: 24px;
+      border-left: 2px solid #B8976A;
+      background: rgba(232, 213, 208, 0.08);
+    }
+
+    .highlight-item h4 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #2D2D2D;
+      margin-bottom: 8px;
+    }
+
+    .highlight-item p {
+      font-size: 0.78rem;
+      color: #888;
+      line-height: 1.9;
+    }
+
+    /* ===== Featured Venue - Editorial ===== */
+    .featured-venue {
+      background: #F8F4F0;
+    }
+
+    .featured-venue-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 480px;
+    }
+
+    .featured-venue-image {
+      background: linear-gradient(135deg, #E8D5D0, #D8C5B8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+    }
+
+    .featured-venue-image .fv-placeholder {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.1em;
+    }
+
+    .featured-venue-content {
+      padding: 72px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .featured-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      color: #B8976A;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .featured-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: #B8976A;
+    }
+
+    .featured-venue-content h3 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #2D2D2D;
+      margin-bottom: 8px;
+      letter-spacing: 0.06em;
+    }
+
+    .featured-venue-content .fv-area {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: #B8976A;
+      margin-bottom: 24px;
+    }
+
+    .featured-venue-content p {
+      font-size: 0.88rem;
+      color: #777;
+      line-height: 2.2;
+      margin-bottom: 24px;
+    }
+
+    .featured-venue-meta {
+      font-size: 0.78rem;
+      color: #aaa;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 32px;
+    }
+
+    .featured-venue-meta span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .featured-venue-meta span::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 1px;
+      background: #B8976A;
+    }
+
+    .btn-editorial {
+      display: inline-block;
+      padding: 16px 40px;
+      background: #2D2D2D;
+      color: #FEFCFA;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      align-self: flex-start;
+    }
+
+    .btn-editorial:hover {
+      background: #B8976A;
+      color: #fff;
+    }
+
+    /* ===== Venues Grid - 2 Column Editorial ===== */
+    .venues {
+      background: #FEFCFA;
+    }
+
+    .venues-editorial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    .venue-editorial-card {
+      position: relative;
+      transition: transform 0.4s ease;
+    }
+
+    .venue-editorial-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .venue-editorial-image {
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .venue-editorial-card:nth-child(1) .venue-editorial-image {
+      background: linear-gradient(135deg, #D4BFA0, #C4A882);
+    }
+    .venue-editorial-card:nth-child(2) .venue-editorial-image {
+      background: linear-gradient(135deg, #A8B8A0, #98A890);
+    }
+    .venue-editorial-card:nth-child(3) .venue-editorial-image {
+      background: linear-gradient(135deg, #B0A0C0, #A090B0);
+    }
+    .venue-editorial-card:nth-child(4) .venue-editorial-image {
+      background: linear-gradient(135deg, #A0B8C8, #90A8B8);
+    }
+
+    .venue-editorial-image .venue-img-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.1em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .venue-editorial-card .venue-ed-area {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      color: #B8976A;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .venue-editorial-card h3 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #2D2D2D;
+      margin-bottom: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .venue-editorial-card .venue-ed-date {
+      font-size: 0.78rem;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+
+    .venue-editorial-card .venue-ed-desc {
+      font-size: 0.82rem;
+      color: #888;
+      line-height: 2;
+      margin-bottom: 20px;
+    }
+
+    .venue-editorial-card .venue-ed-capacity {
+      font-size: 0.72rem;
+      color: #bbb;
+      margin-bottom: 20px;
+    }
+
+    .btn-venue-apply {
+      display: inline-block;
+      padding: 12px 32px;
+      background: transparent;
+      border: 1px solid #2D2D2D;
+      color: #2D2D2D;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-venue-apply:hover {
+      background: #2D2D2D;
+      color: #FEFCFA;
+    }
+
+    /* ===== Themes Section - Magazine Style ===== */
+    .themes {
+      background: #F8F4F0;
+    }
+
+    .themes-editorial-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+
+    .theme-editorial-item {
+      padding: 40px;
+      border: 1px solid rgba(184, 151, 106, 0.08);
+      background: rgba(254, 252, 250, 0.5);
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .theme-editorial-item:hover {
+      background: rgba(254, 252, 250, 0.9);
+    }
+
+    .theme-editorial-item .theme-ed-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      color: rgba(184, 151, 106, 0.15);
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      line-height: 1;
+    }
+
+    .theme-editorial-item .theme-ed-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 20px;
+    }
+
+    .theme-editorial-item h3 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #2D2D2D;
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .theme-editorial-item .theme-ed-en {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.75rem;
+      color: #B8976A;
+      margin-bottom: 16px;
+    }
+
+    .theme-editorial-item p {
+      font-size: 0.82rem;
+      color: #888;
+      line-height: 2;
+    }
+
+    /* ===== Past Events Section ===== */
+    .past-events {
+      background: #FEFCFA;
+    }
+
+    .toggle-editorial-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 40px;
+      background: transparent;
+      border: 1px solid rgba(184, 151, 106, 0.3);
+      color: #B8976A;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-editorial-btn:hover {
+      border-color: #B8976A;
+      background: rgba(184, 151, 106, 0.04);
+    }
+
+    .toggle-editorial-btn .toggle-icon {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .toggle-editorial-btn .toggle-icon::before,
+    .toggle-editorial-btn .toggle-icon::after {
+      content: '';
+      position: absolute;
+      background: #B8976A;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-editorial-btn .toggle-icon::before {
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      transform: translateY(-50%);
+    }
+
+    .toggle-editorial-btn .toggle-icon::after {
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+      transform: translateX(-50%);
+    }
+
+    .toggle-editorial-btn.active .toggle-icon::after {
+      transform: translateX(-50%) rotate(90deg);
+      opacity: 0;
+    }
+
+    .past-events-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s ease, opacity 0.4s ease;
+      opacity: 0;
+    }
+
+    .past-events-content.show {
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    .past-events-editorial-list {
+      padding-top: 56px;
+    }
+
+    .past-event-editorial {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 40px;
+      padding: 36px 0;
+      border-bottom: 1px solid rgba(184, 151, 106, 0.08);
+      align-items: start;
+    }
+
+    .past-event-editorial:last-child {
+      border-bottom: none;
+    }
+
+    .pe-date-block {
+      text-align: right;
+      padding-right: 24px;
+      border-right: 1px solid rgba(184, 151, 106, 0.15);
+    }
+
+    .pe-date-block .pe-year {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      color: #bbb;
+      letter-spacing: 0.12em;
+    }
+
+    .pe-date-block .pe-monthday {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: #2D2D2D;
+      letter-spacing: 0.04em;
+    }
+
+    .pe-info h4 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #2D2D2D;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .pe-info p {
+      font-size: 0.82rem;
+      color: #888;
+      line-height: 2;
+      margin-bottom: 12px;
+    }
+
+    .pe-info .pe-venue-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: #B8976A;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border: 1px solid rgba(184, 151, 106, 0.2);
+      display: inline-block;
+    }
+
+    /* ===== Footer - Magazine Style ===== */
+    .site-footer {
+      background: #2D2D2D;
+      color: #B0A8A0;
+    }
+
+    .footer-top {
+      padding: 80px 0 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    .footer-brand .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: #FEFCFA;
+      margin-bottom: 4px;
+    }
+
+    .footer-brand .footer-logo-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      color: #B8976A;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .footer-brand p {
+      font-size: 0.78rem;
+      line-height: 2;
+      color: #888;
+      max-width: 320px;
+    }
+
+    .footer-col h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 12px;
+    }
+
+    .footer-col ul li a {
+      font-size: 0.8rem;
+      color: #777;
+      transition: color 0.3s ease;
+    }
+
+    .footer-col ul li a:hover {
+      color: #B8976A;
+    }
+
+    .footer-bottom {
+      padding: 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copyright {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      color: #555;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-organizer {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      color: #555;
+    }
+
+    .footer-organizer span {
+      color: #B8976A;
+    }
+
+    /* ===== Animations ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-in-left {
+      opacity: 0;
+      transform: translateX(-28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .fade-in-right {
+      opacity: 0;
+      transform: translateX(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ===== Responsive ===== */
+    @media screen and (max-width: 1024px) {
+      .hero-editorial-layout {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-text-side {
+        padding: 140px 48px 60px;
+        max-width: none;
+        margin-left: 0;
+      }
+
+      .hero-image-side {
+        min-height: 360px;
+      }
+
+      .hero-scroll-cue {
+        left: 48px;
+        bottom: 32px;
+      }
+
+      .about-editorial-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .featured-venue-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .featured-venue-image {
+        min-height: 320px;
+      }
+
+      .featured-venue-content {
+        padding: 48px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .header-inner {
+        padding: 0 24px;
+      }
+
+      .header-nav {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(254, 252, 250, 0.98);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        z-index: 999;
+      }
+
+      .header-nav.open {
+        display: flex;
+      }
+
+      .header-nav a {
+        font-size: 0.85rem;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .header-line {
+        left: 24px;
+        right: 24px;
+      }
+
+      .container {
+        padding: 0 24px;
+      }
+
+      .section-padding {
+        padding: 72px 0;
+      }
+
+      .hero-text-side {
+        padding: 120px 24px 48px;
+      }
+
+      .hero-title {
+        font-size: 2.2rem;
+      }
+
+      .hero-subtitle-en {
+        font-size: 1rem;
+      }
+
+      .hero-image-side {
+        min-height: 280px;
+      }
+
+      .hero-scroll-cue {
+        left: 24px;
+      }
+
+      .section-header-editorial h2 {
+        font-size: 1.5rem;
+      }
+
+      .about-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .venues-editorial-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .themes-editorial-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .featured-venue-content {
+        padding: 36px 24px;
+      }
+
+      .featured-venue-content h3 {
+        font-size: 1.4rem;
+      }
+
+      .past-event-editorial {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .pe-date-block {
+        text-align: left;
+        padding-right: 0;
+        border-right: none;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(184, 151, 106, 0.08);
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .hero-title {
+        font-size: 1.7rem;
+      }
+
+      .hero-subtitle-en {
+        font-size: 0.9rem;
+      }
+
+      .hero-issue-label {
+        font-size: 0.58rem;
+      }
+
+      .about-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-item .stat-number {
+        font-size: 1.8rem;
+      }
+
+      .venue-editorial-image {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-logo">
+        <span class="logo-main">AnyMall Lunch Event</span>
+        <span class="logo-sub">by A'ALDA</span>
+      </div>
+      <nav class="header-nav" id="headerNav">
+        <a href="#about">About</a>
+        <a href="#venues">Venues</a>
+        <a href="#themes">Contents</a>
+        <a href="#past-events">Archive</a>
+      </nav>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- ===== Hero Section - Editorial ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-editorial-layout">
+      <div class="hero-text-side">
+        <p class="hero-issue-label">AnyMall Lunch Event 2026</p>
+        <h1 class="hero-title">愛犬と、もっと<br>豊かな毎日を。</h1>
+        <p class="hero-subtitle-en">A life enriched with your beloved companion.</p>
+        <p class="hero-description">
+          A'ALDAが主催する、愛犬家のための完全招待制イベント。
+          獣医師や栄養学の専門家による講演、手作りフードの体験など、
+          大切な家族との暮らしをより豊かにするプログラムをお届けします。
+        </p>
+        <ul class="hero-meta-list">
+          <li><strong>2026年5月 - 12月</strong> 全32回開催</li>
+          <li>東京・大阪 5会場</li>
+          <li>各回 <strong>40〜50名様限定</strong> / 完全招待制</li>
+          <li>所要時間 約3時間（12:00 - 15:00）</li>
+        </ul>
+      </div>
+      <div class="hero-image-side">
+        <div class="hero-image-placeholder">
+          <p class="placeholder-text">AnyMall</p>
+          <p class="placeholder-sub">Hero Visual</p>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-cue">
+      <div class="cue-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ===== Divider ===== -->
+  <div class="editorial-divider">
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ===== About Section ===== -->
+  <section class="about section-padding" id="about">
+    <div class="container">
+      <div class="section-header-editorial fade-in">
+        <div class="section-number">01</div>
+        <h2>イベントについて</h2>
+        <p class="section-subtitle-en">About the Event</p>
+      </div>
+      <div class="about-editorial-grid">
+        <div class="about-text-column fade-in-left">
+          <p>
+            AnyMall Lunch Eventは、動物医療ネットワークA'ALDAが主催する
+            愛犬家のための特別な体験型イベントです。
+          </p>
+          <p>
+            大切な家族であるペットとの暮らしをより豊かに、
+            より健康的にするための知識と体験をお届けします。
+            獣医師や栄養学の専門家をお招きし、
+            ペットの健康管理から手作りフードのレシピ、
+            犬種別のケア方法まで、質の高い情報を少人数制の
+            アットホームな空間でお届けいたします。
+          </p>
+          <div class="pull-quote">
+            「愛犬との暮らしに、新しい発見と喜びを。」
+          </div>
+          <p>
+            2026年5月から12月にかけて、東京・大阪の厳選された5会場で
+            全32回開催。各回40〜50名様限定の完全招待制で、
+            一人ひとりのお客様に寄り添った特別なひとときをお約束いたします。
+            同じ想いを持つ愛犬家の方々との交流も、
+            このイベントの大きな魅力のひとつです。
+          </p>
+        </div>
+        <div class="about-sidebar fade-in-right">
+          <div class="about-stats">
+            <div class="stat-item">
+              <div class="stat-number">32</div>
+              <div class="stat-unit">events</div>
+              <div class="stat-label">全開催回数</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">5</div>
+              <div class="stat-unit">venues</div>
+              <div class="stat-label">開催会場数</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">8</div>
+              <div class="stat-unit">months</div>
+              <div class="stat-label">開催期間</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">50</div>
+              <div class="stat-unit">max</div>
+              <div class="stat-label">各回定員</div>
+            </div>
+          </div>
+          <div class="about-highlights">
+            <div class="highlight-item">
+              <h4>専門家による講演</h4>
+              <p>獣医師や栄養学のプロフェッショナルが、最新の研究に基づいた情報をわかりやすくお伝えします。</p>
+            </div>
+            <div class="highlight-item">
+              <h4>体験型ワークショップ</h4>
+              <p>手作りペットフードの実演や、日々のケア方法を実際に体験いただけるプログラムをご用意。</p>
+            </div>
+            <div class="highlight-item">
+              <h4>コミュニティ交流</h4>
+              <p>同じ想いを持つ愛犬家の方々とつながり、情報交換や交流をお楽しみいただけます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Divider ===== -->
+  <div class="editorial-divider">
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ===== Featured Venue Section ===== -->
+  <section class="featured-venue" id="featured-venue">
+    <div class="featured-venue-inner">
+      <div class="featured-venue-image fade-in-left">
+        <span class="fv-placeholder">inumo芝公園 by Villa Fontaine</span>
+      </div>
+      <div class="featured-venue-content fade-in-right">
+        <div class="featured-label">Featured Venue</div>
+        <h3>inumo芝公園 by Villa Fontaine</h3>
+        <p class="fv-area">Tokyo</p>
+        <p>
+          芝公園の緑豊かなロケーションに位置する、ペットと過ごすための特別な空間。
+          Villa Fontaineが手がける上質なホスピタリティのもと、
+          愛犬との豊かな時間をお楽しみいただけます。
+          洗練されたインテリアと温かみのあるサービスが、
+          忘れられないひとときを演出します。
+        </p>
+        <div class="featured-venue-meta">
+          <span>開催期間: 2026年5月〜12月</span>
+          <span>各回 40〜50名様限定</span>
+          <span>所要時間: 約3時間</span>
+        </div>
+        <a href="#" class="btn-editorial">お申し込みはこちら</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Venues Grid Section ===== -->
+  <section class="venues section-padding" id="venues">
+    <div class="container">
+      <div class="section-header-editorial fade-in">
+        <div class="section-number">02</div>
+        <h2>開催会場</h2>
+        <p class="section-subtitle-en">Venues</p>
+        <p class="section-desc">東京・大阪の厳選された会場で、特別な体験をお届けいたします。</p>
+      </div>
+      <div class="venues-editorial-grid">
+
+        <!-- Venue 1 -->
+        <div class="venue-editorial-card fade-in">
+          <div class="venue-editorial-image">
+            <span class="venue-img-label">Dplus Azabudai</span>
+          </div>
+          <p class="venue-ed-area">Tokyo</p>
+          <h3>Dplus麻布台</h3>
+          <p class="venue-ed-date">2026年5月〜12月</p>
+          <p class="venue-ed-desc">
+            麻布台の洗練されたエリアに佇むモダンな会場。
+            都心の利便性と上質な空間デザインが調和した環境で、
+            リラックスしながら愛犬との暮らしを学べます。
+          </p>
+          <p class="venue-ed-capacity">各回 40〜50名様限定 / 約3時間</p>
+          <a href="#" class="btn-venue-apply">Apply</a>
+        </div>
+
+        <!-- Venue 2 -->
+        <div class="venue-editorial-card fade-in">
+          <div class="venue-editorial-image">
+            <span class="venue-img-label">Green Field Tennoji</span>
+          </div>
+          <p class="venue-ed-area">Osaka</p>
+          <h3>Green Field Tennoji</h3>
+          <p class="venue-ed-date">2026年5月〜12月</p>
+          <p class="venue-ed-desc">
+            天王寺エリアの自然豊かな環境に位置する開放的な会場。
+            グリーンに囲まれた心地よい空間で、
+            ペットとの健康的な暮らしについてじっくり学んでいただけます。
+          </p>
+          <p class="venue-ed-capacity">各回 40〜50名様限定 / 約3時間</p>
+          <a href="#" class="btn-venue-apply">Apply</a>
+        </div>
+
+        <!-- Venue 3 -->
+        <div class="venue-editorial-card fade-in">
+          <div class="venue-editorial-image">
+            <span class="venue-img-label">Dyplus Osaka Kita</span>
+          </div>
+          <p class="venue-ed-area">Osaka</p>
+          <h3>Dyplus大阪北</h3>
+          <p class="venue-ed-date">2026年5月〜12月</p>
+          <p class="venue-ed-desc">
+            大阪北エリアのスタイリッシュな空間。
+            最新の設備を備えた快適な環境で、
+            愛犬の栄養管理やケア方法について深く学んでいただけます。
+          </p>
+          <p class="venue-ed-capacity">各回 40〜50名様限定 / 約3時間</p>
+          <a href="#" class="btn-venue-apply">Apply</a>
+        </div>
+
+        <!-- Venue 4 -->
+        <div class="venue-editorial-card fade-in">
+          <div class="venue-editorial-image">
+            <span class="venue-img-label">Hamamatsucho Building</span>
+          </div>
+          <p class="venue-ed-area">Tokyo</p>
+          <h3>浜松町ビルディング</h3>
+          <p class="venue-ed-date">2026年5月〜12月</p>
+          <p class="venue-ed-desc">
+            浜松町駅至近の好アクセスな会場。
+            ビジネス街の中心にありながらも落ち着いた雰囲気の空間で、
+            忙しい日々の中でも気軽にご参加いただけます。
+          </p>
+          <p class="venue-ed-capacity">各回 40〜50名様限定 / 約3時間</p>
+          <a href="#" class="btn-venue-apply">Apply</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Divider ===== -->
+  <div class="editorial-divider">
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ===== Themes Section ===== -->
+  <section class="themes section-padding" id="themes">
+    <div class="container">
+      <div class="section-header-editorial fade-in">
+        <div class="section-number">03</div>
+        <h2>イベント内容</h2>
+        <p class="section-subtitle-en">Event Contents</p>
+        <p class="section-desc">専門家監修のもと、愛犬との暮らしを豊かにするさまざまなテーマをお届けします。</p>
+      </div>
+      <div class="themes-editorial-layout">
+
+        <div class="theme-editorial-item fade-in">
+          <div class="theme-ed-number">01</div>
+          <div class="theme-ed-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#B8976A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          </div>
+          <h3>ペット栄養学</h3>
+          <p class="theme-ed-en">Pet Nutrition Science</p>
+          <p>獣医栄養学の専門家が、愛犬に最適な食事バランスや栄養素について解説します。年齢や体質に合わせた食事管理の方法を、最新の研究データとともにお伝えします。</p>
+        </div>
+
+        <div class="theme-editorial-item fade-in">
+          <div class="theme-ed-number">02</div>
+          <div class="theme-ed-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#B8976A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+          </div>
+          <h3>手作りペットフード</h3>
+          <p class="theme-ed-en">Homemade Pet Food Workshop</p>
+          <p>安心・安全な食材を使った手作りフードのレシピを、実演を交えてご紹介。ご自宅で簡単に作れるメニューをお持ち帰りいただけます。</p>
+        </div>
+
+        <div class="theme-editorial-item fade-in">
+          <div class="theme-ed-number">03</div>
+          <div class="theme-ed-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#B8976A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <h3>犬種別ヘルスケア</h3>
+          <p class="theme-ed-en">Breed-Specific Health Care</p>
+          <p>犬種ごとの特性や注意すべき健康リスクについて、獣医師がわかりやすく解説。日々の観察ポイントや予防法を学べます。</p>
+        </div>
+
+        <div class="theme-editorial-item fade-in">
+          <div class="theme-ed-number">04</div>
+          <div class="theme-ed-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#B8976A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+          </div>
+          <h3>長寿の秘訣</h3>
+          <p class="theme-ed-en">Secrets to Longevity</p>
+          <p>愛犬と一日でも長く健康に過ごすために。最新の獣医学研究に基づいた長寿のためのライフスタイルや環境づくりについてお話しします。</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Divider ===== -->
+  <div class="editorial-divider">
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ===== Past Events Section ===== -->
+  <section class="past-events section-padding" id="past-events">
+    <div class="container">
+      <div class="section-header-editorial fade-in">
+        <div class="section-number">04</div>
+        <h2>過去のイベント</h2>
+        <p class="section-subtitle-en">Past Events</p>
+        <p class="section-desc">これまでに開催したイベントの一覧をご覧いただけます。</p>
+      </div>
+      <div class="fade-in">
+        <button class="toggle-editorial-btn" id="togglePastEvents" aria-expanded="false" aria-controls="pastEventsContent">
+          過去のイベントを表示する
+          <span class="toggle-icon"></span>
+        </button>
+      </div>
+      <div class="past-events-content" id="pastEventsContent">
+        <div class="past-events-editorial-list">
+
+          <div class="past-event-editorial">
+            <div class="pe-date-block">
+              <div class="pe-year">2026</div>
+              <div class="pe-monthday">Apr 20</div>
+            </div>
+            <div class="pe-info">
+              <h4>プレローンチイベント: 愛犬の食事を見直そう</h4>
+              <p>獣医師監修のもと、愛犬の年齢や体質に合わせた食事管理について学ぶプレイベントを開催しました。参加者の皆様からは「今日から実践できる内容ばかりで大変参考になった」とのお声をいただきました。</p>
+              <span class="pe-venue-label">inumo芝公園 by Villa Fontaine</span>
+            </div>
+          </div>
+
+          <div class="past-event-editorial">
+            <div class="pe-date-block">
+              <div class="pe-year">2026</div>
+              <div class="pe-monthday">Mar 15</div>
+            </div>
+            <div class="pe-info">
+              <h4>特別セミナー: ペットの長寿と幸福</h4>
+              <p>ペットの長寿研究の第一人者をお招きし、愛犬との暮らしをより豊かにするためのヒントをお届けしました。最新の研究データをもとに、日常的に取り入れられるケア方法をご紹介しました。</p>
+              <span class="pe-venue-label">Dplus麻布台</span>
+            </div>
+          </div>
+
+          <div class="past-event-editorial">
+            <div class="pe-date-block">
+              <div class="pe-year">2026</div>
+              <div class="pe-monthday">Feb 28</div>
+            </div>
+            <div class="pe-info">
+              <h4>ワークショップ: 手作りフード入門</h4>
+              <p>初心者の方でも簡単に作れる手作りペットフードの基本をレクチャー。実際に調理を体験いただき、ご自宅ですぐに実践できるレシピをお持ち帰りいただきました。</p>
+              <span class="pe-venue-label">Green Field Tennoji</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">AnyMall Lunch Event</div>
+            <div class="footer-logo-sub">by A'ALDA</div>
+            <p>
+              A'ALDAが主催する、愛犬家のための特別な体験型イベントシリーズ。
+              2026年5月〜12月、東京・大阪の5会場で全32回開催。
+              完全招待制の少人数制イベントです。
+            </p>
+          </div>
+          <div class="footer-col">
+            <h4>Menu</h4>
+            <ul>
+              <li><a href="#about">イベントについて</a></li>
+              <li><a href="#venues">開催会場</a></li>
+              <li><a href="#themes">イベント内容</a></li>
+              <li><a href="#past-events">過去のイベント</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Tokyo</h4>
+            <ul>
+              <li><a href="#">inumo芝公園</a></li>
+              <li><a href="#">Dplus麻布台</a></li>
+              <li><a href="#">浜松町ビルディング</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Osaka</h4>
+            <ul>
+              <li><a href="#">Green Field Tennoji</a></li>
+              <li><a href="#">Dyplus大阪北</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2026 AnyMall Lunch Event. All rights reserved.</p>
+        <p class="footer-organizer">Organized by <span>A'ALDA</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JavaScript ===== -->
+  <script>
+    // Mobile menu toggle
+    var mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    var headerNav = document.getElementById('headerNav');
+
+    mobileMenuBtn.addEventListener('click', function () {
+      this.classList.toggle('active');
+      headerNav.classList.toggle('open');
+      document.body.style.overflow = headerNav.classList.contains('open') ? 'hidden' : '';
+    });
+
+    // Close mobile menu on link click
+    headerNav.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        mobileMenuBtn.classList.remove('active');
+        headerNav.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Past events toggle
+    var toggleBtn = document.getElementById('togglePastEvents');
+    var pastEventsContent = document.getElementById('pastEventsContent');
+
+    toggleBtn.addEventListener('click', function () {
+      var isOpen = pastEventsContent.classList.contains('show');
+      pastEventsContent.classList.toggle('show');
+      this.classList.toggle('active');
+      this.setAttribute('aria-expanded', !isOpen);
+
+      // Update button text
+      var textNode = this.firstChild;
+      textNode.textContent = isOpen ? '過去のイベントを表示する ' : '過去のイベントを閉じる ';
+    });
+
+    // Scroll-based fade-in animation
+    function handleScrollAnimations() {
+      var elements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
+      var windowHeight = window.innerHeight;
+
+      elements.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        var triggerPoint = windowHeight * 0.88;
+
+        if (rect.top < triggerPoint) {
+          el.classList.add('visible');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', handleScrollAnimations);
+    window.addEventListener('load', handleScrollAnimations);
+  </script>
+
+</body>
+</html>

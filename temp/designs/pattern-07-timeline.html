@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnyMall Lunch Event - Timeline Layout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background-color: #FFFEF5;
+      color: #2C3E50;
+      line-height: 1.8;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.3s ease;
+    }
+
+    a:hover {
+      opacity: 0.75;
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    .heading-serif {
+      font-family: 'Noto Serif JP', 'Playfair Display', serif;
+    }
+
+    .heading-en {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* ============================================
+       UTILITY
+       ============================================ */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section-label {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .section-label span {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      display: inline-block;
+      position: relative;
+      padding: 0 20px;
+    }
+
+    .section-label span::before,
+    .section-label span::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 30px;
+      height: 1px;
+      background: #C9A96E;
+    }
+
+    .section-label span::before {
+      left: -20px;
+    }
+
+    .section-label span::after {
+      right: -20px;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+      color: #2C3E50;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #7f8c8d;
+      margin-bottom: 48px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+
+    /* ============================================
+       HEADER / NAV
+       ============================================ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255, 254, 245, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .header.scrolled {
+      box-shadow: 0 2px 20px rgba(44, 62, 80, 0.06);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .header-logo {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .header-logo-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2C3E50;
+      letter-spacing: 0.05em;
+    }
+
+    .header-logo-sub {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.6rem;
+      color: #C9A96E;
+      letter-spacing: 0.15em;
+      margin-top: -2px;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .header-nav a {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: #2C3E50;
+      position: relative;
+    }
+
+    .header-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #C9A96E;
+      transition: width 0.3s ease;
+    }
+
+    .header-nav a:hover {
+      opacity: 1;
+      color: #C9A96E;
+    }
+
+    .header-nav a:hover::after {
+      width: 100%;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .mobile-menu-btn span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: #2C3E50;
+      margin: 6px 0;
+      transition: all 0.3s ease;
+    }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .hero {
+      margin-top: 72px;
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: linear-gradient(160deg, #FFFEF5 0%, #F5ECD7 40%, #FFFEF5 70%, #F5ECD7 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201, 169, 110, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201, 169, 110, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: 60px 24px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 2.8rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #2C3E50;
+      margin-bottom: 20px;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-title-en {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: #C9A96E;
+      margin-bottom: 32px;
+      letter-spacing: 0.1em;
+    }
+
+    .hero-description {
+      font-size: 0.95rem;
+      color: #5a6c7d;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 2;
+      font-weight: 300;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      text-align: center;
+    }
+
+    .hero-meta-item .label {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      margin-bottom: 4px;
+    }
+
+    .hero-meta-item .value {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.9rem;
+      color: #2C3E50;
+      font-weight: 500;
+    }
+
+    .hero-scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #C9A96E;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: floatDown 2s ease-in-out infinite;
+    }
+
+    .hero-scroll-indicator .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, #C9A96E, transparent);
+    }
+
+    @keyframes floatDown {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ============================================
+       ABOUT SECTION
+       ============================================ */
+    .about {
+      padding: 100px 0;
+      background: #FFFEF5;
+    }
+
+    .about-content {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .about-text {
+      font-size: 0.95rem;
+      line-height: 2.2;
+      color: #4a5568;
+      font-weight: 300;
+      margin-bottom: 48px;
+    }
+
+    .about-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .about-feature {
+      text-align: center;
+      padding: 32px 16px;
+      border: 1px solid rgba(201, 169, 110, 0.2);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .about-feature:hover {
+      border-color: #C9A96E;
+      box-shadow: 0 8px 30px rgba(201, 169, 110, 0.08);
+    }
+
+    .about-feature-icon {
+      font-size: 1.6rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .about-feature-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2C3E50;
+    }
+
+    .about-feature-desc {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ============================================
+       THEMES SECTION
+       ============================================ */
+    .themes {
+      padding: 100px 0;
+      background: linear-gradient(180deg, #F5ECD7 0%, #FFFEF5 100%);
+    }
+
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .theme-card {
+      background: #FFFEF5;
+      padding: 36px 24px;
+      text-align: center;
+      border: 1px solid rgba(201, 169, 110, 0.15);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theme-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #C9A96E, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .theme-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(44, 62, 80, 0.06);
+    }
+
+    .theme-card:hover::before {
+      opacity: 1;
+    }
+
+    .theme-card-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.7rem;
+      color: #C9A96E;
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .theme-card-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2C3E50;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .theme-card-desc {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ============================================
+       TIMELINE SECTION (VENUES)
+       ============================================ */
+    .venues {
+      padding: 100px 0;
+      background: #FFFEF5;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    /* Center line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, #C9A96E 10%, #C9A96E 90%, transparent);
+    }
+
+    /* Timeline item */
+    .timeline-item {
+      position: relative;
+      margin-bottom: 60px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Alternating layout */
+    .timeline-item:nth-child(odd) {
+      justify-content: flex-start;
+      padding-right: calc(50% + 40px);
+    }
+
+    .timeline-item:nth-child(even) {
+      justify-content: flex-end;
+      padding-left: calc(50% + 40px);
+    }
+
+    /* Timeline dot */
+    .timeline-dot {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #FFFEF5;
+      border: 2px solid #C9A96E;
+      z-index: 2;
+      top: 32px;
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-dot {
+      background: #C9A96E;
+      box-shadow: 0 0 0 6px rgba(201, 169, 110, 0.15);
+    }
+
+    /* Date circle */
+    .timeline-date {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -8px;
+      z-index: 3;
+    }
+
+    .timeline-date-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #C9A96E, #d4b67e);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #FFFEF5;
+      box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+    }
+
+    .timeline-date-month {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .timeline-date-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    /* Timeline card */
+    .timeline-card {
+      background: #FFFEF5;
+      border: 1px solid rgba(201, 169, 110, 0.2);
+      border-radius: 6px;
+      padding: 32px;
+      width: 100%;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .timeline-card:hover {
+      box-shadow: 0 12px 40px rgba(44, 62, 80, 0.06);
+      border-color: #C9A96E;
+    }
+
+    /* Arrow pointing to center line */
+    .timeline-item:nth-child(odd) .timeline-card::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 36px;
+      width: 14px;
+      height: 14px;
+      background: #FFFEF5;
+      border-right: 1px solid rgba(201, 169, 110, 0.2);
+      border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+      transform: rotate(-45deg);
+    }
+
+    .timeline-item:nth-child(even) .timeline-card::after {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 36px;
+      width: 14px;
+      height: 14px;
+      background: #FFFEF5;
+      border-left: 1px solid rgba(201, 169, 110, 0.2);
+      border-top: 1px solid rgba(201, 169, 110, 0.2);
+      transform: rotate(-45deg);
+    }
+
+    .timeline-card-region {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      margin-bottom: 8px;
+    }
+
+    .timeline-card-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #2C3E50;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .timeline-card-location {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .timeline-card-location::before {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237f8c8d' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 10.5a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+      flex-shrink: 0;
+    }
+
+    .timeline-card-desc {
+      font-size: 0.85rem;
+      color: #5a6c7d;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+
+    .timeline-card-meta {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      font-size: 0.78rem;
+      color: #7f8c8d;
+    }
+
+    .timeline-card-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .timeline-card-btn {
+      display: inline-block;
+      padding: 10px 28px;
+      border: 1px solid #C9A96E;
+      color: #C9A96E;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .timeline-card-btn:hover {
+      background: #C9A96E;
+      color: #FFFEF5;
+      opacity: 1;
+    }
+
+    /* ============================================
+       PAST EVENTS SECTION
+       ============================================ */
+    .past-events {
+      padding: 100px 0;
+      background: linear-gradient(180deg, #FFFEF5 0%, #F5ECD7 100%);
+    }
+
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 0 auto 40px;
+      padding: 14px 40px;
+      background: transparent;
+      border: 1px solid #C9A96E;
+      color: #C9A96E;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-btn:hover {
+      background: #C9A96E;
+      color: #FFFEF5;
+    }
+
+    .toggle-btn .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+      font-size: 0.7rem;
+    }
+
+    .toggle-btn.active .arrow {
+      transform: rotate(180deg);
+    }
+
+    .past-events-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s ease;
+    }
+
+    .past-events-content.open {
+      max-height: 2000px;
+    }
+
+    .past-events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .past-event-card {
+      background: #FFFEF5;
+      border: 1px solid rgba(201, 169, 110, 0.15);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .past-event-card:hover {
+      box-shadow: 0 8px 30px rgba(44, 62, 80, 0.06);
+    }
+
+    .past-event-img {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, #F5ECD7, #e8dcc5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      color: #C9A96E;
+      letter-spacing: 0.15em;
+    }
+
+    .past-event-body {
+      padding: 20px;
+    }
+
+    .past-event-date {
+      font-size: 0.72rem;
+      color: #C9A96E;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .past-event-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2C3E50;
+    }
+
+    .past-event-desc {
+      font-size: 0.78rem;
+      color: #7f8c8d;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      background: #2C3E50;
+      color: #FFFEF5;
+      padding: 60px 0 32px;
+    }
+
+    .footer-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 48px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      max-width: 360px;
+    }
+
+    .footer-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #C9A96E;
+    }
+
+    .footer-brand-sub {
+      font-size: 0.7rem;
+      color: rgba(255, 254, 245, 0.5);
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: rgba(255, 254, 245, 0.6);
+      font-weight: 300;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 60px;
+    }
+
+    .footer-links-group h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #C9A96E;
+      margin-bottom: 16px;
+    }
+
+    .footer-links-group ul {
+      list-style: none;
+    }
+
+    .footer-links-group ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links-group ul li a {
+      font-size: 0.8rem;
+      color: rgba(255, 254, 245, 0.6);
+      transition: color 0.3s ease;
+    }
+
+    .footer-links-group ul li a:hover {
+      color: #C9A96E;
+      opacity: 1;
+    }
+
+    .footer-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 254, 245, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copyright {
+      font-size: 0.72rem;
+      color: rgba(255, 254, 245, 0.4);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .footer-organizer {
+      font-size: 0.72rem;
+      color: rgba(255, 254, 245, 0.4);
+    }
+
+    .footer-organizer span {
+      color: #C9A96E;
+    }
+
+    /* ============================================
+       MOBILE RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .themes-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-nav {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      /* Mobile menu */
+      .header-nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: rgba(255, 254, 245, 0.98);
+        backdrop-filter: blur(12px);
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+      }
+
+      .hero {
+        min-height: 75vh;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-title-en {
+        font-size: 0.95rem;
+      }
+
+      .hero-meta {
+        gap: 24px;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .about-features {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .themes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Timeline mobile: single column */
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-item:nth-child(odd),
+      .timeline-item:nth-child(even) {
+        padding-left: 56px;
+        padding-right: 0;
+        justify-content: flex-start;
+      }
+
+      .timeline-dot {
+        left: 20px;
+      }
+
+      .timeline-date {
+        left: 20px;
+      }
+
+      .timeline-date-circle {
+        width: 40px;
+        height: 40px;
+      }
+
+      .timeline-date-month {
+        font-size: 0.45rem;
+      }
+
+      .timeline-date-num {
+        font-size: 0.8rem;
+      }
+
+      .timeline-item:nth-child(odd) .timeline-card::after,
+      .timeline-item:nth-child(even) .timeline-card::after {
+        left: -8px;
+        right: auto;
+        border-left: 1px solid rgba(201, 169, 110, 0.2);
+        border-top: 1px solid rgba(201, 169, 110, 0.2);
+        border-right: none;
+        border-bottom: none;
+      }
+
+      .timeline-card {
+        padding: 24px;
+      }
+
+      .past-events-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        flex-direction: column;
+      }
+
+      .footer-links {
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 1.6rem;
+      }
+
+      .hero-description {
+        font-size: 0.85rem;
+      }
+
+      .hero-meta {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .timeline-card-meta {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       HEADER
+       ============================================ -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <span class="header-logo-main">AnyMall Lunch Event</span>
+        <span class="header-logo-sub">by A'ALDA</span>
+      </div>
+      <nav class="header-nav" id="headerNav">
+        <a href="#about">About</a>
+        <a href="#themes">Themes</a>
+        <a href="#venues">Venues</a>
+        <a href="#past-events">Past Events</a>
+      </nav>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================
+       HERO
+       ============================================ -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">A'ALDA presents</p>
+      <h1 class="hero-title heading-serif">愛犬と、もっと<br>豊かな毎日を。</h1>
+      <p class="hero-title-en heading-en">Enriching Every Day with Your Beloved Pet</p>
+      <p class="hero-description">
+        大切な愛犬との暮らしをもっと特別に。<br>
+        栄養学・健康管理・手作りフードなど、<br>
+        専門家から学ぶ完全招待制のプレミアムイベント。
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="label">Period</div>
+          <div class="value">2026年5月 - 12月</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Events</div>
+          <div class="value">全32回開催</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Capacity</div>
+          <div class="value">各回40〜50名様</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       ABOUT
+       ============================================ -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-label"><span>About</span></div>
+      <h2 class="section-title heading-serif">AnyMall Lunch Event について</h2>
+      <p class="section-subtitle">ペットとの暮らしを、もっと美しく</p>
+      <div class="about-content">
+        <p class="about-text">
+          AnyMall Lunch Eventは、動物医療ネットワーク「A'ALDA」が主催する、
+          愛犬家のための完全招待制プレミアム体験イベントです。<br><br>
+          ペットの栄養学、犬種別の健康管理、手作りフードのレシピ、
+          そして長寿のための最新知識まで。各分野の専門家をお招きし、
+          約3時間の贅沢な学びの時間をお届けいたします。<br><br>
+          東京・大阪の厳選された5つの会場で、2026年5月から12月にかけて全32回。
+          少人数制だからこそ実現できる、きめ細やかなプログラムをお楽しみください。
+        </p>
+        <div class="about-features">
+          <div class="about-feature">
+            <span class="about-feature-icon" aria-hidden="true">&#9734;</span>
+            <h3 class="about-feature-title heading-serif">完全招待制</h3>
+            <p class="about-feature-desc">各回40〜50名様限定の特別なご招待イベント。少人数だからこそ叶う上質な体験を。</p>
+          </div>
+          <div class="about-feature">
+            <span class="about-feature-icon" aria-hidden="true">&#9825;</span>
+            <h3 class="about-feature-title heading-serif">専門家による講座</h3>
+            <p class="about-feature-desc">獣医師・栄養士・トレーナーなど、各分野のスペシャリストが直接レクチャー。</p>
+          </div>
+          <div class="about-feature">
+            <span class="about-feature-icon" aria-hidden="true">&#9733;</span>
+            <h3 class="about-feature-title heading-serif">厳選会場</h3>
+            <p class="about-feature-desc">東京・大阪の5つのプレミアム会場で開催。特別な空間で上質なひとときを。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       THEMES
+       ============================================ -->
+  <section class="themes" id="themes">
+    <div class="container">
+      <div class="section-label"><span>Themes</span></div>
+      <h2 class="section-title heading-serif">イベントテーマ</h2>
+      <p class="section-subtitle">各回異なるテーマで、愛犬との暮らしを多角的に学びます</p>
+      <div class="themes-grid">
+        <div class="theme-card">
+          <div class="theme-card-number">Theme 01</div>
+          <h3 class="theme-card-title heading-serif">ペットの栄養学</h3>
+          <p class="theme-card-desc">愛犬に最適な栄養バランスとは。最新の研究に基づいた食事管理を学びます。</p>
+        </div>
+        <div class="theme-card">
+          <div class="theme-card-number">Theme 02</div>
+          <h3 class="theme-card-title heading-serif">手作りフード</h3>
+          <p class="theme-card-desc">プロのレシピで作る、安心・安全な手作りごはん。実践的なワークショップ形式で。</p>
+        </div>
+        <div class="theme-card">
+          <div class="theme-card-number">Theme 03</div>
+          <h3 class="theme-card-title heading-serif">犬種別ヘルスケア</h3>
+          <p class="theme-card-desc">犬種ごとに異なるかかりやすい疾患や予防法。専門の獣医師がわかりやすく解説。</p>
+        </div>
+        <div class="theme-card">
+          <div class="theme-card-number">Theme 04</div>
+          <h3 class="theme-card-title heading-serif">長寿の秘訣</h3>
+          <p class="theme-card-desc">愛犬と一日でも長く一緒に。日々のケアから定期検診まで、長寿のためのヒント。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       VENUES (TIMELINE)
+       ============================================ -->
+  <section class="venues" id="venues">
+    <div class="container">
+      <div class="section-label"><span>Venues &amp; Schedule</span></div>
+      <h2 class="section-title heading-serif">開催会場・スケジュール</h2>
+      <p class="section-subtitle">東京・大阪の厳選会場で全32回開催いたします</p>
+
+      <div class="timeline">
+        <!-- Venue 1 -->
+        <div class="timeline-item">
+          <div class="timeline-date">
+            <div class="timeline-date-circle">
+              <span class="timeline-date-month">May</span>
+              <span class="timeline-date-num">2026</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-region">Tokyo</div>
+            <h3 class="timeline-card-title heading-serif">inumo芝公園 by Villa Fontaine</h3>
+            <div class="timeline-card-location">東京都港区芝公園</div>
+            <p class="timeline-card-desc">
+              愛犬と一緒に宿泊できるプレミアムホテル内の特別会場。芝公園の豊かな緑に囲まれた、
+              都心とは思えない穏やかな空間で、愛犬とともにゆったりとした学びの時間をお過ごしいただけます。
+            </p>
+            <div class="timeline-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>定員 40名</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="timeline-card-btn">参加申し込み</a>
+          </div>
+        </div>
+
+        <!-- Venue 2 -->
+        <div class="timeline-item">
+          <div class="timeline-date">
+            <div class="timeline-date-circle">
+              <span class="timeline-date-month">Jun</span>
+              <span class="timeline-date-num">2026</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-region">Tokyo</div>
+            <h3 class="timeline-card-title heading-serif">Dplus麻布台</h3>
+            <div class="timeline-card-location">東京都港区麻布台</div>
+            <p class="timeline-card-desc">
+              麻布台ヒルズエリアに位置するモダンなイベントスペース。
+              洗練されたインテリアと最新設備を備え、上質なセミナー体験をお届けします。
+              アクセスの良さも魅力の一つです。
+            </p>
+            <div class="timeline-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>定員 45名</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="timeline-card-btn">参加申し込み</a>
+          </div>
+        </div>
+
+        <!-- Venue 3 -->
+        <div class="timeline-item">
+          <div class="timeline-date">
+            <div class="timeline-date-circle">
+              <span class="timeline-date-month">Aug</span>
+              <span class="timeline-date-num">2026</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-region">Osaka</div>
+            <h3 class="timeline-card-title heading-serif">Green Field Tennoji</h3>
+            <div class="timeline-card-location">大阪市天王寺区</div>
+            <p class="timeline-card-desc">
+              天王寺エリアの緑豊かなイベント会場。自然光がたっぷり入る開放的な空間で、
+              リラックスした雰囲気の中、愛犬との暮らしに役立つ知識を深めていただけます。
+              関西圏の愛犬家の皆様にぜひお越しいただきたい会場です。
+            </p>
+            <div class="timeline-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>定員 50名</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="timeline-card-btn">参加申し込み</a>
+          </div>
+        </div>
+
+        <!-- Venue 4 -->
+        <div class="timeline-item">
+          <div class="timeline-date">
+            <div class="timeline-date-circle">
+              <span class="timeline-date-month">Oct</span>
+              <span class="timeline-date-num">2026</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-region">Osaka</div>
+            <h3 class="timeline-card-title heading-serif">Dyplus大阪北</h3>
+            <div class="timeline-card-location">大阪市北区</div>
+            <p class="timeline-card-desc">
+              大阪北エリアのスタイリッシュな多目的スペース。
+              モダンで清潔感のある空間は、ペットに関する学びの場として最適です。
+              梅田からのアクセスも便利で、お気軽にご参加いただけます。
+            </p>
+            <div class="timeline-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>定員 40名</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="timeline-card-btn">参加申し込み</a>
+          </div>
+        </div>
+
+        <!-- Venue 5 -->
+        <div class="timeline-item">
+          <div class="timeline-date">
+            <div class="timeline-date-circle">
+              <span class="timeline-date-month">Dec</span>
+              <span class="timeline-date-num">2026</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-region">Tokyo</div>
+            <h3 class="timeline-card-title heading-serif">浜松町ビルディング</h3>
+            <div class="timeline-card-location">東京都港区浜松町</div>
+            <p class="timeline-card-desc">
+              浜松町駅直結の利便性抜群な会場。ビジネスエリアの中心に位置しながらも、
+              落ち着いた雰囲気のイベントフロアで、年末の特別プログラムをお届けします。
+              シリーズの集大成にふさわしい会場です。
+            </p>
+            <div class="timeline-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>定員 50名</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="timeline-card-btn">参加申し込み</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       PAST EVENTS
+       ============================================ -->
+  <section class="past-events" id="past-events">
+    <div class="container">
+      <div class="section-label"><span>Past Events</span></div>
+      <h2 class="section-title heading-serif">過去のイベント</h2>
+      <p class="section-subtitle">これまでに開催したイベントの様子をご紹介します</p>
+
+      <button class="toggle-btn" id="togglePastEvents">
+        <span>過去のイベントを見る</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+
+      <div class="past-events-content" id="pastEventsContent">
+        <div class="past-events-grid">
+          <div class="past-event-card">
+            <div class="past-event-img">Photo</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2025.12.15</div>
+              <h3 class="past-event-title heading-serif">冬のペットケア特別セミナー</h3>
+              <p class="past-event-desc">寒い季節の愛犬ケアについて、専門獣医師をお招きして開催。防寒対策から冬場の食事管理まで幅広く学びました。</p>
+            </div>
+          </div>
+          <div class="past-event-card">
+            <div class="past-event-img">Photo</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2025.10.20</div>
+              <h3 class="past-event-title heading-serif">手作りフードワークショップ</h3>
+              <p class="past-event-desc">ペット栄養士の指導のもと、愛犬のための手作りごはんを実際に調理。参加者同士の交流も盛り上がりました。</p>
+            </div>
+          </div>
+          <div class="past-event-card">
+            <div class="past-event-img">Photo</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2025.08.05</div>
+              <h3 class="past-event-title heading-serif">夏の健康管理講座</h3>
+              <p class="past-event-desc">熱中症対策や夏場の皮膚トラブル予防など、暑い季節を愛犬と快適に過ごすためのノウハウを共有しました。</p>
+            </div>
+          </div>
+          <div class="past-event-card">
+            <div class="past-event-img">Photo</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2025.06.12</div>
+              <h3 class="past-event-title heading-serif">犬種別ケアセミナー</h3>
+              <p class="past-event-desc">トイプードル・チワワ・ダックスフンドなど人気犬種に特化した健康管理セミナー。犬種ごとの特性を深く学びました。</p>
+            </div>
+          </div>
+          <div class="past-event-card">
+            <div class="past-event-img">Photo</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2025.04.18</div>
+              <h3 class="past-event-title heading-serif">春のお出かけ準備講座</h3>
+              <p class="past-event-desc">愛犬とのお出かけマナーや旅行時の注意点、持ち物チェックリストなど実用的な情報をお伝えしました。</p>
+            </div>
+          </div>
+          <div class="past-event-card">
+            <div class="past-event-img">Photo</div>
+            <div class="past-event-body">
+              <div class="past-event-date">2025.02.22</div>
+              <h3 class="past-event-title heading-serif">デンタルケア特別講座</h3>
+              <p class="past-event-desc">意外と見落としがちな愛犬の歯のケア。正しいブラッシング方法から歯周病予防まで、実演を交えて解説しました。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-name heading-en">AnyMall Lunch Event</div>
+          <div class="footer-brand-sub">Presented by A'ALDA Animal Medical Network</div>
+          <p class="footer-brand-desc">
+            A'ALDAは、ペットと飼い主の幸せな暮らしを支える動物医療ネットワークです。
+            最先端の獣医療と心のこもったサービスで、大切な家族の健康を見守ります。
+          </p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-links-group">
+            <h4>Event</h4>
+            <ul>
+              <li><a href="#about">イベントについて</a></li>
+              <li><a href="#themes">テーマ一覧</a></li>
+              <li><a href="#venues">会場・スケジュール</a></li>
+              <li><a href="#past-events">過去のイベント</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-group">
+            <h4>Information</h4>
+            <ul>
+              <li><a href="#">A'ALDAについて</a></li>
+              <li><a href="#">プライバシーポリシー</a></li>
+              <li><a href="#">お問い合わせ</a></li>
+              <li><a href="#">特定商取引法に基づく表記</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright">&copy; 2026 A'ALDA Inc. All Rights Reserved.</div>
+        <div class="footer-organizer">主催: <span>A'ALDA</span> Animal Medical Network</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       JAVASCRIPT
+       ============================================ -->
+  <script>
+    // Header scroll effect
+    (function() {
+      var header = document.getElementById('header');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+    })();
+
+    // Mobile menu toggle
+    (function() {
+      var btn = document.getElementById('mobileMenuBtn');
+      var nav = document.getElementById('headerNav');
+      btn.addEventListener('click', function() {
+        nav.classList.toggle('open');
+      });
+      // Close menu when clicking a nav link
+      var navLinks = nav.querySelectorAll('a');
+      navLinks.forEach(function(link) {
+        link.addEventListener('click', function() {
+          nav.classList.remove('open');
+        });
+      });
+    })();
+
+    // Past events toggle
+    (function() {
+      var btn = document.getElementById('togglePastEvents');
+      var content = document.getElementById('pastEventsContent');
+      var isOpen = false;
+
+      btn.addEventListener('click', function() {
+        isOpen = !isOpen;
+        if (isOpen) {
+          content.classList.add('open');
+          btn.classList.add('active');
+          btn.querySelector('span:first-child').textContent = '過去のイベントを閉じる';
+        } else {
+          content.classList.remove('open');
+          btn.classList.remove('active');
+          btn.querySelector('span:first-child').textContent = '過去のイベントを見る';
+        }
+      });
+    })();
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        var href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        var target = document.querySelector(href);
+        if (target) {
+          var headerHeight = document.getElementById('header').offsetHeight;
+          var targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Timeline animation on scroll
+    (function() {
+      var items = document.querySelectorAll('.timeline-item');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.15 });
+
+      items.forEach(function(item) {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(item);
+      });
+    })();
+  </script>
+</body>
+</html>

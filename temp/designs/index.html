@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnyMall Lunch Event - デザイン案一覧</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background: #FAFAF7;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #E8E4DF;
+      padding: 32px 0;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', 'Noto Serif JP', serif;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: #2D2D2D;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: #888;
+      margin-top: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .intro h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 16px;
+      color: #2D2D2D;
+    }
+
+    .intro p {
+      font-size: 14px;
+      color: #666;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 32px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #E8E4DF;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+
+    .card-preview {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 400;
+      color: #fff;
+      position: relative;
+    }
+
+    .card-preview span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-body {
+      padding: 28px 24px;
+    }
+
+    .card-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 12px;
+      color: #B8976A;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #2D2D2D;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.8;
+    }
+
+    .card-tags {
+      margin-top: 16px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      border: 1px solid #DDD;
+      border-radius: 2px;
+      color: #888;
+      letter-spacing: 0.03em;
+    }
+
+    .tag.horizontal { border-color: #C9A96E; color: #C9A96E; }
+    .tag.vertical { border-color: #9B8BA7; color: #9B8BA7; }
+    .tag.mixed { border-color: #6B8F71; color: #6B8F71; }
+
+    /* Color themes for preview blocks */
+    .theme-1 { background: linear-gradient(135deg, #FDF2F0, #F0D5CE); }
+    .theme-2 { background: linear-gradient(135deg, #FEFCFA, #E8D5D0); }
+    .theme-3 { background: linear-gradient(135deg, #F5F0FA, #D4C4E0); }
+    .theme-4 { background: linear-gradient(135deg, #F0F5F2, #C5D9CB); }
+    .theme-5 { background: linear-gradient(135deg, #FAFAF7, #F2E6E3); }
+    .theme-6 { background: linear-gradient(135deg, #F8F6F3, #FBE8E0); }
+    .theme-7 { background: linear-gradient(135deg, #FFFEF5, #F5ECD7); }
+    .theme-8 { background: linear-gradient(135deg, #F0F2F5, #D4A5A5); }
+    .theme-9 { background: linear-gradient(135deg, #FDFBF7, #FFF0E5); }
+    .theme-10 { background: linear-gradient(135deg, #F5F5F5, #FAE5E1); }
+
+    .theme-1 span { color: #C4A882; }
+    .theme-2 span { color: #B8976A; }
+    .theme-3 span { color: #9B8BA7; }
+    .theme-4 span { color: #6B8F71; }
+    .theme-5 span { color: #C9A96E; }
+    .theme-6 span { color: #B87D5B; }
+    .theme-7 span { color: #C9A96E; }
+    .theme-8 span { color: #4A5568; }
+    .theme-9 span { color: #C47D5A; }
+    .theme-10 span { color: #5B3A5E; }
+
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid #E8E4DF;
+      margin-top: 60px;
+    }
+
+    .footer p {
+      font-size: 12px;
+      color: #999;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>AnyMall Lunch Event</h1>
+    <p>Design Proposals &mdash; 10 Patterns</p>
+  </div>
+
+  <div class="container">
+    <div class="intro">
+      <h2>デザイン案一覧</h2>
+      <p>AnyMall Lunch Eventランディングページのデザインパターン10案です。各カードをクリックすると、それぞれのデザイン案を確認できます。</p>
+    </div>
+
+    <div class="grid">
+
+      <a href="pattern-01-classic-grid.html" class="card">
+        <div class="card-preview theme-1"><span>01</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 01</div>
+          <div class="card-title">Classic 3-Column Grid</div>
+          <div class="card-desc">クリーンな3カラムグリッドで会場を横並び表示。レスポンシブで3→2→1列に変化。繊細なボーダーとシャドウのカードデザイン。</div>
+          <div class="card-tags">
+            <span class="tag horizontal">横並び</span>
+            <span class="tag">ペールピンク</span>
+            <span class="tag">カード型</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-02-magazine-editorial.html" class="card">
+        <div class="card-preview theme-2"><span>02</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 02</div>
+          <div class="card-title">Magazine Editorial</div>
+          <div class="card-desc">ELLE風エディトリアルレイアウト。大きなヒーローエリア、2カラム構成、豊富な余白。ファッション誌のような洗練されたデザイン。</div>
+          <div class="card-tags">
+            <span class="tag horizontal">横並び</span>
+            <span class="tag">ローズ</span>
+            <span class="tag">エディトリアル</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-03-vertical-stack.html" class="card">
+        <div class="card-preview theme-3"><span>03</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 03</div>
+          <div class="card-title">Vertical Stack Cards</div>
+          <div class="card-desc">縦積みフルワイドカード。各会場がフル幅で表示され、件数が増えても崩れないレイアウト。ラベンダー基調の上品な配色。</div>
+          <div class="card-tags">
+            <span class="tag vertical">縦積み</span>
+            <span class="tag">ラベンダー</span>
+            <span class="tag">フルワイド</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-04-alternating-zigzag.html" class="card">
+        <div class="card-preview theme-4"><span>04</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 04</div>
+          <div class="card-title">Alternating Zigzag</div>
+          <div class="card-desc">画像とテキストが左右交互に配置されるジグザグレイアウト。自然をイメージしたミント/セージの配色でペットテーマにマッチ。</div>
+          <div class="card-tags">
+            <span class="tag vertical">縦積み</span>
+            <span class="tag mixed">ミント/セージ</span>
+            <span class="tag">ジグザグ</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-05-minimal-card.html" class="card">
+        <div class="card-preview theme-5"><span>05</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 05</div>
+          <div class="card-title">Minimal Card</div>
+          <div class="card-desc">超ミニマルデザイン。細い1pxボーダー、シャドウなし、豊富な余白。ホバーで詳細表示。ハイファッション的な美学。</div>
+          <div class="card-tags">
+            <span class="tag horizontal">横並び</span>
+            <span class="tag">ホワイト</span>
+            <span class="tag">ミニマル</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-06-tab-area.html" class="card">
+        <div class="card-preview theme-6"><span>06</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 06</div>
+          <div class="card-title">Tab by Area</div>
+          <div class="card-desc">エリア別タブ切替（すべて/東京/大阪）で会場をフィルタリング。直感的なUI、スムーズな切り替えアニメーション。</div>
+          <div class="card-tags">
+            <span class="tag horizontal">横並び</span>
+            <span class="tag">ピーチ</span>
+            <span class="tag">タブ切替</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-07-timeline.html" class="card">
+        <div class="card-preview theme-7"><span>07</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 07</div>
+          <div class="card-title">Timeline Layout</div>
+          <div class="card-desc">縦タイムラインで会場を時系列表示。中央線の左右に交互配置。イベントの流れが視覚的に伝わるエレガントな構成。</div>
+          <div class="card-tags">
+            <span class="tag vertical">縦積み</span>
+            <span class="tag">アイボリー</span>
+            <span class="tag">タイムライン</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-08-masonry.html" class="card">
+        <div class="card-preview theme-8"><span>08</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 08</div>
+          <div class="card-title">Masonry Grid</div>
+          <div class="card-desc">Pinterest風の段違いグリッド。カードの高さが異なり視覚的に変化を与える。CSSカラムによるメイソンリーレイアウト。</div>
+          <div class="card-tags">
+            <span class="tag mixed">段違い</span>
+            <span class="tag">ブルーグレー</span>
+            <span class="tag">メイソンリー</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-09-fullwidth-band.html" class="card">
+        <div class="card-preview theme-9"><span>09</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 09</div>
+          <div class="card-title">Full-Width Band</div>
+          <div class="card-desc">各会場をフルワイド横帯で表示。交互に背景色を変え、画像とテキストを横並びに配置。縦スクロールに最適。</div>
+          <div class="card-tags">
+            <span class="tag vertical">縦積み</span>
+            <span class="tag">アプリコット</span>
+            <span class="tag">フルワイド帯</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="pattern-10-asymmetric-grid.html" class="card">
+        <div class="card-preview theme-10"><span>10</span></div>
+        <div class="card-body">
+          <div class="card-number">Pattern 10</div>
+          <div class="card-title">Asymmetric Grid</div>
+          <div class="card-desc">非対称グリッドで視覚的な動きを表現。CSS Gridのテンプレートエリアを活用。大小混在のカードレイアウト。</div>
+          <div class="card-tags">
+            <span class="tag mixed">非対称</span>
+            <span class="tag">プラム</span>
+            <span class="tag">CSS Grid</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>AnyMall Lunch Event &mdash; Design Proposals &copy; 2026</p>
+  </div>
+
+</body>
+</html>

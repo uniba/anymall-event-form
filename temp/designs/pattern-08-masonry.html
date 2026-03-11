@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnyMall Lunch Event - Masonry Grid Layout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background-color: #F0F2F5;
+      color: #4A5568;
+      line-height: 1.8;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      opacity: 0.8;
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    .heading-serif {
+      font-family: 'Noto Serif JP', 'Playfair Display', serif;
+    }
+
+    .heading-en {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* ============================================
+       UTILITY
+       ============================================ */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section-label {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .section-label span {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #D4A5A5;
+      display: inline-block;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 14px;
+      letter-spacing: 0.05em;
+      color: #2d3748;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: 0.88rem;
+      color: #718096;
+      margin-bottom: 48px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+
+    /* ============================================
+       HEADER / NAV
+       ============================================ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255, 249, 240, 0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(212, 165, 165, 0.12);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .header.scrolled {
+      box-shadow: 0 2px 24px rgba(74, 85, 104, 0.06);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .header-logo-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #2d3748;
+      letter-spacing: 0.03em;
+    }
+
+    .header-logo-divider {
+      width: 1px;
+      height: 14px;
+      background: #D4A5A5;
+      display: inline-block;
+      margin-top: 3px;
+    }
+
+    .header-logo-sub {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.65rem;
+      color: #D4A5A5;
+      letter-spacing: 0.1em;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .header-nav a {
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #4A5568;
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    .header-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: #D4A5A5;
+      transition: width 0.3s ease;
+    }
+
+    .header-nav a:hover {
+      opacity: 1;
+      color: #D4A5A5;
+    }
+
+    .header-nav a:hover::after {
+      width: 100%;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .mobile-menu-btn span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: #4A5568;
+      transition: all 0.3s ease;
+    }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .hero {
+      margin-top: 68px;
+      min-height: 82vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: #FFF9F0;
+      overflow: hidden;
+    }
+
+    .hero-bg-shapes {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hero-bg-shapes .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+    }
+
+    .hero-bg-shapes .shape-1 {
+      width: 500px;
+      height: 500px;
+      background: #D4A5A5;
+      top: -15%;
+      right: -8%;
+    }
+
+    .hero-bg-shapes .shape-2 {
+      width: 350px;
+      height: 350px;
+      background: #D4A5A5;
+      bottom: -10%;
+      left: -5%;
+      opacity: 0.1;
+    }
+
+    .hero-bg-shapes .shape-3 {
+      width: 200px;
+      height: 200px;
+      background: #F0F2F5;
+      top: 30%;
+      left: 15%;
+      opacity: 0.4;
+    }
+
+    .hero-content {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: 60px 24px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: 6px 20px;
+      border: 1px solid rgba(212, 165, 165, 0.4);
+      border-radius: 20px;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: #D4A5A5;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 2.8rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #2d3748;
+      margin-bottom: 16px;
+      letter-spacing: 0.06em;
+    }
+
+    .hero-title-en {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: #D4A5A5;
+      margin-bottom: 32px;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-description {
+      font-size: 0.92rem;
+      color: #718096;
+      max-width: 500px;
+      margin: 0 auto 40px;
+      line-height: 2;
+      font-weight: 300;
+    }
+
+    .hero-info-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-info-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(212, 165, 165, 0.2);
+      border-radius: 24px;
+      font-size: 0.78rem;
+      color: #4A5568;
+    }
+
+    .hero-info-chip .chip-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.65rem;
+      color: #D4A5A5;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Playfair Display', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #D4A5A5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: pulseDown 2.5s ease-in-out infinite;
+    }
+
+    .hero-scroll .line {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, #D4A5A5, transparent);
+    }
+
+    @keyframes pulseDown {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ============================================
+       ABOUT SECTION
+       ============================================ */
+    .about {
+      padding: 100px 0;
+      background: #FFF9F0;
+    }
+
+    .about-inner {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .about-text {
+      text-align: center;
+      font-size: 0.92rem;
+      line-height: 2.2;
+      color: #4A5568;
+      font-weight: 300;
+      margin-bottom: 56px;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .about-stat {
+      text-align: center;
+      padding: 28px 12px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid rgba(212, 165, 165, 0.1);
+      box-shadow: 0 2px 12px rgba(74, 85, 104, 0.04);
+    }
+
+    .about-stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #D4A5A5;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .about-stat-unit {
+      font-size: 0.8rem;
+      color: #D4A5A5;
+    }
+
+    .about-stat-label {
+      font-size: 0.75rem;
+      color: #718096;
+      font-weight: 400;
+    }
+
+    /* ============================================
+       THEMES SECTION
+       ============================================ */
+    .themes {
+      padding: 100px 0;
+      background: #F0F2F5;
+    }
+
+    .themes-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .theme-item {
+      display: flex;
+      gap: 20px;
+      padding: 28px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid rgba(212, 165, 165, 0.1);
+      box-shadow: 0 2px 12px rgba(74, 85, 104, 0.03);
+      transition: all 0.3s ease;
+    }
+
+    .theme-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(74, 85, 104, 0.07);
+      border-color: rgba(212, 165, 165, 0.3);
+    }
+
+    .theme-item-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: rgba(212, 165, 165, 0.25);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 44px;
+    }
+
+    .theme-item-content {
+      flex: 1;
+    }
+
+    .theme-item-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+
+    .theme-item-desc {
+      font-size: 0.8rem;
+      color: #718096;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ============================================
+       VENUES SECTION (MASONRY)
+       ============================================ */
+    .venues {
+      padding: 100px 0;
+      background: #FFF9F0;
+    }
+
+    .masonry {
+      column-count: 3;
+      column-gap: 20px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .masonry-card {
+      break-inside: avoid;
+      margin-bottom: 20px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(212, 165, 165, 0.1);
+      box-shadow: 0 2px 16px rgba(74, 85, 104, 0.04);
+      transition: all 0.4s ease;
+    }
+
+    .masonry-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(74, 85, 104, 0.08);
+      border-color: rgba(212, 165, 165, 0.3);
+    }
+
+    /* Varying image heights for masonry effect */
+    .masonry-card-img {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      color: white;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .masonry-card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.15) 100%);
+    }
+
+    .masonry-card:nth-child(1) .masonry-card-img {
+      height: 220px;
+      background: linear-gradient(135deg, #D4A5A5, #c99393);
+    }
+
+    .masonry-card:nth-child(2) .masonry-card-img {
+      height: 160px;
+      background: linear-gradient(135deg, #a5b8d4, #8fa3c4);
+    }
+
+    .masonry-card:nth-child(3) .masonry-card-img {
+      height: 260px;
+      background: linear-gradient(135deg, #b8d4a5, #9fc08e);
+    }
+
+    .masonry-card:nth-child(4) .masonry-card-img {
+      height: 180px;
+      background: linear-gradient(135deg, #d4c5a5, #c4b392);
+    }
+
+    .masonry-card:nth-child(5) .masonry-card-img {
+      height: 200px;
+      background: linear-gradient(135deg, #c5a5d4, #b393c4);
+    }
+
+    .masonry-card-img-label {
+      position: relative;
+      z-index: 2;
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 14px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .masonry-card-body {
+      padding: 24px;
+    }
+
+    .masonry-card-tags {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .masonry-card-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      font-size: 0.65rem;
+      border-radius: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .tag-tokyo {
+      background: rgba(212, 165, 165, 0.12);
+      color: #D4A5A5;
+    }
+
+    .tag-osaka {
+      background: rgba(165, 184, 212, 0.12);
+      color: #7a94b8;
+    }
+
+    .tag-capacity {
+      background: rgba(74, 85, 104, 0.06);
+      color: #718096;
+    }
+
+    .masonry-card-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .masonry-card-location {
+      font-size: 0.78rem;
+      color: #718096;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .masonry-card-location .pin-icon {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      display: inline-block;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23718096' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 10.5a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .masonry-card-desc {
+      font-size: 0.82rem;
+      color: #4A5568;
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 18px;
+    }
+
+    .masonry-card-meta {
+      font-size: 0.75rem;
+      color: #a0aec0;
+      margin-bottom: 18px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .masonry-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 22px;
+      background: #D4A5A5;
+      color: white;
+      font-size: 0.78rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      letter-spacing: 0.06em;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .masonry-card-link:hover {
+      background: #c99393;
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    .masonry-card-link .link-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.3s ease;
+    }
+
+    .masonry-card-link:hover .link-arrow {
+      transform: translateX(3px);
+    }
+
+    /* Text-emphasis card variant */
+    .masonry-card.text-emphasis .masonry-card-img {
+      height: 80px;
+    }
+
+    .masonry-card.text-emphasis .masonry-card-body {
+      padding: 28px 24px;
+    }
+
+    .masonry-card.text-emphasis .masonry-card-desc {
+      font-size: 0.85rem;
+      line-height: 1.9;
+    }
+
+    /* ============================================
+       PAST EVENTS SECTION
+       ============================================ */
+    .past-events {
+      padding: 100px 0;
+      background: #F0F2F5;
+    }
+
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 40px;
+      padding: 13px 36px;
+      background: white;
+      border: 1px solid rgba(212, 165, 165, 0.3);
+      color: #D4A5A5;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(74, 85, 104, 0.04);
+    }
+
+    .toggle-btn:hover {
+      background: #D4A5A5;
+      color: white;
+      border-color: #D4A5A5;
+    }
+
+    .toggle-btn .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+      font-size: 0.65rem;
+    }
+
+    .toggle-btn.active .arrow {
+      transform: rotate(180deg);
+    }
+
+    .past-events-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s ease;
+    }
+
+    .past-events-content.open {
+      max-height: 2000px;
+    }
+
+    .past-events-list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .past-event-item {
+      display: flex;
+      gap: 20px;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid rgba(212, 165, 165, 0.08);
+      box-shadow: 0 2px 10px rgba(74, 85, 104, 0.03);
+      transition: all 0.3s ease;
+      align-items: center;
+    }
+
+    .past-event-item:hover {
+      box-shadow: 0 6px 24px rgba(74, 85, 104, 0.06);
+    }
+
+    .past-event-thumb {
+      width: 100px;
+      height: 80px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.6rem;
+      color: white;
+      letter-spacing: 0.1em;
+    }
+
+    .past-event-item:nth-child(odd) .past-event-thumb {
+      background: linear-gradient(135deg, #D4A5A5, #c99393);
+    }
+
+    .past-event-item:nth-child(even) .past-event-thumb {
+      background: linear-gradient(135deg, #a5b8d4, #8fa3c4);
+    }
+
+    .past-event-info {
+      flex: 1;
+    }
+
+    .past-event-date {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.72rem;
+      color: #D4A5A5;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .past-event-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 6px;
+    }
+
+    .past-event-desc {
+      font-size: 0.78rem;
+      color: #718096;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      background: #2d3748;
+      color: #FFF9F0;
+      padding: 60px 0 28px;
+    }
+
+    .footer-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #D4A5A5;
+      margin-bottom: 4px;
+    }
+
+    .footer-brand-sub {
+      font-size: 0.68rem;
+      color: rgba(255, 249, 240, 0.4);
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: rgba(255, 249, 240, 0.55);
+      font-weight: 300;
+    }
+
+    .footer-links-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #D4A5A5;
+      margin-bottom: 16px;
+    }
+
+    .footer-links-list {
+      list-style: none;
+    }
+
+    .footer-links-list li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links-list li a {
+      font-size: 0.8rem;
+      color: rgba(255, 249, 240, 0.55);
+      transition: color 0.3s ease;
+    }
+
+    .footer-links-list li a:hover {
+      color: #D4A5A5;
+      opacity: 1;
+    }
+
+    .footer-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 249, 240, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-copyright {
+      font-size: 0.7rem;
+      color: rgba(255, 249, 240, 0.35);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .footer-organizer {
+      font-size: 0.7rem;
+      color: rgba(255, 249, 240, 0.35);
+    }
+
+    .footer-organizer span {
+      color: #D4A5A5;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1024px) {
+      .masonry {
+        column-count: 2;
+      }
+
+      .about-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-nav {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+      .header-nav.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: rgba(255, 249, 240, 0.98);
+        backdrop-filter: blur(14px);
+        padding: 24px;
+        gap: 18px;
+        border-bottom: 1px solid rgba(212, 165, 165, 0.12);
+      }
+
+      .hero {
+        min-height: 72vh;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-title-en {
+        font-size: 0.9rem;
+      }
+
+      .hero-info-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .about-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .themes-list {
+        grid-template-columns: 1fr;
+      }
+
+      .masonry {
+        column-count: 1;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .past-event-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .past-event-thumb {
+        width: 100%;
+        height: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 1.6rem;
+      }
+
+      .hero-description {
+        font-size: 0.85rem;
+      }
+
+      .about-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .theme-item {
+        padding: 20px;
+        gap: 14px;
+      }
+
+      .theme-item-num {
+        font-size: 1.6rem;
+        width: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       HEADER
+       ============================================ -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <span class="header-logo-main">AnyMall Lunch Event</span>
+        <span class="header-logo-divider"></span>
+        <span class="header-logo-sub">by A'ALDA</span>
+      </div>
+      <nav class="header-nav" id="headerNav">
+        <a href="#about">About</a>
+        <a href="#themes">Themes</a>
+        <a href="#venues">Venues</a>
+        <a href="#past-events">Past Events</a>
+      </nav>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================
+       HERO
+       ============================================ -->
+  <section class="hero">
+    <div class="hero-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-tag">Invitation Only</div>
+      <h1 class="hero-title heading-serif">愛犬と、もっと<br>豊かな毎日を。</h1>
+      <p class="hero-title-en heading-en">Enriching Every Day with Your Beloved Pet</p>
+      <p class="hero-description">
+        大切な愛犬との暮らしをもっと特別に。<br>
+        栄養学・健康管理・手作りフードなど、<br>
+        専門家から学ぶ完全招待制のプレミアムイベント。
+      </p>
+      <div class="hero-info-row">
+        <div class="hero-info-chip">
+          <span class="chip-label">Period</span>
+          <span>2026年5月 - 12月</span>
+        </div>
+        <div class="hero-info-chip">
+          <span class="chip-label">Events</span>
+          <span>全32回開催</span>
+        </div>
+        <div class="hero-info-chip">
+          <span class="chip-label">Capacity</span>
+          <span>各回40〜50名様</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="line"></div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       ABOUT
+       ============================================ -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-label"><span>About</span></div>
+      <h2 class="section-title heading-serif">AnyMall Lunch Event について</h2>
+      <p class="section-subtitle">ペットとの暮らしを、もっと美しく</p>
+
+      <div class="about-inner">
+        <p class="about-text">
+          AnyMall Lunch Eventは、動物医療ネットワーク「A'ALDA」が主催する、
+          愛犬家のための完全招待制プレミアム体験イベントです。<br><br>
+          ペットの栄養学、犬種別の健康管理、手作りフードのレシピ、
+          そして長寿のための最新知識まで。各分野の専門家をお招きし、
+          約3時間の贅沢な学びの時間をお届けいたします。<br><br>
+          東京・大阪の厳選された5つの会場で、2026年5月から12月にかけて全32回。
+          少人数制だからこそ実現できる、きめ細やかなプログラムをお楽しみください。
+        </p>
+
+        <div class="about-stats">
+          <div class="about-stat">
+            <div class="about-stat-number">32<span class="about-stat-unit">回</span></div>
+            <div class="about-stat-label">イベント開催数</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-number">5<span class="about-stat-unit">会場</span></div>
+            <div class="about-stat-label">厳選された会場</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-number">8<span class="about-stat-unit">ヶ月</span></div>
+            <div class="about-stat-label">開催期間</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-number">50<span class="about-stat-unit">名</span></div>
+            <div class="about-stat-label">各回最大定員</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       THEMES
+       ============================================ -->
+  <section class="themes" id="themes">
+    <div class="container">
+      <div class="section-label"><span>Themes</span></div>
+      <h2 class="section-title heading-serif">イベントテーマ</h2>
+      <p class="section-subtitle">各回異なるテーマで、愛犬との暮らしを多角的に学びます</p>
+
+      <div class="themes-list">
+        <div class="theme-item">
+          <div class="theme-item-num">01</div>
+          <div class="theme-item-content">
+            <h3 class="theme-item-title heading-serif">ペットの栄養学</h3>
+            <p class="theme-item-desc">愛犬に最適な栄養バランスとは。最新の研究に基づいた食事管理を、わかりやすく学びます。</p>
+          </div>
+        </div>
+        <div class="theme-item">
+          <div class="theme-item-num">02</div>
+          <div class="theme-item-content">
+            <h3 class="theme-item-title heading-serif">手作りフード</h3>
+            <p class="theme-item-desc">プロのレシピで作る、安心・安全な手作りごはん。実践的なワークショップ形式でお届けします。</p>
+          </div>
+        </div>
+        <div class="theme-item">
+          <div class="theme-item-num">03</div>
+          <div class="theme-item-content">
+            <h3 class="theme-item-title heading-serif">犬種別ヘルスケア</h3>
+            <p class="theme-item-desc">犬種ごとに異なるかかりやすい疾患や予防法。専門の獣医師がわかりやすく解説いたします。</p>
+          </div>
+        </div>
+        <div class="theme-item">
+          <div class="theme-item-num">04</div>
+          <div class="theme-item-content">
+            <h3 class="theme-item-title heading-serif">長寿の秘訣</h3>
+            <p class="theme-item-desc">愛犬と一日でも長く一緒に。日々のケアから定期検診まで、長寿のためのヒントをお伝えします。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       VENUES (MASONRY)
+       ============================================ -->
+  <section class="venues" id="venues">
+    <div class="container">
+      <div class="section-label"><span>Venues &amp; Schedule</span></div>
+      <h2 class="section-title heading-serif">開催会場</h2>
+      <p class="section-subtitle">東京・大阪の厳選会場で全32回開催いたします</p>
+
+      <div class="masonry">
+        <!-- Card 1 - Image emphasis (tall image) -->
+        <div class="masonry-card">
+          <div class="masonry-card-img">
+            <span class="masonry-card-img-label">inumo Shiba Park</span>
+          </div>
+          <div class="masonry-card-body">
+            <div class="masonry-card-tags">
+              <span class="masonry-card-tag tag-tokyo">Tokyo</span>
+              <span class="masonry-card-tag tag-capacity">定員 40名</span>
+            </div>
+            <h3 class="masonry-card-title heading-serif">inumo芝公園 by Villa Fontaine</h3>
+            <div class="masonry-card-location">
+              <span class="pin-icon"></span>
+              東京都港区芝公園
+            </div>
+            <p class="masonry-card-desc">
+              愛犬と一緒に宿泊できるプレミアムホテル内の特別会場。
+              芝公園の豊かな緑に囲まれた、都心とは思えない穏やかな空間で、
+              愛犬とともにゆったりとした学びの時間をお過ごしいただけます。
+            </p>
+            <div class="masonry-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="masonry-card-link">
+              参加申し込み
+              <span class="link-arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2 - Text emphasis (short image) -->
+        <div class="masonry-card text-emphasis">
+          <div class="masonry-card-img">
+            <span class="masonry-card-img-label">Dplus Azabudai</span>
+          </div>
+          <div class="masonry-card-body">
+            <div class="masonry-card-tags">
+              <span class="masonry-card-tag tag-tokyo">Tokyo</span>
+              <span class="masonry-card-tag tag-capacity">定員 45名</span>
+            </div>
+            <h3 class="masonry-card-title heading-serif">Dplus麻布台</h3>
+            <div class="masonry-card-location">
+              <span class="pin-icon"></span>
+              東京都港区麻布台
+            </div>
+            <p class="masonry-card-desc">
+              麻布台ヒルズエリアに位置するモダンなイベントスペース。
+              洗練されたインテリアと最新設備を備え、上質なセミナー体験をお届けします。
+              アクセスの良さも魅力の一つです。
+            </p>
+            <div class="masonry-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="masonry-card-link">
+              参加申し込み
+              <span class="link-arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 3 - Image emphasis (tallest image) -->
+        <div class="masonry-card">
+          <div class="masonry-card-img">
+            <span class="masonry-card-img-label">Green Field Tennoji</span>
+          </div>
+          <div class="masonry-card-body">
+            <div class="masonry-card-tags">
+              <span class="masonry-card-tag tag-osaka">Osaka</span>
+              <span class="masonry-card-tag tag-capacity">定員 50名</span>
+            </div>
+            <h3 class="masonry-card-title heading-serif">Green Field Tennoji</h3>
+            <div class="masonry-card-location">
+              <span class="pin-icon"></span>
+              大阪市天王寺区
+            </div>
+            <p class="masonry-card-desc">
+              天王寺エリアの緑豊かなイベント会場。自然光がたっぷり入る開放的な空間で、
+              リラックスした雰囲気の中、愛犬との暮らしに役立つ知識を深めていただけます。
+            </p>
+            <div class="masonry-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="masonry-card-link">
+              参加申し込み
+              <span class="link-arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 4 - Mixed -->
+        <div class="masonry-card">
+          <div class="masonry-card-img">
+            <span class="masonry-card-img-label">Dyplus Osaka Kita</span>
+          </div>
+          <div class="masonry-card-body">
+            <div class="masonry-card-tags">
+              <span class="masonry-card-tag tag-osaka">Osaka</span>
+              <span class="masonry-card-tag tag-capacity">定員 40名</span>
+            </div>
+            <h3 class="masonry-card-title heading-serif">Dyplus大阪北</h3>
+            <div class="masonry-card-location">
+              <span class="pin-icon"></span>
+              大阪市北区
+            </div>
+            <p class="masonry-card-desc">
+              大阪北エリアのスタイリッシュな多目的スペース。
+              モダンで清潔感のある空間は、ペットに関する学びの場として最適です。
+              梅田からのアクセスも便利で、お気軽にご参加いただけます。
+            </p>
+            <div class="masonry-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="masonry-card-link">
+              参加申し込み
+              <span class="link-arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 5 - Image emphasis -->
+        <div class="masonry-card">
+          <div class="masonry-card-img">
+            <span class="masonry-card-img-label">Hamamatsucho Building</span>
+          </div>
+          <div class="masonry-card-body">
+            <div class="masonry-card-tags">
+              <span class="masonry-card-tag tag-tokyo">Tokyo</span>
+              <span class="masonry-card-tag tag-capacity">定員 50名</span>
+            </div>
+            <h3 class="masonry-card-title heading-serif">浜松町ビルディング</h3>
+            <div class="masonry-card-location">
+              <span class="pin-icon"></span>
+              東京都港区浜松町
+            </div>
+            <p class="masonry-card-desc">
+              浜松町駅直結の利便性抜群な会場。ビジネスエリアの中心に位置しながらも、
+              落ち着いた雰囲気のイベントフロアで、年末の特別プログラムをお届けします。
+              シリーズの集大成にふさわしい会場です。
+            </p>
+            <div class="masonry-card-meta">
+              <span>12:00 - 15:00</span>
+              <span>完全招待制</span>
+            </div>
+            <a href="#" class="masonry-card-link">
+              参加申し込み
+              <span class="link-arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       PAST EVENTS
+       ============================================ -->
+  <section class="past-events" id="past-events">
+    <div class="container">
+      <div class="section-label"><span>Past Events</span></div>
+      <h2 class="section-title heading-serif">過去のイベント</h2>
+      <p class="section-subtitle">これまでに開催したイベントの様子をご紹介します</p>
+
+      <button class="toggle-btn" id="togglePastEvents">
+        <span>過去のイベントを見る</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+
+      <div class="past-events-content" id="pastEventsContent">
+        <div class="past-events-list">
+          <div class="past-event-item">
+            <div class="past-event-thumb">Photo</div>
+            <div class="past-event-info">
+              <div class="past-event-date">2025.12.15</div>
+              <h3 class="past-event-title heading-serif">冬のペットケア特別セミナー</h3>
+              <p class="past-event-desc">寒い季節の愛犬ケアについて、専門獣医師をお招きして開催。防寒対策から冬場の食事管理まで幅広く学びました。</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-thumb">Photo</div>
+            <div class="past-event-info">
+              <div class="past-event-date">2025.10.20</div>
+              <h3 class="past-event-title heading-serif">手作りフードワークショップ</h3>
+              <p class="past-event-desc">ペット栄養士の指導のもと、愛犬のための手作りごはんを実際に調理。参加者同士の交流も盛り上がりました。</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-thumb">Photo</div>
+            <div class="past-event-info">
+              <div class="past-event-date">2025.08.05</div>
+              <h3 class="past-event-title heading-serif">夏の健康管理講座</h3>
+              <p class="past-event-desc">熱中症対策や夏場の皮膚トラブル予防など、暑い季節を愛犬と快適に過ごすためのノウハウを共有しました。</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-thumb">Photo</div>
+            <div class="past-event-info">
+              <div class="past-event-date">2025.06.12</div>
+              <h3 class="past-event-title heading-serif">犬種別ケアセミナー</h3>
+              <p class="past-event-desc">トイプードル・チワワ・ダックスフンドなど人気犬種に特化した健康管理セミナー。犬種ごとの特性を深く学びました。</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-thumb">Photo</div>
+            <div class="past-event-info">
+              <div class="past-event-date">2025.04.18</div>
+              <h3 class="past-event-title heading-serif">春のお出かけ準備講座</h3>
+              <p class="past-event-desc">愛犬とのお出かけマナーや旅行時の注意点、持ち物チェックリストなど実用的な情報をお伝えしました。</p>
+            </div>
+          </div>
+          <div class="past-event-item">
+            <div class="past-event-thumb">Photo</div>
+            <div class="past-event-info">
+              <div class="past-event-date">2025.02.22</div>
+              <h3 class="past-event-title heading-serif">デンタルケア特別講座</h3>
+              <p class="past-event-desc">意外と見落としがちな愛犬の歯のケア。正しいブラッシング方法から歯周病予防まで、実演を交えて解説しました。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-name heading-en">AnyMall Lunch Event</div>
+          <div class="footer-brand-sub">Presented by A'ALDA Animal Medical Network</div>
+          <p class="footer-brand-desc">
+            A'ALDAは、ペットと飼い主の幸せな暮らしを支える動物医療ネットワークです。
+            最先端の獣医療と心のこもったサービスで、大切な家族の健康を見守ります。
+          </p>
+        </div>
+        <div class="footer-links-col">
+          <h4 class="footer-links-title">Event</h4>
+          <ul class="footer-links-list">
+            <li><a href="#about">イベントについて</a></li>
+            <li><a href="#themes">テーマ一覧</a></li>
+            <li><a href="#venues">開催会場</a></li>
+            <li><a href="#past-events">過去のイベント</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-col">
+          <h4 class="footer-links-title">Information</h4>
+          <ul class="footer-links-list">
+            <li><a href="#">A'ALDAについて</a></li>
+            <li><a href="#">プライバシーポリシー</a></li>
+            <li><a href="#">お問い合わせ</a></li>
+            <li><a href="#">特定商取引法に基づく表記</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright">&copy; 2026 A'ALDA Inc. All Rights Reserved.</div>
+        <div class="footer-organizer">主催: <span>A'ALDA</span> Animal Medical Network</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       JAVASCRIPT
+       ============================================ -->
+  <script>
+    // Header scroll effect
+    (function() {
+      var header = document.getElementById('header');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+    })();
+
+    // Mobile menu toggle
+    (function() {
+      var btn = document.getElementById('mobileMenuBtn');
+      var nav = document.getElementById('headerNav');
+      btn.addEventListener('click', function() {
+        nav.classList.toggle('open');
+      });
+      // Close menu on link click
+      var navLinks = nav.querySelectorAll('a');
+      navLinks.forEach(function(link) {
+        link.addEventListener('click', function() {
+          nav.classList.remove('open');
+        });
+      });
+    })();
+
+    // Past events toggle
+    (function() {
+      var btn = document.getElementById('togglePastEvents');
+      var content = document.getElementById('pastEventsContent');
+      var isOpen = false;
+
+      btn.addEventListener('click', function() {
+        isOpen = !isOpen;
+        if (isOpen) {
+          content.classList.add('open');
+          btn.classList.add('active');
+          btn.querySelector('span:first-child').textContent = '過去のイベントを閉じる';
+        } else {
+          content.classList.remove('open');
+          btn.classList.remove('active');
+          btn.querySelector('span:first-child').textContent = '過去のイベントを見る';
+        }
+      });
+    })();
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        var href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        var target = document.querySelector(href);
+        if (target) {
+          var headerHeight = document.getElementById('header').offsetHeight;
+          var targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Masonry card entrance animation on scroll
+    (function() {
+      var cards = document.querySelectorAll('.masonry-card');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1 });
+
+      cards.forEach(function(card, index) {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(24px)';
+        card.style.transition = 'opacity 0.5s ease ' + (index * 0.1) + 's, transform 0.5s ease ' + (index * 0.1) + 's';
+        observer.observe(card);
+      });
+    })();
+  </script>
+</body>
+</html>
