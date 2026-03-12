@@ -5,7 +5,6 @@ export type LotteryRowResult = {
   id: string;
   submissionName: string;
   submissionEmail: string;
-  preferenceRank: number;
   status: SlotApplicationStatus.ACCEPTED | SlotApplicationStatus.WAITLISTED;
 };
 
@@ -144,7 +143,6 @@ export async function runSlotLottery(params: {
       id: row.id,
       submissionName: row.submission.name,
       submissionEmail: row.submission.email,
-      preferenceRank: row.preferenceRank,
       status
     });
 

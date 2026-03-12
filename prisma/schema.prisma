@@ -69,7 +69,6 @@ model SubmissionSlot {
   slotId       String
   submission   Submission            @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   slot         Slot                  @relation(fields: [slotId], references: [id], onDelete: Cascade)
-  preferenceRank Int
   appliedAt    DateTime              @default(now())
   status       SlotApplicationStatus @default(APPLIED)
   notes        String?
@@ -77,7 +76,6 @@ model SubmissionSlot {
   updatedAt    DateTime              @updatedAt
 
   @@unique([submissionId, slotId])
-  @@unique([submissionId, preferenceRank])
   @@index([slotId, status])
   @@index([submissionId])
 }

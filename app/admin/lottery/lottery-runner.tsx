@@ -11,7 +11,6 @@ type LotteryRowResult = {
   id: string;
   submissionName: string;
   submissionEmail: string;
-  preferenceRank: number;
   status: "ACCEPTED" | "WAITLISTED";
 };
 
@@ -166,7 +165,6 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
                   <tr className="border-b border-slate-200 text-left text-slate-600">
                     <th className="px-2 py-2">Name</th>
                     <th className="px-2 py-2">Email</th>
-                    <th className="px-2 py-2">Preference Rank</th>
                     <th className="px-2 py-2">Status</th>
                   </tr>
                 </thead>
@@ -175,7 +173,6 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
                     <tr className="border-b border-slate-100" key={row.id}>
                       <td className="px-2 py-2">{row.submissionName}</td>
                       <td className="px-2 py-2">{row.submissionEmail}</td>
-                      <td className="px-2 py-2">{row.preferenceRank}</td>
                       <td className="px-2 py-2">{row.status}</td>
                     </tr>
                   ))}
@@ -199,7 +196,6 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
                   <tr className="border-b border-slate-200 text-left text-slate-600">
                     <th className="px-2 py-2">Name</th>
                     <th className="px-2 py-2">Email</th>
-                    <th className="px-2 py-2">Preference Rank</th>
                     <th className="px-2 py-2">Status</th>
                   </tr>
                 </thead>
@@ -208,7 +204,6 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
                     <tr className="border-b border-slate-100" key={row.id}>
                       <td className="px-2 py-2">{row.submissionName}</td>
                       <td className="px-2 py-2">{row.submissionEmail}</td>
-                      <td className="px-2 py-2">{row.preferenceRank}</td>
                       <td className="px-2 py-2">{row.status}</td>
                     </tr>
                   ))}
