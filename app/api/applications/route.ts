@@ -17,6 +17,30 @@ function normalizeText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
+async function createDuplicateSubmissionAttemptRows(
+  submissionId: string,
+  selectedSlotIds: string[],
+  submissionAttemptId: string
+): Promise<void> {
+  const existingSlotApplications = await prisma.submissionSlot.findMany({
+    where: { submissionId },
+    select: { slotId: true }
+  });
+  const existingSlotIdSet = new Set(existingSlotApplications.map((row) => row.slotId));
+
+  await prisma.submissionSlot.createMany({
+    data: selectedSlotIds.map((slotId) => ({
+      submissionId,
+      slotId,
+      submissionAttemptId,
+      status: existingSlotIdSet.has(slotId)
+        ? SlotApplicationStatus.REJECTED
+        : SlotApplicationStatus.APPLIED
+    })),
+    skipDuplicates: true
+  });
+}
+
 export async function POST(request: NextRequest) {
   let body: CreateApplicationBody;
 
@@ -82,9 +106,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const existing = await prisma.submission.findUnique({ where: { email } });
+  const submissionAttemptId = randomUUID();
+  const existing = await prisma.submission.findUnique({
+    where: { email },
+    select: { id: true }
+  });
   if (existing) {
-    return NextResponse.json({ error: "This email is already registered." }, { status: 409 });
+    await createDuplicateSubmissionAttemptRows(existing.id, selectedSlotIds, submissionAttemptId);
+    return NextResponse.json({ ok: true }, { status: 200 });
   }
 
   const token = randomUUID();
@@ -103,6 +132,7 @@ export async function POST(request: NextRequest) {
         slotApplications: {
           create: selectedSlotIds.map((slotId) => ({
             slotId,
+            submissionAttemptId,
             status: SlotApplicationStatus.APPLIED
           }))
         }
@@ -126,7 +156,19 @@ export async function POST(request: NextRequest) {
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      return NextResponse.json({ error: "This email is already registered." }, { status: 409 });
+      const existingSubmission = await prisma.submission.findUnique({
+        where: { email },
+        select: { id: true }
+      });
+
+      if (existingSubmission) {
+        await createDuplicateSubmissionAttemptRows(
+          existingSubmission.id,
+          selectedSlotIds,
+          submissionAttemptId
+        ).catch(() => {});
+        return NextResponse.json({ ok: true }, { status: 200 });
+      }
     }
 
     return NextResponse.json(

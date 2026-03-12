@@ -69,6 +69,7 @@ model SubmissionSlot {
   id           String                @id @default(cuid())
   submissionId String
   slotId       String
+  submissionAttemptId String
   submission   Submission            @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   slot         Slot                  @relation(fields: [slotId], references: [id], onDelete: Cascade)
   appliedAt    DateTime              @default(now())
@@ -77,7 +78,8 @@ model SubmissionSlot {
   createdAt    DateTime              @default(now())
   updatedAt    DateTime              @updatedAt
 
-  @@unique([submissionId, slotId])
+  @@unique([submissionId, slotId, submissionAttemptId])
   @@index([slotId, status])
   @@index([submissionId])
+  @@index([submissionId, submissionAttemptId])
 }
