@@ -1,6 +1,6 @@
 # Anymall Lunch Event Form
 
-Simple Next.js app for collecting lunch event applications with email verification.
+Simple Next.js app for collecting lunch event applications and sending confirmation emails.
 
 ## Stack
 
@@ -8,33 +8,25 @@ Simple Next.js app for collecting lunch event applications with email verificati
 - Tailwind CSS
 - Prisma
 - Neon Postgres
-- Resend
+- SendGrid
 
 ## What It Does
 
-- Shows event details on the home page
-- Collects `email` and `LINE ID`
-- Validates email format on both client and server
-- Saves application data in Postgres
-- Sends verification email with token link
-- Verifies users after they click the link
-- Prevents duplicate emails via DB unique constraint + server check
+- Shows the application form on the home page
+- Collects `name`, `email`, `birthday`, `gender`, and slot selections
+- Validates input on both client and server
+- Saves application and slot application data in Postgres
+- Sends a confirmation email after submission
+- Supports duplicate-email resubmissions as new attempts
 
 ## Environment Variables
 
-Create `.env` from `.env.example`:
-
-```bash
-cp .env.example .env
-```
-
-Variables:
+Create `.env` with the following variables:
 
 - `DATABASE_URL`: Neon pooled connection string for app runtime
 - `DIRECT_URL`: Neon direct connection string for Prisma migrations
-- `RESEND_API_KEY`: API key from Resend
-- `EMAIL_FROM`: sender email for verification mails (must be verified in Resend in production)
-- `APP_URL`: base URL used to generate verification link (local: `http://localhost:3000`)
+- `SENDGRID_API_KEY`: API key from SendGrid
+- `EMAIL_FROM`: sender email for confirmation mails (must be a verified sender/domain in SendGrid)
 
 ## Local Development
 
@@ -51,18 +43,30 @@ npm run prisma:migrate -- --name init
 npm run prisma:generate
 ```
 
-3. Start dev server:
+3. Load placeholder venues and slots:
+
+```bash
+npm run prisma:seed
+```
+
+4. Start dev server:
 
 ```bash
 npm run dev
 ```
 
-4. Open `http://localhost:3000`
+5. Open `http://localhost:3000`
 
-## Verification Flow
+## Seed Data
 
-1. User submits email + LINE ID
-2. Record is created with `verificationToken` and 24h expiration
-3. Verification email is sent via Resend
-4. User clicks token link (`/api/verify?token=...`)
-5. App marks user as verified and clears token
+- `npm run prisma:seed` runs the Prisma seed entrypoint in `prisma/seed.ts`.
+- Placeholder venue and slot records live in `prisma/seed-data.ts`.
+- The seed is idempotent because it uses stable string IDs and Prisma `upsert`, so rerunning it updates the same records instead of creating duplicates.
+- Production seeding is blocked by default. To allow it intentionally, set `ALLOW_PRODUCTION_SEED=true` for that run.
+
+## Submission Email Behavior
+
+1. User submits the form
+2. Submission + `SubmissionSlot` attempt rows are created
+3. Confirmation email is sent via SendGrid
+4. If email sending fails, the submission attempt rows are marked `REJECTED`
