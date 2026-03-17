@@ -1,9 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { Prisma, SlotApplicationStatus, SlotState } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import type { GenderInput } from "@/lib/labels";
 import { sendApplicationReceivedEmail } from "@/lib/mailer";
 import { prisma } from "@/lib/prisma";
-import { isValidEmail, isValidGender, isValidKatakanaName, parseBirthday } from "@/lib/validation";
+import { isValidEmail, isValidGenderInput, isValidKatakanaName, parseBirthday, toStoredGender } from "@/lib/validation";
 
 type CreateApplicationBody = {
   name?: string;
@@ -117,9 +118,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid birthday." }, { status: 400 });
   }
 
-  if (!isValidGender(gender)) {
+  if (!isValidGenderInput(gender)) {
     return NextResponse.json({ error: "Invalid gender value." }, { status: 400 });
   }
+
+  const storedGender = toStoredGender(gender as GenderInput);
 
   if (!Array.isArray(selectedSlotIdsInput)) {
     return NextResponse.json({ error: "At least one slot must be selected." }, { status: 400 });
@@ -174,7 +177,7 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         email,
-        gender,
+        gender: storedGender,
         birthday,
         slotApplications: {
           create: selectedSlotIds.map((slotId) => ({

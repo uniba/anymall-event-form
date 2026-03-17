@@ -1,6 +1,7 @@
 import { SlotState } from "@prisma/client";
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
+import { getSlotStateLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 import { LotteryRunner } from "./lottery-runner";
 
@@ -47,7 +48,7 @@ export default async function AdminLotteryPage() {
 
   const slotOptions = slots.map((slot) => ({
     id: slot.id,
-    label: `${slot.venue.name} — ${formatDate(slot.startsAt)} to ${formatTime(slot.endsAt)} — ${slot.state}`
+    label: `${slot.venue.name} — ${formatDate(slot.startsAt)} to ${formatTime(slot.endsAt)} — ${getSlotStateLabel(slot.state)}`
   }));
 
   return (
@@ -55,9 +56,9 @@ export default async function AdminLotteryPage() {
       <AdminNav active="lottery" />
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-xl font-semibold text-slate-900">Manual Lottery</h1>
+        <h1 className="text-xl font-semibold text-slate-900">抽選</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Select a closed slot, enter success count, and run the lottery.
+          受付終了したスロットを選択し、当選人数を入力して抽選を実行します。
         </p>
 
         <LotteryRunner slots={slotOptions} />
@@ -65,4 +66,3 @@ export default async function AdminLotteryPage() {
     </main>
   );
 }
-

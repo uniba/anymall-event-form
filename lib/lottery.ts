@@ -5,7 +5,7 @@ export type LotteryRowResult = {
   id: string;
   submissionName: string;
   submissionEmail: string;
-  status: SlotApplicationStatus.ACCEPTED | SlotApplicationStatus.WAITLISTED;
+  status: "ACCEPTED" | "WAITLISTED";
 };
 
 export type LotteryRunResult = {
@@ -138,7 +138,7 @@ export async function runSlotLottery(params: {
 
     const toResultRow = (
       row: (typeof shuffled)[number],
-      status: SlotApplicationStatus.ACCEPTED | SlotApplicationStatus.WAITLISTED
+      status: "ACCEPTED" | "WAITLISTED"
     ): LotteryRowResult => ({
       id: row.id,
       submissionName: row.submission.name,

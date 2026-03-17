@@ -5,28 +5,28 @@ import { requireAdminSession } from "@/lib/admin-guard";
 const cards = [
   {
     href: "/admin/submissions",
-    title: "Submissions",
-    description: "View email submissions."
+    title: "申込一覧",
+    description: "申込内容を確認します。"
   },
   {
     href: "/admin/applications",
-    title: "Applications",
-    description: "View submission-slot applications."
+    title: "応募一覧",
+    description: "各スロットへの応募状況を確認します。"
   },
   {
     href: "/admin/venues",
-    title: "Venues",
-    description: "View venue names and addresses."
+    title: "会場",
+    description: "会場名と住所を確認します。"
   },
   {
     href: "/admin/slots",
-    title: "Slots",
-    description: "View event time slots and states."
+    title: "スロット",
+    description: "開催枠の日時と状態を確認します。"
   },
   {
     href: "/admin/lottery",
-    title: "Lottery",
-    description: "Run manual lotteries for closed slots."
+    title: "抽選",
+    description: "受付終了したスロットの抽選を実行します。"
   }
 ];
 
@@ -38,8 +38,8 @@ export default async function AdminDashboardPage() {
       <AdminNav active="dashboard" />
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-semibold text-slate-900">Admin Dashboard</h1>
-        <p className="mt-2 text-sm text-slate-600">Use the sections below to view records and run lotteries.</p>
+        <h1 className="text-2xl font-semibold text-slate-900">管理ダッシュボード</h1>
+        <p className="mt-2 text-sm text-slate-600">以下の各項目を使用して、記録の確認や抽選の実施を行ってください。</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {cards.map((card) => (

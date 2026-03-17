@@ -21,11 +21,17 @@ enum SlotApplicationStatus {
   CANCELED
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  UNSPECIFIED
+}
+
 model Submission {
   id                String           @id @default(cuid())
   name              String
   email             String           @unique
-  gender            String
+  gender            Gender
   birthday          DateTime
   slotApplications  SubmissionSlot[]
   createdAt         DateTime         @default(now())

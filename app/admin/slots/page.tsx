@@ -1,6 +1,7 @@
 import { SlotState } from "@prisma/client";
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
+import { getSlotStateLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 
 type SlotsPageProps = {
@@ -56,10 +57,10 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
         <form className="mt-4 flex flex-wrap items-end gap-3" method="get">
           <div>
             <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-venue">
-              Venue
+              会場
             </label>
             <select className={inputClassName} defaultValue={venueFilter} id="filter-venue" name="venue">
-              <option value="">All venues</option>
+              <option value="">全部</option>
               {venues.map((venue) => (
                 <option key={venue.id} value={venue.id}>
                   {venue.name}
@@ -69,25 +70,25 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-state">
-              State
+              状態
             </label>
             <select className={inputClassName} defaultValue={stateFilter} id="filter-state" name="state">
-              <option value="">All states</option>
+              <option value="">全部</option>
               {slotStateOptions.map((state) => (
                 <option key={state} value={state}>
-                  {state}
+                  {getSlotStateLabel(state)}
                 </option>
               ))}
             </select>
           </div>
           <button className={secondaryButtonClassName} type="submit">
-            Search
+            検索
           </button>
         </form>
 
         <div className="mt-6">
           <p className="mb-1 block text-xs font-medium text-slate-600">
-            Total Slots: {slots.length} 
+            スロット件数 {slots.length} 
           </p>
         </div>
 
@@ -95,14 +96,14 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
           <table className="min-w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-600">
-                <th className="px-2 py-2">Venue</th>
-                <th className="px-2 py-2">Instructor</th>
-                <th className="px-2 py-2">Theme</th>
-                <th className="px-2 py-2">Application Begin</th>
-                <th className="px-2 py-2">Application Deadline</th>
-                <th className="px-2 py-2">Starts At</th>
-                <th className="px-2 py-2">Ends At</th>
-                <th className="px-2 py-2">State</th>
+                <th className="px-2 py-2">会場</th>
+                <th className="px-2 py-2">インストラクター</th>
+                <th className="px-2 py-2">テーマ</th>
+                <th className="px-2 py-2">応募開始日時</th>
+                <th className="px-2 py-2">応募締切日時</th>
+                <th className="px-2 py-2">開始日時</th>
+                <th className="px-2 py-2">終了日時</th>
+                <th className="px-2 py-2">状態</th>
               </tr>
             </thead>
             <tbody>
@@ -115,13 +116,13 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
                   <td className="px-2 py-3">{slot.applicationDeadline.toLocaleString()}</td>
                   <td className="px-2 py-3">{slot.startsAt.toLocaleString()}</td>
                   <td className="px-2 py-3">{slot.endsAt.toLocaleString()}</td>
-                  <td className="px-2 py-3">{slot.state}</td>
+                  <td className="px-2 py-3">{getSlotStateLabel(slot.state)}</td>
                 </tr>
               ))}
               {slots.length === 0 ? (
                 <tr>
                   <td className="px-2 py-4 text-slate-500" colSpan={7}>
-                    No slots found.
+                    スロットはありません
                   </td>
                 </tr>
               ) : null}
@@ -132,4 +133,3 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
     </main>
   );
 }
-

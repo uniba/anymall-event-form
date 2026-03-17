@@ -1,6 +1,8 @@
 "use client";
 
+import type { SlotApplicationStatus } from "@prisma/client";
 import { useEffect, useMemo, useState } from "react";
+import { getSlotApplicationStatusLabel } from "@/lib/labels";
 
 const inputClassName =
   "rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500";
@@ -29,7 +31,7 @@ type ApplicationFiltersProps = {
   defaultVenue: string;
   defaultSlot: string;
   defaultStatus: string;
-  statusOptions: string[];
+  statusOptions: SlotApplicationStatus[];
 };
 
 function slotLabel(slot: ApplicationFilterSlotOption): string {
@@ -82,20 +84,20 @@ export function ApplicationFilters({
     <form className="mt-4 flex flex-wrap items-end gap-3" method="get">
       <div>
         <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-email">
-          Submission Email or Name
+          メーイルまたは名前
         </label>
         <input
           className={inputClassName}
           defaultValue={defaultEmail}
           id="filter-email-name"
           name="email"
-          placeholder="Email or name"
+          placeholder="メーイルまたは名前"
           type="text"
         />
       </div>
       <div>
         <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-venue">
-          Venue
+          会場
         </label>
         <select
           className={inputClassName}
@@ -104,7 +106,7 @@ export function ApplicationFilters({
           onChange={(event) => setSelectedVenue(event.target.value)}
           value={selectedVenue}
         >
-          <option value="">All venues</option>
+          <option value="">全部</option>
           {venues.map((venue) => (
             <option key={venue.id} value={venue.id}>
               {venue.name}
@@ -114,7 +116,7 @@ export function ApplicationFilters({
       </div>
       <div className="w-full min-w-0 sm:w-auto">
         <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-slot">
-          Slot
+          スロット
         </label>
         <select
           className={slotSelectClassName}
@@ -124,7 +126,7 @@ export function ApplicationFilters({
           title={selectedSlotTitle}
           value={selectedSlot}
         >
-          <option value="">All slots</option>
+          <option value="">全部</option>
           {filteredSlots.map((slot) => (
             <option key={slot.id} title={slotLabel(slot)} value={slot.id}>
               {slotLabel(slot)}
@@ -134,19 +136,19 @@ export function ApplicationFilters({
       </div>
       <div>
         <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-status">
-          Status
+          状態
         </label>
         <select className={inputClassName} defaultValue={defaultStatus} id="filter-status" name="status">
-          <option value="">All statuses</option>
+          <option value="">全部</option>
           {statusOptions.map((status) => (
             <option key={status} value={status}>
-              {status}
+              {getSlotApplicationStatusLabel(status)}
             </option>
           ))}
         </select>
       </div>
       <button className={secondaryButtonClassName} type="submit">
-        Search
+        検査
       </button>
     </form>
   );

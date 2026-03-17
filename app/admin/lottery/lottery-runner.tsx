@@ -1,6 +1,8 @@
 "use client";
 
+import type { SlotState } from "@prisma/client";
 import { FormEvent, useMemo, useState } from "react";
+import { getSlotApplicationStatusLabel, getSlotStateLabel } from "@/lib/labels";
 
 type SlotOption = {
   id: string;
@@ -20,7 +22,7 @@ type LotteryResult = {
     venueName: string;
     startsAt: string;
     endsAt: string;
-    state: string;
+    state: SlotState;
   };
   eligibleCount: number;
   acceptedCount: number;
@@ -53,16 +55,16 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
     setResult(null);
 
     if (!targetSlotId) {
-      setError("Please select a slot.");
+      setError("スロットを選んでください");
       return;
     }
 
     if (!Number.isInteger(parsedSuccessCount) || parsedSuccessCount < 0) {
-      setError("Success count must be a non-negative integer.");
+      setError("当選人数は0以上の整数で入力してください。");
       return;
     }
 
-    if (!window.confirm("Run lottery now? This will update application statuses for the selected slot.")) {
+    if (!window.confirm("抽選を実行しますか？選択したスロットの応募状況が更新されます。")) {
       return;
     }
 
@@ -107,7 +109,7 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
           required
           value={targetSlotId}
         >
-          <option value="">{hasSlots ? "Select slot" : "No closed slots available"}</option>
+          <option value="">{hasSlots ? "スロットを選ぶ" : "受付終了したスロットはありません"}</option>
           {slots.map((slot) => (
             <option key={slot.id} value={slot.id}>
               {slot.label}
@@ -130,7 +132,7 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
           disabled={!hasSlots || isRunning}
           type="submit"
         >
-          {isRunning ? "Running..." : "Run Lottery"}
+          {isRunning ? "抽選中" : "抽選を実行"}
         </button>
       </form>
 
@@ -140,32 +142,32 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
 
       {result ? (
         <section className="rounded-lg border border-slate-200 p-4">
-          <h2 className="text-lg font-semibold text-slate-900">Lottery Result</h2>
+          <h2 className="text-lg font-semibold text-slate-900">抽選結果</h2>
           <div className="mt-3 grid gap-2 text-sm text-slate-700">
             <p>
-              <span className="font-medium">Selected Slot:</span> {result.slot.venueName} |{" "}
-              {formatDateTime(result.slot.startsAt)} - {formatDateTime(result.slot.endsAt)} | {result.slot.state}
+              <span className="font-medium">スロット</span> {result.slot.venueName} |{" "}
+              {formatDateTime(result.slot.startsAt)} - {formatDateTime(result.slot.endsAt)} | {getSlotStateLabel(result.slot.state)}
             </p>
             <p>
-              <span className="font-medium">Eligible Applications:</span> {result.eligibleCount}
+              <span className="font-medium">抽選対象応募数:</span> {result.eligibleCount}
             </p>
             <p>
-              <span className="font-medium">Accepted:</span> {result.acceptedCount}
+              <span className="font-medium">当選数:</span> {result.acceptedCount}
             </p>
             <p>
-              <span className="font-medium">Waitlisted:</span> {result.waitlistedCount}
+              <span className="font-medium">キャンセル待ち数:</span> {result.waitlistedCount}
             </p>
           </div>
 
           <div className="mt-5">
-            <h3 className="text-sm font-semibold text-slate-900">Accepted Applicants</h3>
+            <h3 className="text-sm font-semibold text-slate-900">当選者:</h3>
             <div className="mt-2 overflow-x-auto">
               <table className="min-w-full border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-left text-slate-600">
-                    <th className="px-2 py-2">Name</th>
-                    <th className="px-2 py-2">Email</th>
-                    <th className="px-2 py-2">Status</th>
+                    <th className="px-2 py-2">名前</th>
+                    <th className="px-2 py-2">メーイル</th>
+                    <th className="px-2 py-2">状態</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -173,13 +175,13 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
                     <tr className="border-b border-slate-100" key={row.id}>
                       <td className="px-2 py-2">{row.submissionName}</td>
                       <td className="px-2 py-2">{row.submissionEmail}</td>
-                      <td className="px-2 py-2">{row.status}</td>
+                      <td className="px-2 py-2">{getSlotApplicationStatusLabel(row.status)}</td>
                     </tr>
                   ))}
                   {result.accepted.length === 0 ? (
                     <tr>
                       <td className="px-2 py-2 text-slate-500" colSpan={4}>
-                        No accepted applicants.
+                        当選者はありません
                       </td>
                     </tr>
                   ) : null}
@@ -189,14 +191,14 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
           </div>
 
           <div className="mt-5">
-            <h3 className="text-sm font-semibold text-slate-900">Waitlisted Applicants</h3>
+            <h3 className="text-sm font-semibold text-slate-900">キャンセル待ち:</h3>
             <div className="mt-2 overflow-x-auto">
               <table className="min-w-full border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-left text-slate-600">
-                    <th className="px-2 py-2">Name</th>
-                    <th className="px-2 py-2">Email</th>
-                    <th className="px-2 py-2">Status</th>
+                    <th className="px-2 py-2">名前</th>
+                    <th className="px-2 py-2">メーイル</th>
+                    <th className="px-2 py-2">状態</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -204,13 +206,13 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
                     <tr className="border-b border-slate-100" key={row.id}>
                       <td className="px-2 py-2">{row.submissionName}</td>
                       <td className="px-2 py-2">{row.submissionEmail}</td>
-                      <td className="px-2 py-2">{row.status}</td>
+                      <td className="px-2 py-2">{getSlotApplicationStatusLabel(row.status)}</td>
                     </tr>
                   ))}
                   {result.waitlisted.length === 0 ? (
                     <tr>
                       <td className="px-2 py-2 text-slate-500" colSpan={4}>
-                        No waitlisted applicants.
+                        キャンセル待ちはありません
                       </td>
                     </tr>
                   ) : null}
@@ -223,4 +225,3 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
     </div>
   );
 }
-

@@ -36,30 +36,30 @@ export default async function AdminVenuesPage({ searchParams }: VenuesPageProps)
       <AdminNav active="venues" />
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-xl font-semibold text-slate-900">Venues</h1>
+        <h1 className="text-xl font-semibold text-slate-900">会場</h1>
 
         <form className="mt-4 flex flex-wrap items-end gap-3" method="get">
           <div>
             <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="search-name">
-              Search Name
+              名前を検索
             </label>
             <input
               className={inputClassName}
               defaultValue={query}
               id="search-name"
               name="q"
-              placeholder="Venue name"
+              placeholder="会場名前"
               type="text"
             />
           </div>
           <button className={secondaryButtonClassName} type="submit">
-            Search
+            検査
           </button>
         </form>
 
         <div className="mt-6">
           <p className="mb-1 block text-xs font-medium text-slate-600">
-            Total venues: {venues.length}
+            会場件数: {venues.length}
           </p>
         </div>
 
@@ -67,8 +67,8 @@ export default async function AdminVenuesPage({ searchParams }: VenuesPageProps)
           <table className="min-w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-600">
-                <th className="px-2 py-2">Name</th>
-                <th className="px-2 py-2">Address</th>
+                <th className="px-2 py-2">名前</th>
+                <th className="px-2 py-2">住所</th>
               </tr>
             </thead>
             <tbody>
@@ -81,7 +81,7 @@ export default async function AdminVenuesPage({ searchParams }: VenuesPageProps)
               {venues.length === 0 ? (
                 <tr>
                   <td className="px-2 py-4 text-slate-500" colSpan={3}>
-                    No venues found.
+                    会場はありません
                   </td>
                 </tr>
               ) : null}

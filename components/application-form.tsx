@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { type GenderInput } from "@/lib/labels";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const katakanaPattern = /^[\u30A0-\u30FFー・\s]+$/;
@@ -19,7 +20,7 @@ export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
-  const [gender, setGender] = useState<"" | "male" | "female">("");
+  const [gender, setGender] = useState<"" | GenderInput>("");
   const [selectedSlotIds, setSelectedSlotIds] = useState<Array<string>>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -63,7 +64,11 @@ export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
       return;
     }
 
-    if (normalizedGender !== "male" && normalizedGender !== "female") {
+    if (
+      normalizedGender !== "male" &&
+      normalizedGender !== "female" &&
+      normalizedGender !== "unspecified"
+    ) {
       setError("Select a valid gender.");
       return;
     }
@@ -186,6 +191,16 @@ export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
               value="female"
             />
             Female
+          </label>
+          <label className="inline-flex items-center gap-2">
+            <input
+              checked={gender === "unspecified"}
+              name="gender"
+              onChange={() => setGender("unspecified")}
+              type="radio"
+              value="unspecified"
+            />
+            Unspecified
           </label>
         </div>
       </div>

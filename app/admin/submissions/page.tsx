@@ -1,5 +1,6 @@
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
+import { getGenderLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 
 type SubmissionsPageProps = {
@@ -11,8 +12,20 @@ const inputClassName =
 const secondaryButtonClassName =
   "rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50";
 
-function toDateInputValue(date: Date): string {
-  return date.toISOString().slice(0, 10);
+function calculateAge(birthDate: Date): number {
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+
+  const hasHadBirthdayThisYear =
+    today.getMonth() > birthDate.getMonth() ||
+    (today.getMonth() === birthDate.getMonth() &&
+      today.getDate() >= birthDate.getDate());
+
+  if (!hasHadBirthdayThisYear) {
+    age--;
+  }
+
+  return age;
 }
 
 export default async function AdminSubmissionsPage({ searchParams }: SubmissionsPageProps) {
@@ -50,12 +63,12 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
       <AdminNav active="submissions" />
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-xl font-semibold text-slate-900">Submissions</h1>
+        <h1 className="text-xl font-semibold text-slate-900">申込一覧</h1>
 
         <form className="mt-4 flex flex-wrap items-end gap-3" method="get">
           <div>
             <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="search-email-name">
-              Search Email or Name
+              メールアドレスまたは名前を検索
             </label>
             <input
               className={inputClassName}
@@ -67,13 +80,13 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
             />
           </div>
           <button className={secondaryButtonClassName} type="submit">
-            Search
+            検索
           </button>
         </form>
 
         <div className="mt-6">
           <p className="mb-1 block text-xs font-medium text-slate-600">
-            Total Submissions: {submissions.length}
+            申込件数: {submissions.length}
           </p>
         </div>
 
@@ -81,11 +94,11 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
           <table className="min-w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-600">
-                <th className="px-2 py-2">Name</th>
-                <th className="px-2 py-2">Email</th>
-                <th className="px-2 py-2">Gender</th>
-                <th className="px-2 py-2">Birthday</th>
-                <th className="px-2 py-2">Created At</th>
+                <th className="px-2 py-2">名前</th>
+                <th className="px-2 py-2">メーイル</th>
+                <th className="px-2 py-2">性別</th>
+                <th className="px-2 py-2">年齢</th>
+                <th className="px-2 py-2">申込日時</th>
               </tr>
             </thead>
             <tbody>
@@ -93,15 +106,15 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
                 <tr className="border-b border-slate-100 align-top" key={submission.id}>
                   <td className="px-2 py-3">{submission.name}</td>
                   <td className="px-2 py-3">{submission.email}</td>
-                  <td className="px-2 py-3">{submission.gender}</td>
-                  <td className="px-2 py-3">{toDateInputValue(submission.birthday)}</td>
+                  <td className="px-2 py-3">{getGenderLabel(submission.gender)}</td>
+                  <td className="px-2 py-3">{calculateAge(submission.birthday)}</td>
                   <td className="px-2 py-3">{submission.createdAt.toLocaleString()}</td>
                 </tr>
               ))}
               {submissions.length === 0 ? (
                 <tr>
                   <td className="px-2 py-4 text-slate-500" colSpan={5}>
-                    No submissions found.
+                    申込はありません
                   </td>
                 </tr>
               ) : null}

@@ -16,22 +16,22 @@ export function AdminNav({ active }: AdminNavProps) {
     <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
       <nav className="flex flex-wrap items-center gap-2">
         <Link className={navLinkClass(active === "dashboard")} href="/admin">
-          Dashboard
+          ダッシュボード
         </Link>
         <Link className={navLinkClass(active === "submissions")} href="/admin/submissions">
-          Submissions
+          申込一覧
         </Link>
         <Link className={navLinkClass(active === "applications")} href="/admin/applications">
-          Applications
+          応募一覧
         </Link>
         <Link className={navLinkClass(active === "venues")} href="/admin/venues">
-          Venues
+          会場
         </Link>
         <Link className={navLinkClass(active === "slots")} href="/admin/slots">
-          Slots
+          スロット
         </Link>
         <Link className={navLinkClass(active === "lottery")} href="/admin/lottery">
-          Lottery
+          抽選
         </Link>
       </nav>
 
@@ -40,7 +40,7 @@ export function AdminNav({ active }: AdminNavProps) {
           className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           type="submit"
         >
-          Logout
+          ロッグアウト
         </button>
       </form>
     </header>

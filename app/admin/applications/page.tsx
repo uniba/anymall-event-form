@@ -6,6 +6,7 @@ import {
 } from "@/components/application-filters";
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
+import { getGenderLabel, getSlotApplicationStatusLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 
 type ApplicationsPageProps = {
@@ -138,12 +139,10 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
     venueName: slot.venue.name
   }));
 
-  const maleCount = applications.filter(
-    (application) => application.submission.gender === "male"
-  ).length;
-
-  const femaleCount = applications.filter(
-    (application) => application.submission.gender === "female"
+  const maleCount = applications.filter((application) => application.submission.gender === "MALE").length;
+  const femaleCount = applications.filter((application) => application.submission.gender === "FEMALE").length;
+  const unspecifiedCount = applications.filter(
+    (application) => application.submission.gender === "UNSPECIFIED"
   ).length;
 
   return (
@@ -151,7 +150,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
       <AdminNav active="applications" />
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-xl font-semibold text-slate-900">Applications</h1>
+        <h1 className="text-xl font-semibold text-slate-900">応募一覧</h1>
 
         <ApplicationFilters
           defaultEmail={emailFilter}
@@ -165,7 +164,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
 
         <div className="mt-6">
           <p className="mb-1 block text-xs font-medium text-slate-600">
-            Total Applications: {applications.length} | Males: {maleCount} | Females: {femaleCount}
+            応募件数: {applications.length} | 男性: {maleCount} | 女性: {femaleCount} | 未回答: {unspecifiedCount}
           </p>
         </div>
 
@@ -173,14 +172,14 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
           <table className="min-w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-600">
-                <th className="px-2 py-2">Email</th>
-                <th className="px-2 py-2">Name</th>
-                <th className="px-2 py-2">Gender</th>
-                <th className="px-2 py-2">Age</th>
-                <th className="px-2 py-2">Venue</th>
-                <th className="px-2 py-2">Slot Time</th>
-                <th className="px-2 py-2">Status</th>
-                <th className="px-2 py-2">Applied At</th>
+                <th className="px-2 py-2">メーイル</th>
+                <th className="px-2 py-2">名前</th>
+                <th className="px-2 py-2">性別</th>
+                <th className="px-2 py-2">年齢</th>
+                <th className="px-2 py-2">会場</th>
+                <th className="px-2 py-2">スロット日時</th>
+                <th className="px-2 py-2">状態</th>
+                <th className="px-2 py-2">応募日時</th>
               </tr>
             </thead>
             <tbody>
@@ -188,20 +187,20 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
                 <tr className="border-b border-slate-100 align-top" key={application.id}>
                   <td className="px-2 py-3">{application.submission.email}</td>
                   <td className="px-2 py-3">{application.submission.name}</td>
-                  <td className="px-2 py-3">{application.submission.gender}</td>
+                  <td className="px-2 py-3">{getGenderLabel(application.submission.gender)}</td>
                   <td className="px-2 py-3">{calculateAge(application.submission.birthday)}</td>
                   <td className="px-2 py-3">{application.slot.venue.name}</td>
                   <td className="px-2 py-3">
                     {application.slot.startsAt.toLocaleString()} - {application.slot.endsAt.toLocaleString()}
                   </td>
-                  <td className="px-2 py-3">{application.status}</td>
+                  <td className="px-2 py-3">{getSlotApplicationStatusLabel(application.status)}</td>
                   <td className="px-2 py-3">{application.appliedAt.toLocaleString()}</td>
                 </tr>
               ))}
               {applications.length === 0 ? (
                 <tr>
                   <td className="px-2 py-4 text-slate-500" colSpan={8}>
-                    No applications found.
+                    応募はありません
                   </td>
                 </tr>
               ) : null}
