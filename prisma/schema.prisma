@@ -51,10 +51,13 @@ model Slot {
   id                  String           @id @default(cuid())
   venueId             String
   venue               Venue            @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  eventName           String           @default("未設定イベント")
   theme               String           @default("Not decided")
   instructor          String           @default("Not decided")
+  capacity            Int              @default(0)
   applicationBegin    DateTime
   applicationDeadline DateTime
+  lotteryResultTime   DateTime
   startsAt            DateTime
   endsAt              DateTime
   state               SlotState        @default(ACCEPTING_APPLICATIONS)

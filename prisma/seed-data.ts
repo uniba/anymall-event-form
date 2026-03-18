@@ -9,10 +9,13 @@ export type SeedVenue = {
 export type SeedSlot = {
   id: string;
   venueId: SeedVenue["id"];
+  eventName: string;
   theme: string;
   instructor: string;
+  capacity: number;
   applicationBegin: string;
   applicationDeadline: string;
+  lotteryResultTime: string;
   startsAt: string;
   endsAt: string;
   state: SlotState;
@@ -20,65 +23,185 @@ export type SeedSlot = {
 
 export const seedVenues: SeedVenue[] = [
   {
-    id: "seed-venue-tokyo-bayside",
-    name: "Tokyo Bayside Studio",
-    address: "1-8-1 Kaigan, Minato-ku, Tokyo"
+    id: "seed-venue-tokyo-inumo",
+    name: "inumo shibakoen",
+    address: "1 Chome-6番6号 Shibakoen, Minato City, Tokyo, 105-0011"
   },
   {
-    id: "seed-venue-shibuya-garden",
-    name: "Shibuya Garden Terrace",
-    address: "2-21-1 Shibuya, Shibuya-ku, Tokyo"
-  },
-  {
-    id: "seed-venue-osaka-riverside",
-    name: "Osaka Riverside Hall",
-    address: "3-5-12 Nakanoshima, Kita-ku, Osaka"
+    id: "seed-venue-osaka-dyplus",
+    name: "Dyplus OSAKA KITA",
+    address: "3 Chome-4-25 Tenmabashi, Kita Ward, Osaka, 530-0042"
   }
 ];
 
-export const seedSlots: SeedSlot[] = [
+export const seedSlots: SeedSlot[] = 
+[
   {
-    id: "seed-slot-tokyo-bayside-apr-18-am",
-    venueId: "seed-venue-tokyo-bayside",
-    theme: "Spring Networking Lunch",
-    instructor: "Aiko Tanaka",
-    applicationBegin: "2026-03-20T00:00:00+09:00",
-    applicationDeadline: "2026-04-12T23:59:59+09:00",
-    startsAt: "2026-04-18T11:30:00+09:00",
-    endsAt: "2026-04-18T13:00:00+09:00",
+    id: "seed-slot-tokyo-inumo-may-16",
+    venueId: "seed-venue-tokyo-inumo",
+    eventName: "はじめての愛犬ごはんサロン",
+    theme: "・初めての手作りトッピングごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "まなみ先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-04-23T23:59:59+09:00",
+    lotteryResultTime: "2026-04-30T12:00:00+09:00",
+    startsAt: "2026-05-16T12:00:00+09:00",
+    endsAt: "2026-05-16T13:30:00+09:00",
     state: SlotState.ACCEPTING_APPLICATIONS
   },
   {
-    id: "seed-slot-tokyo-bayside-apr-18-pm",
-    venueId: "seed-venue-tokyo-bayside",
-    theme: "Product Feedback Circle",
-    instructor: "Ken Sato",
-    applicationBegin: "2026-03-20T00:00:00+09:00",
-    applicationDeadline: "2026-04-12T23:59:59+09:00",
-    startsAt: "2026-04-18T14:30:00+09:00",
-    endsAt: "2026-04-18T16:00:00+09:00",
+    id: "seed-slot-osaka-dyplus-may-17",
+    venueId: "seed-venue-osaka-dyplus",
+    eventName: "愛犬の健康チェックサロン",
+    theme: "・仮）篤先生　例：健診、中毒など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "篤先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-04-23T23:59:59+09:00",
+    lotteryResultTime: "2026-04-30T12:00:00+09:00",
+    startsAt: "2026-05-17T12:00:00+09:00",
+    endsAt: "2026-05-17T13:30:00+09:00",
     state: SlotState.ACCEPTING_APPLICATIONS
   },
   {
-    id: "seed-slot-shibuya-garden-apr-25",
-    venueId: "seed-venue-shibuya-garden",
-    theme: "Creator Meetup Lunch",
-    instructor: "Mika Hayashi",
-    applicationBegin: "2026-03-24T00:00:00+09:00",
-    applicationDeadline: "2026-04-20T23:59:59+09:00",
-    startsAt: "2026-04-25T12:00:00+09:00",
-    endsAt: "2026-04-25T13:30:00+09:00",
+    id: "seed-slot-tokyo-inumo-may-27",
+    venueId: "seed-venue-tokyo-inumo",
+    eventName: "はじめての愛犬ごはんサロン",
+    theme: "・初めての手作りトッピングごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "まなみ先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-04-23T23:59:59+09:00",
+    lotteryResultTime: "2026-04-30T12:00:00+09:00",
+    startsAt: "2026-05-27T12:00:00+09:00",
+    endsAt: "2026-05-27T13:30:00+09:00",
     state: SlotState.ACCEPTING_APPLICATIONS
   },
   {
-    id: "seed-slot-osaka-riverside-apr-11",
-    venueId: "seed-venue-osaka-riverside",
-    theme: "Community Lunch Pilot",
-    instructor: "Ryo Nakamura",
-    applicationBegin: "2026-03-15T00:00:00+09:00",
-    applicationDeadline: "2026-04-05T23:59:59+09:00",
-    startsAt: "2026-04-11T12:00:00+09:00",
-    endsAt: "2026-04-11T13:30:00+09:00",
-    state: SlotState.APPLICATIONS_CLOSED
+    id: "seed-slot-tokyo-inumo-may-28",
+    venueId: "seed-venue-tokyo-inumo",
+    eventName: "愛犬ピクニック交流会",
+    theme: "・ピクニック交流撮影会\n・例）しつけ相談（A'alda内の専門家）、写真撮影\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "スタッフ数人",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-04-23T23:59:59+09:00",
+    lotteryResultTime: "2026-04-30T12:00:00+09:00",
+    startsAt: "2026-05-28T12:00:00+09:00",
+    endsAt: "2026-05-28T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
+  },
+  {
+    id: "seed-slot-tokyo-inumo-jun-13",
+    venueId: "seed-venue-tokyo-inumo",
+    eventName: "皮膚ケアごはんサロン",
+    theme: "・夏前に！手作り皮膚ケアごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "まなみ先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-05-14T23:59:59+09:00",
+    lotteryResultTime: "2026-05-21T12:00:00+09:00",
+    startsAt: "2026-06-13T12:00:00+09:00",
+    endsAt: "2026-06-13T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
+  },
+  {
+    id: "seed-slot-osaka-dyplus-jun-14",
+    venueId: "seed-venue-osaka-dyplus",
+    eventName: "愛犬デンタルケアサロン",
+    theme: "・愛犬のデンタルケアレッスン\n・QAタイム、歯ブラシ実演など\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "仮）なつこ先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-05-14T23:59:59+09:00",
+    lotteryResultTime: "2026-05-21T12:00:00+09:00",
+    startsAt: "2026-06-14T12:00:00+09:00",
+    endsAt: "2026-06-14T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
+  },
+  {
+    id: "seed-slot-tokyo-inumo-jun-17",
+    venueId: "seed-venue-tokyo-inumo",
+    eventName: "皮膚ケアごはんサロン",
+    theme: "・夏前に！手作り皮膚ケアごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "まなみ先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-05-14T23:59:59+09:00",
+    lotteryResultTime: "2026-05-21T12:00:00+09:00",
+    startsAt: "2026-06-17T12:00:00+09:00",
+    endsAt: "2026-06-17T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
+  },
+  {
+    id: "seed-slot-osaka-dyplus-jun-18",
+    venueId: "seed-venue-osaka-dyplus",
+    eventName: "愛犬の健康チェックサロン",
+    theme: "・仮）篤先生　例：健診、中毒など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "篤先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-05-14T23:59:59+09:00",
+    lotteryResultTime: "2026-05-21T12:00:00+09:00",
+    startsAt: "2026-06-18T12:00:00+09:00",
+    endsAt: "2026-06-18T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
+  },
+  {
+    id: "seed-slot-tokyo-inumo-jul-11",
+    venueId: "seed-venue-tokyo-inumo",
+    eventName: "夏バテ対策ごはんサロン",
+    theme: "・夏バテ対策！食事と水分ケア\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "まなみ先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-06-11T23:59:59+09:00",
+    lotteryResultTime: "2026-06-18T12:00:00+09:00",
+    startsAt: "2026-07-11T12:00:00+09:00",
+    endsAt: "2026-07-11T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
+  },
+  {
+    id: "seed-slot-osaka-dyplus-jul-12",
+    venueId: "seed-venue-osaka-dyplus",
+    eventName: "夏の健康管理サロン",
+    theme: "・仮）篤先生　例：熱中症対策など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "篤先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-06-11T23:59:59+09:00",
+    lotteryResultTime: "2026-06-18T12:00:00+09:00",
+    startsAt: "2026-07-12T12:00:00+09:00",
+    endsAt: "2026-07-12T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
+  },
+  {
+    id: "seed-slot-tokyo-inumo-jul-15",
+    venueId: "seed-venue-tokyo-inumo",
+    eventName: "夏バテ対策ごはんサロン",
+    theme: "・夏バテ対策！食事と水分ケア\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "まなみ先生",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-06-11T23:59:59+09:00",
+    lotteryResultTime: "2026-06-18T12:00:00+09:00",
+    startsAt: "2026-07-15T12:00:00+09:00",
+    endsAt: "2026-07-15T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
+  },
+  {
+    id: "seed-slot-osaka-dyplus-jul-16",
+    venueId: "seed-venue-osaka-dyplus",
+    eventName: "夏まつり交流会",
+    theme: "・夏祭り交流撮影会\n・例）しつけ相談（A'alda内の専門家）、写真撮影\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "スタッフ数人",
+    capacity: 20,
+    applicationBegin: "2026-03-19T00:00:00+09:00",
+    applicationDeadline: "2026-06-11T23:59:59+09:00",
+    lotteryResultTime: "2026-06-18T12:00:00+09:00",
+    startsAt: "2026-07-16T12:00:00+09:00",
+    endsAt: "2026-07-16T13:30:00+09:00",
+    state: SlotState.ACCEPTING_APPLICATIONS
   }
 ];

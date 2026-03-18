@@ -3,6 +3,7 @@ import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
 import { getSlotStateLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
+import { getCapacityLabel } from "@/lib/slot-display";
 import { LotteryRunner } from "./lottery-runner";
 
 function formatDate(date: Date): string {
@@ -48,7 +49,9 @@ export default async function AdminLotteryPage() {
 
   const slotOptions = slots.map((slot) => ({
     id: slot.id,
-    label: `${slot.venue.name} — ${formatDate(slot.startsAt)} to ${formatTime(slot.endsAt)} — ${getSlotStateLabel(slot.state)}`
+    label:
+      `${slot.eventName} | ${slot.venue.name} | ${formatDate(slot.startsAt)} to ${formatTime(slot.endsAt)} | ` +
+      `${getCapacityLabel(slot.capacity)} | ${getSlotStateLabel(slot.state)}`
   }));
 
   return (

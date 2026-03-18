@@ -3,6 +3,7 @@ import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
 import { getSlotStateLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
+import { getCapacityLabel, getThemeBulletLines } from "@/lib/slot-display";
 
 type SlotsPageProps = {
   searchParams?: Promise<{ venue?: string; state?: string }>;
@@ -96,11 +97,14 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
           <table className="min-w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-600">
+                <th className="px-2 py-2">イベント名</th>
                 <th className="px-2 py-2">会場</th>
                 <th className="px-2 py-2">インストラクター</th>
                 <th className="px-2 py-2">テーマ</th>
+                <th className="px-2 py-2">定員</th>
                 <th className="px-2 py-2">応募開始日時</th>
                 <th className="px-2 py-2">応募締切日時</th>
+                <th className="px-2 py-2">抽選結果発表日時</th>
                 <th className="px-2 py-2">開始日時</th>
                 <th className="px-2 py-2">終了日時</th>
                 <th className="px-2 py-2">状態</th>
@@ -109,11 +113,20 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
             <tbody>
               {slots.map((slot) => (
                 <tr className="border-b border-slate-100 align-top" key={slot.id}>
+                  <td className="px-2 py-3">{slot.eventName}</td>
                   <td className="px-2 py-3">{slot.venue.name}</td>
                   <td className="px-2 py-3">{slot.instructor}</td>
-                  <td className="px-2 py-3">{slot.theme}</td>
+                  <td className="px-2 py-3">
+                    <ul className="space-y-1">
+                      {getThemeBulletLines(slot.theme).map((line) => (
+                        <li key={line}>• {line}</li>
+                      ))}
+                    </ul>
+                  </td>
+                  <td className="px-2 py-3">{getCapacityLabel(slot.capacity)}</td>
                   <td className="px-2 py-3">{slot.applicationBegin.toLocaleString()}</td>
                   <td className="px-2 py-3">{slot.applicationDeadline.toLocaleString()}</td>
+                  <td className="px-2 py-3">{slot.lotteryResultTime.toLocaleString()}</td>
                   <td className="px-2 py-3">{slot.startsAt.toLocaleString()}</td>
                   <td className="px-2 py-3">{slot.endsAt.toLocaleString()}</td>
                   <td className="px-2 py-3">{getSlotStateLabel(slot.state)}</td>
@@ -121,7 +134,7 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
               ))}
               {slots.length === 0 ? (
                 <tr>
-                  <td className="px-2 py-4 text-slate-500" colSpan={7}>
+                  <td className="px-2 py-4 text-slate-500" colSpan={10}>
                     スロットはありません
                   </td>
                 </tr>

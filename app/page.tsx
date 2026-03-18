@@ -1,6 +1,7 @@
 import { SlotState } from "@prisma/client";
 import { ApplicationForm } from "@/components/application-form";
 import { prisma } from "@/lib/prisma";
+import { getCapacityLabel, getThemeSummary } from "@/lib/slot-display";
 
 export default async function HomePage() {
   const slots = await prisma.slot.findMany({
@@ -31,7 +32,10 @@ export default async function HomePage() {
 
   const slotOptions = slots.map((slot) => ({
     id: slot.id,
-    label: `${slot.venue.name} — ${dayFormatter.format(slot.startsAt)}, ${timeFormatter.format(slot.startsAt)}–${timeFormatter.format(slot.endsAt)}`
+    label:
+      `${slot.eventName} | ${slot.venue.name} | ` +
+      `${dayFormatter.format(slot.startsAt)}, ${timeFormatter.format(slot.startsAt)}–${timeFormatter.format(slot.endsAt)} | ` +
+      `${getCapacityLabel(slot.capacity)} | ${getThemeSummary(slot.theme)}`
   }));
 
   return (

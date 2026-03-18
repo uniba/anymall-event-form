@@ -23,10 +23,13 @@ function createVenueInput(venue: SeedVenue) {
 function createSlotInput(slot: SeedSlot) {
   return {
     venueId: slot.venueId,
+    eventName: slot.eventName,
     theme: slot.theme,
     instructor: slot.instructor,
+    capacity: slot.capacity,
     applicationBegin: toDate(slot.applicationBegin),
     applicationDeadline: toDate(slot.applicationDeadline),
+    lotteryResultTime: toDate(slot.lotteryResultTime),
     startsAt: toDate(slot.startsAt),
     endsAt: toDate(slot.endsAt),
     state: slot.state
