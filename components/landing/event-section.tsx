@@ -171,7 +171,10 @@ export function EventSection({
 
   return (
     <>
-      <section id="events" className="bg-warm-100 px-4 py-8 md:px-8 md:py-16">
+      <section
+        id="events"
+        className="bg-warm-100 px-4 py-8 md:px-8 md:py-16 overflow-hidden"
+      >
         <div className="relative mx-auto flex max-w-6xl flex-col gap-8">
           <SectionHeading
             sub="Schedule"
