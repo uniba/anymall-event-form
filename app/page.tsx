@@ -107,6 +107,14 @@ export default async function HomePage() {
           />
 
           <div className="mx-auto max-w-2xl text-base leading-7 text-warm-600 md:text-center">
+            <Image
+              src="/images/theme-life.jpg"
+              alt="ペットとの暮らしを、もっと楽しむために。"
+              width={512}
+              height={512}
+            />
+          </div>
+          <div className="mx-auto max-w-2xl text-base leading-7 text-warm-600 md:text-center">
             <p>
               獣医師監修のもと、ペットの食事・健康・生活に関するテーマを取り上げた少人数制イベントを開催します。
             </p>
@@ -157,7 +165,7 @@ export default async function HomePage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-8">
           <SectionHeading sub="Venue" label="開催場所" />
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="relative grid gap-6 md:grid-cols-2">
             {[
               {
                 name: "inumo 芝公園 by Villa Fontaine",
@@ -178,7 +186,7 @@ export default async function HomePage() {
             ].map((venue) => (
               <div
                 key={venue.name}
-                className="overflow-hidden rounded-2xl border border-warm-200 bg-white"
+                className="relative z-20 overflow-hidden rounded-2xl border border-warm-200 bg-white"
               >
                 <div className="relative h-[242px] bg-warm-300">
                   <Image
@@ -215,6 +223,13 @@ export default async function HomePage() {
                 </div>
               </div>
             ))}
+            <Image
+              className="absolute z-10 -top-24 -left-1 md:-left-10 -rotate-30"
+              src="/images/fig-dog.jpg"
+              alt=""
+              width={168}
+              height={214}
+            />
           </div>
         </div>
       </section>
@@ -273,10 +288,10 @@ export default async function HomePage() {
       </section>
 
       {/* Partner */}
-      <section className="bg-white py-16">
+      <section className="relative bg-white pt-16 pb-48 overflow-hidden">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-10">
           <SectionHeading sub="Partner" label="パートナー" />
-          <div className="flex flex-col items-center gap-16 md:flex-row md:justify-center md:gap-16">
+          <div className="relative z-30 flex flex-col items-center gap-16 md:flex-row md:justify-center md:gap-16">
             <Image
               src="/images/partner-diners.png"
               alt="Diners Club International"
@@ -296,6 +311,13 @@ export default async function HomePage() {
               height={37}
             />
           </div>
+          <Image
+            className="absolute z-10 left-1/2 -bottom-40 md:-bottom-36 -translate-x-1/2"
+            src="/images/fig-bear.jpg"
+            alt=""
+            width={268}
+            height={320}
+          />
         </div>
       </section>
 

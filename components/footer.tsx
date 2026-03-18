@@ -3,7 +3,7 @@ import { Icon } from "@/components/icon";
 
 export default async function Footer() {
   return (
-    <footer className="bg-warm-800 px-4 py-8 md:px-8 md:py-12">
+    <footer className="relative z-30 bg-warm-800 px-4 py-8 md:px-8 md:py-12">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-8">
         <Image
           src="/images/logo-white.png"

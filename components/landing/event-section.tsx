@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { SlotState } from "@prisma/client";
 import { Icon } from "@/components/icon";
 import { SectionHeading } from "@/components/landing/section-heading";
@@ -171,7 +172,7 @@ export function EventSection({
   return (
     <>
       <section id="events" className="bg-warm-100 px-4 py-8 md:px-8 md:py-16">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8">
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-8">
           <SectionHeading
             sub="Schedule"
             label={`イベント日程 全${acceptingSlots.length + comingSlots.length}回`}
@@ -184,7 +185,7 @@ export function EventSection({
           </p>
 
           {acceptingSlots.length > 0 && (
-            <div className="flex flex-col gap-4">
+            <div className="relative z-30 flex flex-col gap-4">
               <div className="flex items-center gap-2.5">
                 <div className="size-2 rounded bg-brand-green-text" />
                 <span className="text-[15px] font-bold text-warm-900">
@@ -248,6 +249,13 @@ export function EventSection({
               )}
             </div>
           )}
+          <Image
+            className="absolute z-10 -bottom-8 md:bottom-48 -right-0 md:-right-20 rotate-180 md:rotate-60"
+            src="/images/fig-cat.jpg"
+            alt=""
+            width={95}
+            height={120}
+          />
         </div>
       </section>
 
