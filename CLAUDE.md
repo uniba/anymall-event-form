@@ -1,0 +1,75 @@
+# AnyMall Event
+
+Japanese pet event application platform built with Next.js 15, React 19, Tailwind CSS, Prisma + Neon PostgreSQL.
+
+## Design Context
+
+### Users
+Dog owners and pet enthusiasts in Japan looking to attend AnyMall-hosted lunch events. They browse available event slots, select sessions with speakers/topics of interest, and submit applications. Their context is casual but intentional — they're investing time and money in enriching their life with their pet. They expect a smooth, trustworthy experience that respects their time.
+
+### Brand Personality
+**Warm, Natural, Welcoming** — The brand feels like a trusted community space for pet lovers. It combines approachable friendliness with a sense of quality and care. The tone is conversational yet polished, never clinical or overly corporate.
+
+**Emotional Goals:** Users should feel a blend of *premium exclusivity* (they're accessing something special and curated) and *friendly casualness* (relaxed, like a fun outing with their pet). The pet/animal connection is central — every design decision should reinforce the bond between owners and their animals.
+
+### Aesthetic Direction
+- **Visual tone:** Earthy, organic warmth with refined elegance. Green brand palette (#7cb342) grounded in warm neutrals (cream, soft browns). Nature-inspired without being rustic.
+- **Typography:** Serif headings (Noto Serif JP) for elegance and cultural resonance; sans-serif body (Inter + Noto Sans JP) for clarity and modernity.
+- **Layout:** Mobile-first, card-based content organization. Generous whitespace. Subtle borders and shadows — never heavy or boxy.
+- **Icons:** Lucide React, sized 14-16px, muted gray (#8a8a8a) for secondary information.
+- **Theme:** Light mode only. Warm off-white backgrounds (warm-50, warm-100) rather than pure white where possible.
+- **Anti-references:** Avoid cold/clinical tech aesthetics, neon colors, heavy drop shadows, or overly playful/cartoonish styles. This is not a generic SaaS dashboard.
+
+### Design Principles
+
+1. **Pet-first warmth** — Every screen should feel like it was made by people who love animals. Earthy tones, soft edges, and welcoming copy reinforce this.
+2. **Effortless clarity** — Japanese users scanning on mobile should instantly understand what's available and how to apply. Visual hierarchy, clear CTAs, and minimal cognitive load.
+3. **Curated quality** — The experience should feel premium and intentional, not mass-produced. Thoughtful spacing, refined typography, and restrained color use signal care.
+4. **Trust through transparency** — Multi-step forms show progress clearly. Status badges communicate application state at a glance. Confirmation emails close the loop.
+5. **Respect the content** — Let event details, speaker profiles, and venue photos breathe. Design supports the content rather than competing with it.
+
+### Technical Design Tokens
+
+```
+Brand Colors:
+  brand-green:        #7cb342  (primary actions, active states)
+  brand-green-dark:   #689638  (hover states)
+  brand-green-text:   #5a8f6e  (status text, subtle green)
+  brand-green-bg:     #eef2e6  (light green backgrounds)
+  brand-green-accent: #3d5a3d  (dark green for emphasis)
+  brand-green-light:  #d2debb  (dividers, decorative)
+  brand-olive:        #7a9b6d  (secondary green)
+
+Warm Neutrals:
+  warm-50:  #f7f5f0  (page backgrounds)
+  warm-100: #f2eee6  (card backgrounds, form pages)
+  warm-200: #e8e4db  (borders, dividers)
+  warm-300: #e8e2da  (subtle borders)
+  warm-400: #c0b8ad  (disabled states)
+  warm-500: #7a7067  (secondary text)
+  warm-600: #5c5c5c  (body text alternate)
+  warm-700: #48604d  (dark green-brown)
+  warm-800: #3d3d3d  (footer background)
+  warm-900: #2c2520  (darkest text)
+
+Typography:
+  Headings: Noto Serif JP (400, 600, 700)
+  Body:     Inter + Noto Sans JP
+  Sizes:    32px (hero) → 28px (section) → 20px (card) → 15px (body) → 13px (detail) → 11px (caption)
+
+Spacing:
+  Section padding: py-8, px-4
+  Card padding:    p-4 / p-3
+  Component gaps:  gap-2 / gap-3 / gap-4 / gap-8
+
+Border Radius:
+  Buttons/badges: rounded-full
+  Cards:          rounded-2xl
+  Inputs:         rounded-lg
+
+Accessibility:
+  WCAG 2.1 AA compliance
+  Keyboard navigable
+  Screen reader compatible
+  Proper label associations
+```
