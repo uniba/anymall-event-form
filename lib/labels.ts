@@ -1,3 +1,4 @@
+import { Prefecture } from "@prisma/client";
 import type { SlotApplicationStatus, SlotState } from "@prisma/client";
 
 export type GenderInput = "male" | "female" | "unspecified";
@@ -27,6 +28,8 @@ export const genderInputToEnum: Record<GenderInput, StoredGender> = {
   female: "FEMALE",
   unspecified: "UNSPECIFIED"
 };
+
+export const prefectureOptions = Object.values(Prefecture);
 
 export function getSlotStateLabel(value: SlotState): string {
   return slotStateLabels[value];

@@ -1,8 +1,10 @@
+import { Gender } from "@prisma/client";
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
-import { getGenderLabel } from "@/lib/labels";
+import { prefectureOptions } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
-import { time } from "console";
+import { calculateAge } from "@/lib/validation";
+import { SubmissionsTable, type SubmissionTableRow } from "./submissions-table";
 
 type SubmissionsPageProps = {
   searchParams?: Promise<{ q?: string }>;
@@ -12,22 +14,6 @@ const inputClassName =
   "rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500";
 const secondaryButtonClassName =
   "rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50";
-
-function calculateAge(birthDate: Date): number {
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-
-  const hasHadBirthdayThisYear =
-    today.getMonth() > birthDate.getMonth() ||
-    (today.getMonth() === birthDate.getMonth() &&
-      today.getDate() >= birthDate.getDate());
-
-  if (!hasHadBirthdayThisYear) {
-    age--;
-  }
-
-  return age;
-}
 
 export default async function AdminSubmissionsPage({ searchParams }: SubmissionsPageProps) {
   await requireAdminSession();
@@ -59,18 +45,6 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
     }
   });
 
-  const dateText = new Intl.DateTimeFormat("sv-SE", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  });
-
-  const timeFormatter = new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false
-  });
-
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">
       <AdminNav active="submissions" />
@@ -88,7 +62,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
               defaultValue={query}
               id="search-email-name"
               name="q"
-              placeholder="Email or name"
+              placeholder="メイルまたは名前"
               type="text"
             />
           </div>
@@ -103,37 +77,22 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
           </p>
         </div>
 
-        <div className="mt-6 overflow-x-auto">
-          <table className="min-w-full border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-600">
-                <th className="px-2 py-2">名前</th>
-                <th className="px-2 py-2">メーイル</th>
-                <th className="px-2 py-2">性別</th>
-                <th className="px-2 py-2">年齢</th>
-                <th className="px-2 py-2">申込日時</th>
-              </tr>
-            </thead>
-            <tbody>
-              {submissions.map((submission) => (
-                <tr className="border-b border-slate-100 align-top" key={submission.id}>
-                  <td className="px-2 py-3">{submission.name}</td>
-                  <td className="px-2 py-3">{submission.email}</td>
-                  <td className="px-2 py-3">{getGenderLabel(submission.gender)}</td>
-                  <td className="px-2 py-3">{calculateAge(submission.birthday)}</td>
-                  <td className="px-2 py-3">{dateText.format(submission.createdAt)} {timeFormatter.format(submission.createdAt)}</td>
-                </tr>
-              ))}
-              {submissions.length === 0 ? (
-                <tr>
-                  <td className="px-2 py-4 text-slate-500" colSpan={5}>
-                    申込はありません
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
+        <SubmissionsTable
+          genderOptions={Object.values(Gender)}
+          prefectureOptions={prefectureOptions}
+          submissions={submissions.map(
+            (submission): SubmissionTableRow => ({
+              id: submission.id,
+              name: submission.name,
+              email: submission.email,
+              gender: submission.gender,
+              age: calculateAge(submission.birthday),
+              prefecture: submission.prefecture,
+              birthday: submission.birthday.toISOString(),
+              createdAt: submission.createdAt.toISOString()
+            })
+          )}
+        />
       </section>
     </main>
   );

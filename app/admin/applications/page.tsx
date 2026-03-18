@@ -6,9 +6,8 @@ import {
 } from "@/components/application-filters";
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
-import { getGenderLabel, getSlotApplicationStatusLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
-import { formatAdminSlotDateTimeRange } from "@/lib/slot-display";
+import { ApplicationsTable, type ApplicationTableRow } from "./applications-table";
 
 type ApplicationsPageProps = {
   searchParams?: Promise<{ email?: string; venue?: string; slot?: string; status?: string}>;
@@ -140,24 +139,6 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
     venueName: slot.venue.name
   }));
 
-  const maleCount = applications.filter((application) => application.submission.gender === "MALE").length;
-  const femaleCount = applications.filter((application) => application.submission.gender === "FEMALE").length;
-  const unspecifiedCount = applications.filter(
-    (application) => application.submission.gender === "UNSPECIFIED"
-  ).length;
-
-  const dateText = new Intl.DateTimeFormat("sv-SE", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  });
-
-  const timeFormatter = new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false
-  });
-
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">
       <AdminNav active="applications" />
@@ -177,47 +158,27 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
 
         <div className="mt-6">
           <p className="mb-1 block text-xs font-medium text-slate-600">
-            応募件数: {applications.length} | 男性: {maleCount} | 女性: {femaleCount} | 未回答: {unspecifiedCount}
+            応募件数: {applications.length}
           </p>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
-          <table className="min-w-full border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-600">
-                <th className="px-2 py-2">メーイル</th>
-                <th className="px-2 py-2">名前</th>
-                <th className="px-2 py-2">性別</th>
-                <th className="px-2 py-2">年齢</th>
-                <th className="px-2 py-2">会場</th>
-                <th className="px-2 py-2">スロット日時</th>
-                <th className="px-2 py-2">状態</th>
-                <th className="px-2 py-2">応募日時</th>
-              </tr>
-            </thead>
-            <tbody>
-              {applications.map((application) => (
-                <tr className="border-b border-slate-100 align-top" key={application.id}>
-                  <td className="px-2 py-3">{application.submission.email}</td>
-                  <td className="px-2 py-3">{application.submission.name}</td>
-                  <td className="px-2 py-3">{getGenderLabel(application.submission.gender)}</td>
-                  <td className="px-2 py-3">{calculateAge(application.submission.birthday)}</td>
-                  <td className="px-2 py-3">{application.slot.venue.name}</td>
-                  <td className="px-2 py-3">{formatAdminSlotDateTimeRange(application.slot.startsAt, application.slot.endsAt)}</td>
-                  <td className="px-2 py-3">{getSlotApplicationStatusLabel(application.status)}</td>
-                  <td className="px-2 py-3">{dateText.format(application.createdAt)} {timeFormatter.format(application.createdAt)}</td>
-                </tr>
-              ))}
-              {applications.length === 0 ? (
-                <tr>
-                  <td className="px-2 py-4 text-slate-500" colSpan={8}>
-                    応募はありません
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
+        <ApplicationsTable
+          applications={applications.map(
+            (application): ApplicationTableRow => ({
+              id: application.id,
+              submissionEmail: application.submission.email,
+              submissionName: application.submission.name,
+              submissionGender: application.submission.gender,
+              submissionAge: calculateAge(application.submission.birthday),
+              venueName: application.slot.venue.name,
+              startsAt: application.slot.startsAt.toISOString(),
+              endsAt: application.slot.endsAt.toISOString(),
+              status: application.status,
+              createdAt: application.createdAt.toISOString()
+            })
+          )}
+          statusOptions={statusOptions}
+        />
       </section>
     </main>
   );

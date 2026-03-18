@@ -98,12 +98,14 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
             (slot): SlotTableRow => ({
               id: slot.id,
               eventName: slot.eventName,
+              venueId: slot.venueId,
               venueName: slot.venue.name,
               theme: slot.theme,
               instructor: slot.instructor,
               capacity: slot.capacity,
               applicationBegin: slot.applicationBegin.toISOString(),
               applicationDeadline: slot.applicationDeadline.toISOString(),
+              lotteryResultTime: slot.lotteryResultTime.toISOString(),
               startsAt: slot.startsAt.toISOString(),
               endsAt: slot.endsAt.toISOString(),
               state: slot.state

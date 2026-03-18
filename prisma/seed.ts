@@ -16,7 +16,7 @@ function toDate(value: string) {
 function createVenueInput(venue: SeedVenue) {
   return {
     name: venue.name,
-    address: venue.address ?? null
+    address: venue.address ?? ""
   };
 }
 

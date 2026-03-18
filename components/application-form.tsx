@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { type GenderInput } from "@/lib/labels";
+import { prefectureOptions, type GenderInput } from "@/lib/labels";
+import { getMemoMaxLength } from "@/lib/validation";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const katakanaPattern = /^[\u30A0-\u30FFー・\s]+$/;
@@ -17,10 +18,13 @@ type ApplicationFormProps = {
 
 export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
   const hasAvailableSlots = slotOptions.length > 0;
+  const memoMaxLength = getMemoMaxLength();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
   const [gender, setGender] = useState<"" | GenderInput>("");
+  const [prefecture, setPrefecture] = useState("");
+  const [memo, setMemo] = useState("");
   const [selectedSlotIds, setSelectedSlotIds] = useState<Array<string>>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -47,6 +51,8 @@ export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
     const normalizedEmail = email.trim().toLowerCase();
     const normalizedBirthday = birthday.trim();
     const normalizedGender = gender.trim();
+    const normalizedPrefecture = prefecture.trim();
+    const normalizedMemo = memo.trim();
     const dedupedSelectedSlotIds = Array.from(new Set(selectedSlotIds));
 
     if (!katakanaPattern.test(normalizedName)) {
@@ -73,6 +79,16 @@ export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
       return;
     }
 
+    if (!prefectureOptions.includes(normalizedPrefecture as (typeof prefectureOptions)[number])) {
+      setError("Select a valid prefecture.");
+      return;
+    }
+
+    if (normalizedMemo.length > memoMaxLength) {
+      setError(`Memo must be ${memoMaxLength} characters or fewer.`);
+      return;
+    }
+
     if (!hasAvailableSlots) {
       setError("No slots are currently available.");
       return;
@@ -94,6 +110,8 @@ export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
           email: normalizedEmail,
           birthday: normalizedBirthday,
           gender: normalizedGender,
+          prefecture: normalizedPrefecture,
+          memo: normalizedMemo,
           selectedSlotIds: dedupedSelectedSlotIds
         })
       });
@@ -111,6 +129,8 @@ export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
         setEmail("");
         setBirthday("");
         setGender("");
+        setPrefecture("");
+        setMemo("");
         setSelectedSlotIds([]);
         return;
       }
@@ -203,6 +223,41 @@ export function ApplicationForm({ slotOptions }: ApplicationFormProps) {
             Unspecified
           </label>
         </div>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-slate-800" htmlFor="prefecture">
+          都道府県
+        </label>
+        <select
+          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-slate-500"
+          id="prefecture"
+          onChange={(event) => setPrefecture(event.target.value)}
+          required
+          value={prefecture}
+        >
+          <option value="">選択してください</option>
+          {prefectureOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-slate-800" htmlFor="memo">
+          メモ
+        </label>
+        <textarea
+          className="min-h-28 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-slate-500"
+          id="memo"
+          maxLength={memoMaxLength}
+          onChange={(event) => setMemo(event.target.value)}
+          placeholder="ご要望があればご記入ください"
+          value={memo}
+        />
+        <p className="mt-1 text-xs text-slate-500">{memo.length}/{memoMaxLength}</p>
       </div>
 
       <div>

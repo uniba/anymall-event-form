@@ -1,16 +1,27 @@
 import { randomUUID } from "node:crypto";
-import { Prisma, SlotApplicationStatus, SlotState } from "@prisma/client";
+import { Prefecture, Prisma, SlotApplicationStatus, SlotState } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import type { GenderInput } from "@/lib/labels";
 import { sendApplicationReceivedEmail } from "@/lib/mailer";
 import { prisma } from "@/lib/prisma";
-import { isValidEmail, isValidGenderInput, isValidKatakanaName, parseBirthday, toStoredGender } from "@/lib/validation";
+import {
+  isValidEmail,
+  isValidGenderInput,
+  isValidKatakanaName,
+  isValidMemo,
+  isValidPrefecture,
+  normalizeMemo,
+  parseBirthday,
+  toStoredGender
+} from "@/lib/validation";
 
 type CreateApplicationBody = {
   name?: string;
   email?: string;
   birthday?: string;
   gender?: string;
+  prefecture?: string;
+  memo?: string;
   selectedSlotIds?: unknown;
 };
 
@@ -103,6 +114,8 @@ export async function POST(request: NextRequest) {
   const email = normalizeText(body.email).toLowerCase();
   const birthdayInput = normalizeText(body.birthday);
   const gender = normalizeText(body.gender);
+  const prefecture = normalizeText(body.prefecture);
+  const memo = normalizeMemo(normalizeText(body.memo));
   const selectedSlotIdsInput = body.selectedSlotIds;
   const birthday = parseBirthday(birthdayInput);
 
@@ -123,6 +136,14 @@ export async function POST(request: NextRequest) {
   }
 
   const storedGender = toStoredGender(gender as GenderInput);
+
+  if (!isValidPrefecture(prefecture)) {
+    return NextResponse.json({ error: "Invalid prefecture value." }, { status: 400 });
+  }
+
+  if (!isValidMemo(memo)) {
+    return NextResponse.json({ error: "Memo must be 150 characters or fewer." }, { status: 400 });
+  }
 
   if (!Array.isArray(selectedSlotIdsInput)) {
     return NextResponse.json({ error: "At least one slot must be selected." }, { status: 400 });
@@ -179,6 +200,8 @@ export async function POST(request: NextRequest) {
         email,
         gender: storedGender,
         birthday,
+        prefecture: prefecture as Prefecture,
+        memo,
         slotApplications: {
           create: selectedSlotIds.map((slotId) => ({
             slotId,
