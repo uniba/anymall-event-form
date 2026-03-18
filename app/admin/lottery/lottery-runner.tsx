@@ -3,6 +3,7 @@
 import type { SlotState } from "@prisma/client";
 import { FormEvent, useMemo, useState } from "react";
 import { getSlotApplicationStatusLabel, getSlotStateLabel } from "@/lib/labels";
+import { formatAdminSlotDateTimeRange } from "@/lib/slot-display";
 
 type SlotOption = {
   id: string;
@@ -34,10 +35,6 @@ type LotteryResult = {
 type LotteryRunnerProps = {
   slots: SlotOption[];
 };
-
-function formatDateTime(value: string): string {
-  return new Date(value).toLocaleString();
-}
 
 export function LotteryRunner({ slots }: LotteryRunnerProps) {
   const [targetSlotId, setTargetSlotId] = useState("");
@@ -146,7 +143,7 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
           <div className="mt-3 grid gap-2 text-sm text-slate-700">
             <p>
               <span className="font-medium">スロット</span> {result.slot.venueName} |{" "}
-              {formatDateTime(result.slot.startsAt)} - {formatDateTime(result.slot.endsAt)} | {getSlotStateLabel(result.slot.state)}
+              {formatAdminSlotDateTimeRange(result.slot.startsAt, result.slot.endsAt)} | {getSlotStateLabel(result.slot.state)}
             </p>
             <p>
               <span className="font-medium">抽選対象応募数:</span> {result.eligibleCount}

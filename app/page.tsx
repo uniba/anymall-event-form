@@ -34,8 +34,7 @@ export default async function HomePage() {
     id: slot.id,
     label:
       `${slot.eventName} | ${slot.venue.name} | ` +
-      `${dayFormatter.format(slot.startsAt)}, ${timeFormatter.format(slot.startsAt)}–${timeFormatter.format(slot.endsAt)} | ` +
-      `${getCapacityLabel(slot.capacity)} | ${getThemeSummary(slot.theme)}`
+      `${dayFormatter.format(slot.startsAt)}, ${timeFormatter.format(slot.startsAt)}–${timeFormatter.format(slot.endsAt)}` 
   }));
 
   return (

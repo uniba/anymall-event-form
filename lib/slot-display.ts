@@ -23,3 +23,22 @@ export function getThemeSummary(theme: string): string {
 export function getCapacityLabel(capacity: number): string {
   return capacity > 0 ? `${capacity}組` : "定員未設定";
 }
+
+export function formatAdminSlotDateTimeRange(startsAt: Date | string, endsAt: Date | string): string {
+  const startDate = new Date(startsAt);
+  const endDate = new Date(endsAt);
+
+  const dateText = new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(startDate);
+
+  const timeFormatter = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+
+  return `${dateText} ${timeFormatter.format(startDate)}-${timeFormatter.format(endDate)}`;
+}

@@ -8,6 +8,7 @@ import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
 import { getGenderLabel, getSlotApplicationStatusLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
+import { formatAdminSlotDateTimeRange } from "@/lib/slot-display";
 
 type ApplicationsPageProps = {
   searchParams?: Promise<{ email?: string; venue?: string; slot?: string; status?: string}>;
@@ -190,9 +191,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
                   <td className="px-2 py-3">{getGenderLabel(application.submission.gender)}</td>
                   <td className="px-2 py-3">{calculateAge(application.submission.birthday)}</td>
                   <td className="px-2 py-3">{application.slot.venue.name}</td>
-                  <td className="px-2 py-3">
-                    {application.slot.startsAt.toLocaleString()} - {application.slot.endsAt.toLocaleString()}
-                  </td>
+                  <td className="px-2 py-3">{formatAdminSlotDateTimeRange(application.slot.startsAt, application.slot.endsAt)}</td>
                   <td className="px-2 py-3">{getSlotApplicationStatusLabel(application.status)}</td>
                   <td className="px-2 py-3">{application.appliedAt.toLocaleString()}</td>
                 </tr>

@@ -3,30 +3,8 @@ import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
 import { getSlotStateLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
-import { getCapacityLabel } from "@/lib/slot-display";
+import { formatAdminSlotDateTimeRange, getCapacityLabel } from "@/lib/slot-display";
 import { LotteryRunner } from "./lottery-runner";
-
-function formatDate(date: Date): string {
-  const datePart = new Intl.DateTimeFormat("sv-SE", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).format(date);
-  const timePart = new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false
-  }).format(date);
-  return `${datePart} ${timePart}`;
-}
-
-function formatTime(date: Date): string {
-  return new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false
-  }).format(date);
-}
 
 export default async function AdminLotteryPage() {
   await requireAdminSession();
@@ -50,7 +28,7 @@ export default async function AdminLotteryPage() {
   const slotOptions = slots.map((slot) => ({
     id: slot.id,
     label:
-      `${slot.eventName} | ${slot.venue.name} | ${formatDate(slot.startsAt)} to ${formatTime(slot.endsAt)} | ` +
+      `${slot.eventName} | ${slot.venue.name} | ${formatAdminSlotDateTimeRange(slot.startsAt, slot.endsAt)} | ` +
       `${getCapacityLabel(slot.capacity)} | ${getSlotStateLabel(slot.state)}`
   }));
 
