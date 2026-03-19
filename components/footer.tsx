@@ -15,8 +15,20 @@ export default async function Footer() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="flex flex-col gap-6">
               <nav className="flex flex-col gap-4 text-xs font-medium text-white md:flex-row md:gap-6">
-                <a href="#">プライバシーポリシー</a>
-                <a href="#">お問い合わせ</a>
+                <a
+                  href="https://www.anymall.jp/meal/ja/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  プライバシーポリシー
+                </a>
+                <a
+                  href="https://www.anymall.jp/meal/ja/contact"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  お問い合わせ
+                </a>
               </nav>
             </div>
             <div className="flex flex-col md:flex-row gap-8 md:gap-4">

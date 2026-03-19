@@ -144,9 +144,7 @@ function FormField({
         {required ? " * 必須" : " 任意"}
       </label>
       {children}
-      {error && (
-        <p className="text-[11px] text-red-600">{error}</p>
-      )}
+      {error && <p className="text-[11px] text-red-600">{error}</p>}
     </div>
   );
 }
@@ -290,7 +288,9 @@ function FormStep({
   const memoMaxLength = getMemoMaxLength();
   const [agreed, setAgreed] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Partial<Record<string, string>>>({});
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<string, string>>
+  >({});
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const katakanaPattern = /^[\u30A0-\u30FFー・\s]+$/;
@@ -345,7 +345,11 @@ function FormStep({
             />
           </FormField>
 
-          <FormField label="氏名（フリガナ）" required error={fieldErrors.furigana}>
+          <FormField
+            label="氏名（フリガナ）"
+            required
+            error={fieldErrors.furigana}
+          >
             <input
               type="text"
               className={inputClass}
@@ -508,17 +512,24 @@ function FormStep({
             htmlFor="terms-agree"
             className="text-[13px] leading-5 text-warm-900"
           >
-            <button
+            {/* <button
               type="button"
               onClick={() => setShowTerms(true)}
               className="font-bold text-brand-green underline underline-offset-2"
             >
-              利用規約
-            </button>
+              プライバシーポリシー
+            </button> */}
+            <a
+              className="font-bold text-brand-green underline underline-offset-2"
+              href="https://www.anymall.jp/meal/ja/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              プライバシーポリシー
+            </a>
             &nbsp;に同意する
           </label>
         </div>
-
       </div>
       <div className="flex items-center justify-center gap-4 bg-white py-4 mt-auto">
         <button
@@ -653,7 +664,9 @@ function CompleteStep() {
           戻る
         </a>
         <a
-          href="/"
+          href="https://www.anymall.jp/meal/ja/contact"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex h-11 w-full items-center justify-center rounded-full border border-warm-200 bg-white text-sm font-bold text-warm-500 transition-colors hover:bg-warm-50"
         >
           お問い合わせ
