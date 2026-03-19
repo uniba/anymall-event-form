@@ -129,10 +129,12 @@ function StepIndicator({ current }: { current: Step }) {
 function FormField({
   label,
   required,
+  error,
   children,
 }: {
   label: string;
   required?: boolean;
+  error?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -142,6 +144,9 @@ function FormField({
         {required ? " * 必須" : " 任意"}
       </label>
       {children}
+      {error && (
+        <p className="text-[11px] text-red-600">{error}</p>
+      )}
     </div>
   );
 }
@@ -285,16 +290,52 @@ function FormStep({
   const memoMaxLength = getMemoMaxLength();
   const [agreed, setAgreed] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<string, string>>>({});
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const katakanaPattern = /^[\u30A0-\u30FFー・\s]+$/;
+
+  function validateFields(): Partial<Record<string, string>> {
+    const errors: Partial<Record<string, string>> = {};
+    if (!formData.name.trim()) {
+      errors.name = "氏名を入力してください";
+    }
+    if (!formData.furigana.trim()) {
+      errors.furigana = "フリガナを入力してください";
+    } else if (!katakanaPattern.test(formData.furigana.trim())) {
+      errors.furigana = "フリガナはカタカナで入力してください";
+    }
+    if (!formData.email.trim()) {
+      errors.email = "メールアドレスを入力してください";
+    } else if (!emailPattern.test(formData.email.trim())) {
+      errors.email = "有効なメールアドレスを入力してください";
+    }
+    return errors;
+  }
+
+  function handleSubmitClick() {
+    const errors = validateFields();
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+    onConfirm();
+  }
 
   function update(field: keyof FormData, value: string) {
     setFormData({ ...formData, [field]: value });
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
   }
 
   return (
     <div className="flex flex-col flex-1 gap-3.5 pt-6">
       <div className="mx-auto flex w-full max-w-lg flex-col gap-3.5 px-4 md:px-0">
         <div className="grid gap-3.5 md:grid-cols-2">
-          <FormField label="氏名" required>
+          <FormField label="氏名" required error={fieldErrors.name}>
             <input
               type="text"
               className={inputClass}
@@ -304,7 +345,7 @@ function FormStep({
             />
           </FormField>
 
-          <FormField label="氏名（フリガナ）" required>
+          <FormField label="氏名（フリガナ）" required error={fieldErrors.furigana}>
             <input
               type="text"
               className={inputClass}
@@ -315,7 +356,7 @@ function FormStep({
           </FormField>
         </div>
 
-        <FormField label="メールアドレス" required>
+        <FormField label="メールアドレス" required error={fieldErrors.email}>
           <input
             type="email"
             className={inputClass}
@@ -478,7 +519,6 @@ function FormStep({
           </label>
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
       </div>
       <div className="flex items-center justify-center gap-4 bg-white py-4 mt-auto">
         <button
@@ -490,7 +530,7 @@ function FormStep({
         </button>
         <button
           type="button"
-          onClick={onConfirm}
+          onClick={handleSubmitClick}
           disabled={!agreed}
           className="flex h-11 w-[140px] items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark disabled:opacity-40"
         >
@@ -641,29 +681,8 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const katakanaPattern = /^[\u30A0-\u30FFー・\s]+$/;
-
   function handleConfirm() {
     setError(null);
-
-    if (!formData.name.trim()) {
-      setError("氏名を入力してください。");
-      return;
-    }
-    if (!formData.furigana.trim()) {
-      setError("フリガナを入力してください。");
-      return;
-    }
-    if (!katakanaPattern.test(formData.furigana.trim())) {
-      setError("フリガナはカタカナで入力してください。");
-      return;
-    }
-    if (!emailPattern.test(formData.email.trim())) {
-      setError("有効なメールアドレスを入力してください。");
-      return;
-    }
-
     setStep("confirm");
     window.scrollTo(0, 0);
   }
