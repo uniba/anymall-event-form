@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_SESSION_COOKIE, isValidAdminSessionToken } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
-
-const venueAddressMaxLength = 150;
+import { parseVenueInput } from "../venue-input";
 
 type VenueUpdateInput = {
   name?: unknown;
   address?: unknown;
 };
-
-function normalizeText(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
-}
 
 export async function PATCH(
   request: NextRequest,
@@ -30,18 +25,9 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const name = normalizeText(body.name);
-  const address = normalizeText(body.address);
-
-  if (!name || !address) {
-    return NextResponse.json({ error: "必須項目を入力してください。" }, { status: 400 });
-  }
-
-  if (address.length > venueAddressMaxLength) {
-    return NextResponse.json(
-      { error: `住所は${venueAddressMaxLength}文字以内で入力してください。` },
-      { status: 400 }
-    );
+  const parsedInput = parseVenueInput(body);
+  if (!parsedInput.data) {
+    return NextResponse.json({ error: parsedInput.error }, { status: 400 });
   }
 
   const { venueId } = await context.params;
@@ -64,8 +50,8 @@ export async function PATCH(
       id: venueId
     },
     data: {
-      name,
-      address
+      name: parsedInput.data.name,
+      address: parsedInput.data.address
     },
     select: {
       id: true,
