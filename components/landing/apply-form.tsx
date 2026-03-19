@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { prefectureOptions } from "@/lib/labels";
 import { getMemoMaxLength } from "@/lib/validation";
@@ -190,6 +190,83 @@ function SlotSummaryCard({ slot }: { slot: SlotData }) {
   );
 }
 
+// --------------- Terms Modal ---------------
+
+function TermsModal({ onClose }: { onClose: () => void }) {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose],
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [handleKeyDown]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="relative flex max-h-[80vh] w-full max-w-lg flex-col rounded-2xl bg-white shadow-xl">
+        <div className="flex items-center justify-between border-b border-warm-200 px-5 py-4">
+          <h3 className="text-base font-bold text-warm-900">利用規約</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex size-8 items-center justify-center rounded-full text-warm-500 transition-colors hover:bg-warm-100"
+          >
+            <Icon name="X" size={18} />
+          </button>
+        </div>
+        <div className="overflow-y-auto px-5 py-4 text-[13px] leading-6 text-warm-900">
+          <h4 className="mb-2 font-bold">第1条（適用）</h4>
+          <p className="mb-4">
+            本規約は、AnyMall（以下「当社」）が提供するイベント参加申し込みサービス（以下「本サービス」）の利用に関する条件を定めるものです。利用者は本規約に同意の上、本サービスを利用するものとします。
+          </p>
+          <h4 className="mb-2 font-bold">第2条（個人情報の取扱い）</h4>
+          <p className="mb-4">
+            当社は、本サービスの提供にあたり取得した個人情報を、イベントの運営・管理、抽選結果の通知、およびサービス向上の目的にのみ使用します。法令に定める場合を除き、利用者の同意なく第三者に提供することはありません。
+          </p>
+          <h4 className="mb-2 font-bold">第3条（申し込みと抽選）</h4>
+          <p className="mb-4">
+            イベントへの参加は申し込み制とし、応募者多数の場合は抽選により参加者を決定します。抽選結果はメールにてお知らせいたします。抽選結果に関するお問い合わせにはお答えできません。
+          </p>
+          <h4 className="mb-2 font-bold">第4条（キャンセル）</h4>
+          <p className="mb-4">
+            参加確定後のキャンセルは、イベント開催日の3日前までにメールにてご連絡ください。無断キャンセルが続く場合、今後のイベント参加をお断りする場合があります。
+          </p>
+          <h4 className="mb-2 font-bold">第5条（免責事項）</h4>
+          <p className="mb-4">
+            当社は、天災・その他やむを得ない事由によりイベントが中止または変更となった場合の損害について、一切の責任を負いません。
+          </p>
+          <h4 className="mb-2 font-bold">第6条（規約の変更）</h4>
+          <p>
+            当社は、必要に応じて本規約を変更することがあります。変更後の規約は、本サービス上での掲示をもって効力を生じるものとします。
+          </p>
+        </div>
+        <div className="border-t border-warm-200 px-5 py-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-full items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark"
+          >
+            閉じる
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // --------------- Step components ---------------
 
 function FormStep({
@@ -206,6 +283,8 @@ function FormStep({
   onConfirm: () => void;
 }) {
   const memoMaxLength = getMemoMaxLength();
+  const [agreed, setAgreed] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   function update(field: keyof FormData, value: string) {
     setFormData({ ...formData, [field]: value });
@@ -376,6 +455,29 @@ function FormStep({
           </p>
         </FormField>
 
+        <div className="flex items-start justify-center gap-2.5 pb-2">
+          <input
+            type="checkbox"
+            id="terms-agree"
+            checked={agreed}
+            onChange={(e) => setAgreed(e.target.checked)}
+            className="mt-0.5 size-4 shrink-0 accent-brand-green"
+          />
+          <label
+            htmlFor="terms-agree"
+            className="text-[13px] leading-5 text-warm-900"
+          >
+            <button
+              type="button"
+              onClick={() => setShowTerms(true)}
+              className="font-bold text-brand-green underline underline-offset-2"
+            >
+              利用規約
+            </button>
+            &nbsp;に同意する
+          </label>
+        </div>
+
         {error && <p className="text-sm text-red-600">{error}</p>}
       </div>
       <div className="flex items-center justify-center gap-4 bg-white py-4">
@@ -389,11 +491,14 @@ function FormStep({
         <button
           type="button"
           onClick={onConfirm}
-          className="flex h-11 w-[140px] items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark"
+          disabled={!agreed}
+          className="flex h-11 w-[140px] items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark disabled:opacity-40"
         >
           送信する
         </button>
       </div>
+
+      {showTerms && <TermsModal onClose={() => setShowTerms(false)} />}
     </div>
   );
 }
@@ -436,7 +541,10 @@ function ConfirmStep({
             )}
           />
           <ConfirmRow label="居住地" value={formData.prefecture} />
-          <ConfirmRow label="性別" value={formData.gender ? genderDisplayLabel[formData.gender] : ""} />
+          <ConfirmRow
+            label="性別"
+            value={formData.gender ? genderDisplayLabel[formData.gender] : ""}
+          />
           <ConfirmRow label="メモ" value={formData.memo} />
         </div>
 
