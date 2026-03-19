@@ -86,7 +86,7 @@ function EventCard({
           <div className="text-warm-500 min-w-13">担当者</div>
           <div className="flex items-center gap-2">
             <figure
-              className="size-10 rounded-full border border-warm-200 bg-gray-300"
+              className="size-10 rounded-full border border-warm-200 bg-gray-300 -ml-[2px]"
               data-instructor={slot.instructor}
             ></figure>
             <span className="text-warm-900">{slot.instructor}</span>
@@ -237,13 +237,15 @@ export function EventSection({
               )}
             </div>
           )}
-          <Image
-            className="absolute z-10 -bottom-8 md:bottom-48 -right-0 md:-right-20 rotate-180 md:rotate-60"
-            src="/images/fig-cat.jpg"
-            alt=""
-            width={95}
-            height={120}
-          />
+          <div className="absolute z-10 -bottom-8 md:bottom-48 -right-0 md:-right-20 rotate-180 md:rotate-60">
+            <Image
+              className="slideIn"
+              src="/images/fig-cat.jpg"
+              alt=""
+              width={95}
+              height={120}
+            />
+          </div>
         </div>
       </section>
 

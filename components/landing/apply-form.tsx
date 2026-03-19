@@ -168,7 +168,7 @@ function SlotSummaryCard({ slot }: { slot: SlotData }) {
           <div className="text-warm-500 min-w-13">担当者</div>
           <div className="flex items-center gap-2">
             <figure
-              className="size-10 rounded-full border border-warm-200 bg-gray-300"
+              className="size-10 rounded-full border border-warm-200 bg-gray-300 -ml-[2px]"
               data-instructor={slot.instructor}
             ></figure>
             <span className="text-warm-900">{slot.instructor}</span>
