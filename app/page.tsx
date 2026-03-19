@@ -259,13 +259,13 @@ export default async function HomePage() {
                   name: "中村 篤史",
                   title: "獣医師 / A'alda動物病院グループ総院長",
                   bio: "A'aldaの動物病院グループ総院長として国内最大級の動物病院グループを統括。獣医療の現場と経営の両面から、ペットと飼い主の未来を見据えたビジョンを発信しています。",
-                  image: "/images/instructor/instructor-nakamura.png",
+                  image: "/images/instructor/instructor-nakamura.jpg",
                 },
                 {
                   name: "今井 まなみ",
                   title: "獣医師 / 愛犬ごはん研究家",
                   bio: "「獣医師まなみの愛犬ごはん」主宰。\n栄養学と臨床経験に基づく科学的根拠のある手作りごはんを提唱し、SNS総フォロワー数は数万人規模。\n飼い主目線の実践的アドバイスで圧倒的な支持を集めています。",
-                  image: "/images/instructor/instructor-manami.png",
+                  image: "/images/instructor/instructor-manami.jpg",
                 },
               ].map((speaker) => (
                 <div
