@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -67,6 +68,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="ja"
       className={`${inter.variable} ${notoSansJP.variable} ${notoSerifJP.variable}`}
     >
+      {process.env.NEXT_PUBLIC_GTM_ID && (
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+      )}
       <body>{children}</body>
     </html>
   );
