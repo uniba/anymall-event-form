@@ -22,11 +22,39 @@ const notoSerifJP = Noto_Serif_JP({
   display: "swap",
 });
 
+const siteTitle =
+  "AnyMall 獣医師監修 愛犬・愛猫のためのウェルネスランチイベント申し込み受付中！";
+const siteDescription =
+  "愛犬との暮らしがもっと豊かになる、体験型イベント。食事・健康・ライフスタイルを、専門家と一緒に楽しく学びませんか。";
+const siteUrl = "https://event.anymall.jp";
+const ogImageUrl = `${siteUrl}/images/ogimage.png`;
+
 export const metadata: Metadata = {
-  title:
-    "AnyMall 獣医師監修 愛犬・愛猫のためのウェルネスランチイベント申し込み受付中！",
-  description:
-    "愛犬との暮らしがもっと豊かになる、体験型イベント。食事・健康・ライフスタイルを、専門家と一緒に楽しく学びませんか。",
+  title: siteTitle,
+  description: siteDescription,
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    url: siteUrl,
+    siteName: "AnyMall",
+    images: [
+      {
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: siteTitle,
+      },
+    ],
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: [ogImageUrl],
+  },
 };
 
 type RootLayoutProps = {
