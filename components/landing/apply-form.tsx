@@ -90,18 +90,16 @@ function StepIndicator({ current }: { current: Step }) {
           <div key={s.key} className="flex">
             {i > 0 && (
               <div
-                className={`relative top-[14px] h-px w-10 ${
-                  i <= currentIndex ? "bg-brand-green" : "bg-warm-300"
-                }`}
+                className={`relative top-[14px] h-px w-10 ${i <= currentIndex ? "bg-brand-green" : "bg-warm-300"
+                  }`}
               />
             )}
             <div className="flex flex-col items-center gap-1">
               <div
-                className={`flex size-7 items-center justify-center rounded-full text-xs font-bold ${
-                  isCompleted || isCurrent
-                    ? "bg-brand-green text-white"
-                    : "bg-warm-300 text-warm-500"
-                }`}
+                className={`flex size-7 items-center justify-center rounded-full text-xs font-bold ${isCompleted || isCurrent
+                  ? "bg-brand-green text-white"
+                  : "bg-warm-300 text-warm-500"
+                  }`}
               >
                 {isCompleted ? (
                   <Icon className="text-white" name="Check" size={14} />
@@ -110,11 +108,10 @@ function StepIndicator({ current }: { current: Step }) {
                 )}
               </div>
               <span
-                className={`text-[11px] font-medium ${
-                  isCompleted || isCurrent
-                    ? "text-brand-green"
-                    : "text-warm-400"
-                }`}
+                className={`text-[11px] font-medium ${isCompleted || isCurrent
+                  ? "text-brand-green"
+                  : "text-warm-400"
+                  }`}
               >
                 {s.label}
               </span>
@@ -465,11 +462,10 @@ function FormStep({
                 key={opt.value}
                 type="button"
                 onClick={() => update("gender", opt.value)}
-                className={`flex h-10 items-center justify-center rounded-lg border text-[13px] font-medium transition-colors ${
-                  formData.gender === opt.value
-                    ? "border-brand-green bg-brand-green-bg text-brand-green-accent"
-                    : "border-warm-400 bg-white text-warm-900 hover:bg-warm-50"
-                }`}
+                className={`flex h-10 items-center justify-center rounded-lg border text-[13px] font-medium transition-colors ${formData.gender === opt.value
+                  ? "border-brand-green bg-brand-green-bg text-brand-green-accent"
+                  : "border-warm-400 bg-white text-warm-900 hover:bg-warm-50"
+                  }`}
               >
                 {opt.label}
               </button>
@@ -490,34 +486,49 @@ function FormStep({
           </p>
         </FormField>
 
-        <div className="flex items-start justify-center gap-2.5 pb-2">
-          <input
-            type="checkbox"
-            id="terms-agree"
-            checked={agreed}
-            onChange={(e) => setAgreed(e.target.checked)}
-            className="mt-0.5 size-4 shrink-0 accent-brand-green"
-          />
+        <div className="flex flex-col gap-3 pb-2">
+          <div className="rounded-lg border border-warm-300 bg-warm-50 p-4">
+            <p className="text-[13px] leading-6 text-warm-600">
+              ご入力いただいた個人情報は、本イベントの申込受付、抽選、当落連絡、本人確認、当日の運営、お問い合わせ対応のために利用します。
+              <br />
+              また、当社および本イベントの協賛企業・提携先が、今後のイベント、商品、サービス、キャンペーン等のご案内のために利用し、必要な範囲で共有する場合があります。
+              詳細は、
+              <a
+                className="font-bold text-brand-green underline underline-offset-2"
+                href="https://www.anymall.jp/meal/ja/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                プライバシーポリシー
+              </a>
+              をご確認ください。
+            </p>
+          </div>
+
           <label
             htmlFor="terms-agree"
-            className="text-[13px] leading-5 text-warm-900"
+            className="flex cursor-pointer items-start gap-3 rounded-lg border border-warm-300 bg-white p-4 transition-colors hover:bg-warm-50 active:bg-warm-100"
           >
-            {/* <button
-              type="button"
-              onClick={() => setShowTerms(true)}
-              className="font-bold text-brand-green underline underline-offset-2"
-            >
-              プライバシーポリシー
-            </button> */}
-            <a
-              className="font-bold text-brand-green underline underline-offset-2"
-              href="https://www.anymall.jp/meal/ja/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              プライバシーポリシー
-            </a>
-            &nbsp;に同意する
+            <input
+              type="checkbox"
+              id="terms-agree"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-0.5 size-5 shrink-0 cursor-pointer accent-brand-green"
+            />
+            <span className="text-[15px] leading-6 text-warm-900">
+              上記内容および
+              <a
+                className="font-bold text-brand-green underline underline-offset-2"
+                href="https://www.anymall.jp/meal/ja/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                プライバシーポリシー
+              </a>
+              に同意
+            </span>
           </label>
         </div>
       </div>
@@ -640,9 +651,9 @@ function CompleteStep() {
         <p className="text-sm leading-6 text-warm-500">
           お申し込み控え​メールを​送信しましたので​ご確認ください。
           <br />
-          ​万一メールが​届いていない​場合は、​お問い​合わせください。
+          万一メールが​届いていない​場合は、​お問い​合わせください。
           <br />
-          ​抽選結果は​後日メールにてお知らせします。​
+          抽選結果は​後日メールにてお知らせします。
         </p>
       </div>
 
@@ -740,7 +751,7 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
             イベント参加申し込み
           </h1>
           <p className="mt-2 text-sm text-warm-500">
-            以下の​項目に​ついて​それぞれご記入ください。​
+            以下の​項目に​ついて​それぞれご記入ください。
           </p>
         </div>
       )}
