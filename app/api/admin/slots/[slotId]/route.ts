@@ -73,3 +73,43 @@ export async function PATCH(
 
   return NextResponse.json({ slot: toSlotTableRow(updatedSlot) });
 }
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ slotId: string }> }
+) {
+  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
+  if (!isAdminSessionValid) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  const { slotId } = await context.params;
+
+  const existingSlot = await prisma.slot.findUnique({
+    where: { id: slotId },
+    select: { id: true }
+  });
+
+  if (!existingSlot) {
+    return NextResponse.json({ error: "スロットが見つかりません。" }, { status: 404 });
+  }
+
+  const existingApplication = await prisma.submissionSlot.findFirst({
+    where: { slotId },
+    select: { id: true }
+  });
+
+  if (existingApplication) {
+    return NextResponse.json(
+      { error: "このスロットには応募データが紐づいているため削除できません。先に応募データを削除してください。" },
+      { status: 400 }
+    );
+  }
+
+  await prisma.slot.delete({
+    where: { id: slotId }
+  });
+
+  return NextResponse.json({ slotId });
+}

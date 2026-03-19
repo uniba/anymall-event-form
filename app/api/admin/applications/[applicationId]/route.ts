@@ -69,3 +69,37 @@ export async function PATCH(
 
   return NextResponse.json({ application });
 }
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ applicationId: string }> }
+) {
+  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
+  if (!isAdminSessionValid) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  const { applicationId } = await context.params;
+
+  const existingApplication = await prisma.submissionSlot.findUnique({
+    where: {
+      id: applicationId
+    },
+    select: {
+      id: true
+    }
+  });
+
+  if (!existingApplication) {
+    return NextResponse.json({ error: "応募が見つかりません。" }, { status: 404 });
+  }
+
+  await prisma.submissionSlot.delete({
+    where: {
+      id: applicationId
+    }
+  });
+
+  return NextResponse.json({ applicationId });
+}

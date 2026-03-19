@@ -248,7 +248,8 @@ export function SlotsTable({
   const [formValues, setFormValues] = useState<SlotFormState | null>(null);
   const [venues, setVenues] = useState<VenueOption[]>([]);
   const [isLoadingVenues, setIsLoadingVenues] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -338,7 +339,7 @@ export function SlotsTable({
   }, [createRequestCount]);
 
   useEffect(() => {
-    if (!modalState || isSubmitting) {
+    if (!modalState || isSaving || isDeleting) {
       return;
     }
 
@@ -350,7 +351,7 @@ export function SlotsTable({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSubmitting, modalState]);
+  }, [isDeleting, isSaving, modalState]);
 
   function updateFormValue<Key extends keyof SlotFormState>(
     key: Key,
@@ -362,7 +363,7 @@ export function SlotsTable({
   }
 
   function closeModal() {
-    if (!isSubmitting) {
+    if (!isSaving && !isDeleting) {
       setModalState(null);
     }
   }
@@ -390,7 +391,7 @@ export function SlotsTable({
     }
 
     setErrorMessage(null);
-    setIsSubmitting(true);
+    setIsSaving(true);
 
     try {
       const isCreateMode = modalState.mode === "create";
@@ -428,14 +429,54 @@ export function SlotsTable({
     } catch {
       setErrorMessage(modalState.mode === "create" ? "スロットを追加できませんでした。" : "スロットを更新できませんでした。");
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
+    }
+  }
+
+  async function onDelete() {
+    if (modalState?.mode !== "edit" || !selectedSlot) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "このスロットを削除しますか？\n応募データが紐づいているスロットは削除できません。"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(`/api/admin/slots/${modalState.slotId}`, {
+        method: "DELETE"
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string; slotId?: string }
+        | null;
+
+      if (!response.ok || payload?.slotId !== modalState.slotId) {
+        setErrorMessage(payload?.error ?? "スロットを削除できませんでした。");
+        return;
+      }
+
+      setSlotRows((current) => current.filter((slot) => slot.id !== payload.slotId));
+      setModalState(null);
+    } catch {
+      setErrorMessage("スロットを削除できませんでした。");
+    } finally {
+      setIsDeleting(false);
     }
   }
 
   const isCreateMode = modalState?.mode === "create";
   const modalTitle = isCreateMode ? "スロット追加" : "スロット編集";
   const modalSubtitle = isCreateMode ? "新しいスロット情報を入力してください" : selectedSlot?.eventName ?? "";
-  const submitLabel = isSubmitting ? "保存中..." : isCreateMode ? "追加" : "保存";
+  const isSubmitting = isSaving || isDeleting;
+  const submitLabel = isSaving ? "保存中..." : isCreateMode ? "追加" : "保存";
 
   return (
     <>
@@ -802,24 +843,39 @@ export function SlotsTable({
                 </p>
               ) : null}
 
-              <div className="flex justify-end gap-3">
-                <button
-                  className={secondaryButtonClassName}
-                  disabled={isSubmitting}
-                  onClick={closeModal}
-                  type="button"
-                >
-                  キャンセル
-                </button>
-                <button
-                  className={primaryButtonClassName}
-                  disabled={
-                    isSubmitting || isLoadingVenues || venues.length === 0
-                  }
-                  type="submit"
-                >
-                  {submitLabel}
-                </button>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  {!isCreateMode ? (
+                    <button
+                      className="rounded-md border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:border-rose-200 disabled:bg-rose-50 disabled:text-rose-300"
+                      disabled={isSubmitting}
+                      onClick={onDelete}
+                      type="button"
+                    >
+                      {isDeleting ? "削除中..." : "削除"}
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    className={secondaryButtonClassName}
+                    disabled={isSubmitting}
+                    onClick={closeModal}
+                    type="button"
+                  >
+                    キャンセル
+                  </button>
+                  <button
+                    className={primaryButtonClassName}
+                    disabled={
+                      isSubmitting || isLoadingVenues || venues.length === 0
+                    }
+                    type="submit"
+                  >
+                    {submitLabel}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

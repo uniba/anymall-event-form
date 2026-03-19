@@ -122,7 +122,7 @@ export function SlotsManager({
           onClick={() => setCreateRequestCount((current) => current + 1)}
           type="button"
         >
-          add a new slot
+          新しいスロットを追加
         </button>
       </form>
 

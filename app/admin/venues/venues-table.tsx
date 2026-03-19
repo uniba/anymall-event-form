@@ -72,7 +72,8 @@ export function VenuesTable({
   const [venueRows, setVenueRows] = useState(venues);
   const [modalState, setModalState] = useState<ModalState | null>(null);
   const [formValues, setFormValues] = useState<VenueFormState | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -115,7 +116,7 @@ export function VenuesTable({
   }, [createRequestCount]);
 
   useEffect(() => {
-    if (!modalState || isSubmitting) {
+    if (!modalState || isSaving || isDeleting) {
       return;
     }
 
@@ -127,14 +128,14 @@ export function VenuesTable({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSubmitting, modalState]);
+  }, [isDeleting, isSaving, modalState]);
 
   function openVenue(venue: VenueTableRow) {
     setModalState({ mode: "edit", venueId: venue.id });
   }
 
   function closeModal() {
-    if (!isSubmitting) {
+    if (!isSaving && !isDeleting) {
       setModalState(null);
     }
   }
@@ -157,7 +158,7 @@ export function VenuesTable({
     }
 
     setErrorMessage(null);
-    setIsSubmitting(true);
+    setIsSaving(true);
 
     try {
       const isCreateMode = modalState.mode === "create";
@@ -193,14 +194,54 @@ export function VenuesTable({
     } catch {
       setErrorMessage(modalState.mode === "create" ? "会場を追加できませんでした。" : "会場を更新できませんでした。");
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
+    }
+  }
+
+  async function onDelete() {
+    if (modalState?.mode !== "edit" || !selectedVenue) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "この会場を削除しますか？\n紐づくスロットがある会場は削除できません。"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(`/api/admin/venues/${modalState.venueId}`, {
+        method: "DELETE"
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string; venueId?: string }
+        | null;
+
+      if (!response.ok || payload?.venueId !== modalState.venueId) {
+        setErrorMessage(payload?.error ?? "会場を削除できませんでした。");
+        return;
+      }
+
+      setVenueRows((current) => current.filter((venue) => venue.id !== payload.venueId));
+      setModalState(null);
+    } catch {
+      setErrorMessage("会場を削除できませんでした。");
+    } finally {
+      setIsDeleting(false);
     }
   }
 
   const isCreateMode = modalState?.mode === "create";
   const modalTitle = isCreateMode ? "会場追加" : "会場編集";
   const modalSubtitle = isCreateMode ? "新しい会場情報を入力してください" : selectedVenue?.name ?? "";
-  const submitLabel = isSubmitting ? "保存中..." : isCreateMode ? "追加" : "保存";
+  const isSubmitting = isSaving || isDeleting;
+  const submitLabel = isSaving ? "保存中..." : isCreateMode ? "追加" : "保存";
 
   return (
     <>
@@ -306,18 +347,33 @@ export function VenuesTable({
                 </p>
               ) : null}
 
-              <div className="flex justify-end gap-3">
-                <button
-                  className={secondaryButtonClassName}
-                  disabled={isSubmitting}
-                  onClick={closeModal}
-                  type="button"
-                >
-                  キャンセル
-                </button>
-                <button className={primaryButtonClassName} disabled={isSubmitting} type="submit">
-                  {submitLabel}
-                </button>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  {!isCreateMode ? (
+                    <button
+                      className="rounded-md border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:border-rose-200 disabled:bg-rose-50 disabled:text-rose-300"
+                      disabled={isSubmitting}
+                      onClick={onDelete}
+                      type="button"
+                    >
+                      {isDeleting ? "削除中..." : "削除"}
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    className={secondaryButtonClassName}
+                    disabled={isSubmitting}
+                    onClick={closeModal}
+                    type="button"
+                  >
+                    キャンセル
+                  </button>
+                  <button className={primaryButtonClassName} disabled={isSubmitting} type="submit">
+                    {submitLabel}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
