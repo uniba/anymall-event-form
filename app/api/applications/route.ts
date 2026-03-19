@@ -82,13 +82,38 @@ async function rejectAttemptRows(submissionId: string, submissionAttemptId: stri
   });
 }
 
+type SlotInfoForEmail = {
+  venueName: string;
+  eventName: string;
+  startsAt: Date;
+  endsAt: Date;
+};
+
+async function fetchSlotsForEmail(slotIds: string[]): Promise<SlotInfoForEmail[]> {
+  const slots = await prisma.slot.findMany({
+    where: { id: { in: slotIds } },
+    include: { venue: true },
+    orderBy: { startsAt: "asc" }
+  });
+
+  return slots.map((slot) => ({
+    venueName: slot.venue.name,
+    eventName: slot.eventName,
+    startsAt: slot.startsAt,
+    endsAt: slot.endsAt
+  }));
+}
+
 async function sendReceiptOrRejectAttempt(
   submissionId: string,
   submissionAttemptId: string,
-  email: string
+  email: string,
+  applicantName: string,
+  slotIds: string[]
 ): Promise<{ emailSent: boolean; warning?: string }> {
   try {
-    await sendApplicationReceivedEmail({ to: email });
+    const slots = await fetchSlotsForEmail(slotIds);
+    await sendApplicationReceivedEmail({ to: email, applicantName, slots });
     await markAttemptReceiptSent(submissionId, submissionAttemptId);
     return { emailSent: true };
   } catch {
@@ -188,7 +213,9 @@ export async function POST(request: NextRequest) {
     const receiptResult = await sendReceiptOrRejectAttempt(
       existing.id,
       submissionAttemptId,
-      email
+      email,
+      name,
+      selectedSlotIds
     );
     return NextResponse.json({ ok: true, ...receiptResult }, { status: 200 });
   }
@@ -215,7 +242,9 @@ export async function POST(request: NextRequest) {
     const receiptResult = await sendReceiptOrRejectAttempt(
       created.id,
       submissionAttemptId,
-      email
+      email,
+      name,
+      selectedSlotIds
     );
     return NextResponse.json({ ok: true, ...receiptResult }, { status: 201 });
   } catch (error) {
@@ -237,7 +266,9 @@ export async function POST(request: NextRequest) {
         const receiptResult = await sendReceiptOrRejectAttempt(
           existingSubmission.id,
           submissionAttemptId,
-          email
+          email,
+          name,
+          selectedSlotIds
         );
         return NextResponse.json({ ok: true, ...receiptResult }, { status: 200 });
       }
