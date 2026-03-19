@@ -27,3 +27,39 @@ body {
   background-image: url(/images/instructor/instructor-nakamura.jpg);
   @apply bg-cover;
 }
+
+.slideIn {
+  animation: slideIn 1s ease both;
+  animation-timeline: view();
+  animation-range: contain 0% contain 25%;
+}
+
+.slideIn2 {
+  animation: slideIn 1s ease both;
+  animation-timeline: view();
+  animation-range: cover 0% contain 5%;
+}
+
+.slideLtR {
+  animation: slideLtR 1s ease both;
+  animation-timeline: view();
+  animation-range: contain 0% contain 25%;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(36px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLtR {
+  0% {
+    transform: translateX(-36px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
