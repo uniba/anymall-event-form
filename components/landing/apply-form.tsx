@@ -586,7 +586,7 @@ function ConfirmStep({
             label="性別"
             value={formData.gender ? genderDisplayLabel[formData.gender] : ""}
           />
-          <ConfirmRow label="メモ" value={formData.memo} />
+          <ConfirmRow label="ペットに​ついて​" value={formData.memo} />
         </div>
 
         <div className="flex flex-col gap-3">
@@ -701,12 +701,13 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
         body: JSON.stringify({
           name: formData.furigana.trim(),
           email: formData.email.trim().toLowerCase(),
-          birthday: toBirthdayISO(
-            formData.birthdayYear,
-            formData.birthdayMonth,
-            formData.birthdayDay,
-          ),
-          gender: formData.gender || "unspecified",
+          birthday:
+            toBirthdayISO(
+              formData.birthdayYear,
+              formData.birthdayMonth,
+              formData.birthdayDay,
+            ) || "",
+          gender: formData.gender || "",
           prefecture: formData.prefecture.trim(),
           memo: formData.memo.trim(),
           selectedSlotIds: slots.map((s) => s.id),

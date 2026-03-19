@@ -137,9 +137,9 @@ export async function PATCH(
       name: submission.name,
       email: submission.email,
       gender: submission.gender,
-      age: calculateAge(submission.birthday),
+      age: submission.birthday ? calculateAge(submission.birthday) : null,
       prefecture: submission.prefecture,
-      birthday: submission.birthday.toISOString(),
+      birthday: submission.birthday?.toISOString() ?? "",
       createdAt: submission.createdAt.toISOString(),
     },
   });

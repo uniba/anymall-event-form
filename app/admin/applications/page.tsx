@@ -169,7 +169,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
               submissionEmail: application.submission.email,
               submissionName: application.submission.name,
               submissionGender: application.submission.gender,
-              submissionAge: calculateAge(application.submission.birthday),
+              submissionAge: application.submission.birthday ? calculateAge(application.submission.birthday) : null,
               venueName: application.slot.venue.name,
               startsAt: application.slot.startsAt.toISOString(),
               endsAt: application.slot.endsAt.toISOString(),

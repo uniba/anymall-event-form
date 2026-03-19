@@ -10,9 +10,9 @@ export type SubmissionTableRow = {
   id: string;
   name: string;
   email: string;
-  gender: Gender;
-  age: number;
-  prefecture: Prefecture;
+  gender: Gender | null;
+  age: number | null;
+  prefecture: Prefecture | null;
   birthday: string;
   createdAt: string;
 };
@@ -20,7 +20,7 @@ export type SubmissionTableRow = {
 type SubmissionFormState = {
   name: string;
   email: string;
-  gender: Gender;
+  gender: Gender | "";
   ageText: string;
   prefecture: Prefecture | "";
 };
@@ -97,9 +97,9 @@ function getInitialFormState(
   return {
     name: submission.name,
     email: submission.email,
-    gender: submission.gender,
-    ageText: String(submission.age),
-    prefecture: submission.prefecture,
+    gender: submission.gender ?? "",
+    ageText: submission.age != null ? String(submission.age) : "",
+    prefecture: submission.prefecture ?? "",
   };
 }
 
@@ -350,7 +350,7 @@ export function SubmissionsTable({
                 <td className="px-2 py-3">{submission.name}</td>
                 <td className="px-2 py-3">{submission.email}</td>
                 <td className="px-2 py-3">
-                  {getGenderLabel(submission.gender)}
+                  {submission.gender ? getGenderLabel(submission.gender) : "—"}
                 </td>
                 <td className="px-2 py-3">{submission.age}</td>
                 <td className="px-2 py-3">{submission.prefecture}</td>

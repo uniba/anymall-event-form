@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
   const prefecture = normalizeText(body.prefecture);
   const memo = normalizeMemo(normalizeText(body.memo));
   const selectedSlotIdsInput = body.selectedSlotIds;
-  const birthday = parseBirthday(birthdayInput);
+  const birthday = birthdayInput ? parseBirthday(birthdayInput) : null;
 
   if (!isValidKatakanaName(name)) {
     return NextResponse.json({ error: "Name must use katakana only." }, { status: 400 });
@@ -152,21 +152,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid email format." }, { status: 400 });
   }
 
-  if (!birthday) {
+  if (birthdayInput && !birthday) {
     return NextResponse.json({ error: "Invalid birthday." }, { status: 400 });
   }
 
-  if (!isValidGenderInput(gender)) {
-    return NextResponse.json({ error: "Invalid gender value." }, { status: 400 });
+  let storedGender: ReturnType<typeof toStoredGender> | null = null;
+  if (gender) {
+    if (!isValidGenderInput(gender)) {
+      return NextResponse.json({ error: "Invalid gender value." }, { status: 400 });
+    }
+    storedGender = toStoredGender(gender as GenderInput);
   }
 
-  const storedGender = toStoredGender(gender as GenderInput);
-
-  if (!isValidPrefecture(prefecture)) {
+  if (prefecture && !isValidPrefecture(prefecture)) {
     return NextResponse.json({ error: "Invalid prefecture value." }, { status: 400 });
   }
 
-  if (!isValidMemo(memo)) {
+  if (memo && !isValidMemo(memo)) {
     return NextResponse.json({ error: "Memo must be 150 characters or fewer." }, { status: 400 });
   }
 
@@ -225,10 +227,10 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         email,
-        gender: storedGender,
-        birthday,
-        prefecture: prefecture as Prefecture,
-        memo,
+        gender: storedGender ?? undefined,
+        birthday: birthday ?? undefined,
+        prefecture: prefecture ? (prefecture as Prefecture) : undefined,
+        memo: memo || undefined,
         slotApplications: {
           create: selectedSlotIds.map((slotId) => ({
             slotId,

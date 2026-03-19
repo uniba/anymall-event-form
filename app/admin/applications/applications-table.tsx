@@ -9,8 +9,8 @@ export type ApplicationTableRow = {
   id: string;
   submissionEmail: string;
   submissionName: string;
-  submissionGender: StoredGender;
-  submissionAge: number;
+  submissionGender: StoredGender | null;
+  submissionAge: number | null;
   venueName: string;
   startsAt: string;
   endsAt: string;
@@ -263,11 +263,11 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
               </div>
               <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">性別</p>
-                <div className={detailFieldClassName}>{getGenderLabel(selectedApplication.submissionGender)}</div>
+                <div className={detailFieldClassName}>{selectedApplication.submissionGender ? getGenderLabel(selectedApplication.submissionGender) : "—"}</div>
               </div>
               <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">年齢</p>
-                <div className={detailFieldClassName}>{selectedApplication.submissionAge}</div>
+                <div className={detailFieldClassName}>{selectedApplication.submissionAge ?? "—"}</div>
               </div>
               <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">会場</p>

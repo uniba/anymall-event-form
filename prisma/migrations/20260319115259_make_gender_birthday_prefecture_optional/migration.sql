@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Submission" ALTER COLUMN "birthday" DROP NOT NULL,
+ALTER COLUMN "gender" DROP NOT NULL,
+ALTER COLUMN "prefecture" DROP NOT NULL;
