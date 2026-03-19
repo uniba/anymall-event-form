@@ -119,7 +119,7 @@ export function EventSection({
   const [showAllAccepting, setShowAllAccepting] = useState(false);
   const [showAllComing, setShowAllComing] = useState(false);
 
-  const INITIAL_SHOW_COUNT = 6;
+  const INITIAL_SHOW_COUNT = 12;
 
   const visibleAccepting = showAllAccepting
     ? acceptingSlots
@@ -178,7 +178,7 @@ export function EventSection({
                   />
                 ))}
               </div>
-              {!showAllAccepting && remainingAccepting > 0 && (
+              {/* {!showAllAccepting && remainingAccepting > 0 && (
                 <button
                   type="button"
                   onClick={() => setShowAllAccepting(true)}
@@ -191,7 +191,7 @@ export function EventSection({
                     size={16}
                   />
                 </button>
-              )}
+              )} */}
             </div>
           )}
 
