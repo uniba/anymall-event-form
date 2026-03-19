@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_SESSION_COOKIE, isValidAdminSessionToken } from "@/lib/admin-auth";
-import { prisma } from "@/lib/prisma";
 import { validateSlotUpdateInput, type SlotUpdateInput } from "@/lib/admin-slot-validation";
-import { toSlotTableRow } from "../slot-response";
+import { prisma } from "@/lib/prisma";
+import { toSlotTableRow } from "./slot-response";
 
-export async function PATCH(
-  request: NextRequest,
-  context: { params: Promise<{ slotId: string }> }
-) {
+export async function POST(request: NextRequest) {
   const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
   const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
   if (!isAdminSessionValid) {
@@ -26,29 +23,16 @@ export async function PATCH(
     return NextResponse.json({ error: validated.error ?? "Invalid slot data." }, { status: 400 });
   }
 
-  const { slotId } = await context.params;
-
-  const [slot, venue] = await Promise.all([
-    prisma.slot.findUnique({
-      where: { id: slotId },
-      select: { id: true }
-    }),
-    prisma.venue.findUnique({
-      where: { id: validated.data.venueId },
-      select: { id: true }
-    })
-  ]);
-
-  if (!slot) {
-    return NextResponse.json({ error: "スロットが見つかりません。" }, { status: 404 });
-  }
+  const venue = await prisma.venue.findUnique({
+    where: { id: validated.data.venueId },
+    select: { id: true }
+  });
 
   if (!venue) {
     return NextResponse.json({ error: "会場が見つかりません。" }, { status: 404 });
   }
 
-  const updatedSlot = await prisma.slot.update({
-    where: { id: slotId },
+  const slot = await prisma.slot.create({
     data: {
       eventName: validated.data.eventName,
       venueId: validated.data.venueId,
@@ -71,5 +55,5 @@ export async function PATCH(
     }
   });
 
-  return NextResponse.json({ slot: toSlotTableRow(updatedSlot) });
+  return NextResponse.json({ slot: toSlotTableRow(slot) }, { status: 201 });
 }

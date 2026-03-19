@@ -109,6 +109,10 @@ export function validateSlotUpdateInput(input: SlotUpdateInput): {
     return { error: "応募開始日時は応募締切日時以前にしてください。" };
   }
 
+  if (getAdminSlotDateInputValue(lotteryResultTime) >= getAdminSlotDateInputValue(startsAt)) {
+    return { error: "抽選日は開催日より前にしてください。" };
+  }
+
   if (startsAt.getTime() >= endsAt.getTime()) {
     return { error: "開催終了時間は開催開始時間より後にしてください。" };
   }
