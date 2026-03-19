@@ -84,14 +84,14 @@ export function ApplicationFilters({
     <form className="mt-4 flex flex-wrap items-end gap-3" method="get">
       <div>
         <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-email">
-          メイルまたは名前
+          メールアドレスまたは名前
         </label>
         <input
           className={inputClassName}
           defaultValue={defaultEmail}
           id="filter-email-name"
           name="email"
-          placeholder="メイルまたは名前"
+          placeholder="メールアドレスまたは名前"
           type="text"
         />
       </div>

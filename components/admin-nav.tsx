@@ -40,7 +40,7 @@ export function AdminNav({ active }: AdminNavProps) {
           className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           type="submit"
         >
-          ロッグアウト
+          ログアウト
         </button>
       </form>
     </header>

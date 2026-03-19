@@ -184,9 +184,9 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
         <table className="min-w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-600">
-              <th className="px-2 py-2">メイル</th>
+              <th className="px-2 py-2">メールアドレス</th>
               <th className="px-2 py-2">会場</th>
-              <th className="px-2 py-2">スロット日時</th>
+              <th className="px-2 py-2">開催日時</th>
               <th className="px-2 py-2">状態</th>
               <th className="px-2 py-2">応募日時</th>
             </tr>
@@ -257,7 +257,7 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
 
             <div className="grid gap-4 px-6 py-5 md:grid-cols-2">
               <div>
-                <p className="mb-1 text-xs font-medium text-slate-600">メイル</p>
+                <p className="mb-1 text-xs font-medium text-slate-600">メールアドレス</p>
                 <div className={detailFieldClassName}>{selectedApplication.submissionEmail}</div>
               </div>
               <div>

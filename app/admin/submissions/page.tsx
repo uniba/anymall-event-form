@@ -24,21 +24,21 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
   const submissions = await prisma.submission.findMany({
     where: query
       ? {
-          OR: [
-            {
-              email: {
-                contains: query,
-                mode: "insensitive"
-              }
-            },
-            {
-              name: {
-                contains: query,
-                mode: "insensitive"
-              }
+        OR: [
+          {
+            email: {
+              contains: query,
+              mode: "insensitive"
             }
-          ]
-        }
+          },
+          {
+            name: {
+              contains: query,
+              mode: "insensitive"
+            }
+          }
+        ]
+      }
       : undefined,
     orderBy: {
       createdAt: "desc"
@@ -62,7 +62,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
               defaultValue={query}
               id="search-email-name"
               name="q"
-              placeholder="メイルまたは名前"
+              placeholder="メールアドレスまたは名前"
               type="text"
             />
           </div>

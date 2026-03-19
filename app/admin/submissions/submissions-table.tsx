@@ -324,7 +324,7 @@ export function SubmissionsTable({
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-600">
               <th className="px-2 py-2">名前</th>
-              <th className="px-2 py-2">メイル</th>
+              <th className="px-2 py-2">メールアドレス</th>
               <th className="px-2 py-2">性別</th>
               <th className="px-2 py-2">年齢</th>
               <th className="px-2 py-2">居住地</th>
@@ -425,7 +425,7 @@ export function SubmissionsTable({
                     className="mb-1 block text-xs font-medium text-slate-600"
                     htmlFor="submission-email"
                   >
-                    メイル
+                    メールアドレス
                   </label>
                   <input
                     className={textInputClassName}
