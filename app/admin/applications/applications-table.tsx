@@ -9,8 +9,11 @@ export type ApplicationTableRow = {
   id: string;
   submissionEmail: string;
   submissionName: string;
+  submissionFurigana: string;
   submissionGender: StoredGender | null;
   submissionAge: number | null;
+  submissionPrefecture: string | null;
+  submissionMemo: string | null;
   venueName: string;
   startsAt: string;
   endsAt: string;
@@ -262,12 +265,20 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
                 <div className={detailFieldClassName}>{selectedApplication.submissionName}</div>
               </div>
               <div>
+                <p className="mb-1 text-xs font-medium text-slate-600">フリガナ</p>
+                <div className={detailFieldClassName}>{selectedApplication.submissionFurigana}</div>
+              </div>
+              <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">性別</p>
                 <div className={detailFieldClassName}>{selectedApplication.submissionGender ? getGenderLabel(selectedApplication.submissionGender) : "—"}</div>
               </div>
               <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">年齢</p>
                 <div className={detailFieldClassName}>{selectedApplication.submissionAge ?? "—"}</div>
+              </div>
+              <div>
+                <p className="mb-1 text-xs font-medium text-slate-600">居住地</p>
+                <div className={detailFieldClassName}>{selectedApplication.submissionPrefecture ?? "—"}</div>
               </div>
               <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">会場</p>
@@ -297,6 +308,10 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
               <div className="md:col-span-2">
                 <p className="mb-1 text-xs font-medium text-slate-600">応募日時</p>
                 <div className={detailFieldClassName}>{formatApplicationCreatedAt(selectedApplication.createdAt)}</div>
+              </div>
+              <div className="md:col-span-2">
+                <p className="mb-1 text-xs font-medium text-slate-600">ペットについて</p>
+                <div className={detailFieldClassName + " whitespace-pre-wrap"}>{selectedApplication.submissionMemo ?? "—"}</div>
               </div>
               {errorMessage ? (
                 <p className="md:col-span-2 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">

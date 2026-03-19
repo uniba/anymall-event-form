@@ -710,7 +710,8 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.furigana.trim(),
+          name: formData.name.trim(),
+          furigana: formData.furigana.trim(),
           email: formData.email.trim().toLowerCase(),
           birthday:
             toBirthdayISO(

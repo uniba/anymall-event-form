@@ -17,6 +17,7 @@ import {
 
 type CreateApplicationBody = {
   name?: string;
+  furigana?: string;
   email?: string;
   birthday?: string;
   gender?: string;
@@ -136,6 +137,7 @@ export async function POST(request: NextRequest) {
   }
 
   const name = normalizeText(body.name);
+  const furigana = normalizeText(body.furigana);
   const email = normalizeText(body.email).toLowerCase();
   const birthdayInput = normalizeText(body.birthday);
   const gender = normalizeText(body.gender);
@@ -144,8 +146,12 @@ export async function POST(request: NextRequest) {
   const selectedSlotIdsInput = body.selectedSlotIds;
   const birthday = birthdayInput ? parseBirthday(birthdayInput) : null;
 
-  if (!isValidKatakanaName(name)) {
-    return NextResponse.json({ error: "Name must use katakana only." }, { status: 400 });
+  if (!name.trim()) {
+    return NextResponse.json({ error: "Name is required." }, { status: 400 });
+  }
+
+  if (!isValidKatakanaName(furigana)) {
+    return NextResponse.json({ error: "Furigana must use katakana only." }, { status: 400 });
   }
 
   if (!isValidEmail(email)) {
@@ -226,6 +232,7 @@ export async function POST(request: NextRequest) {
     const created = await prisma.submission.create({
       data: {
         name,
+        furigana,
         email,
         gender: storedGender ?? undefined,
         birthday: birthday ?? undefined,

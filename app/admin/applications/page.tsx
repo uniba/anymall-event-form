@@ -111,8 +111,11 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
             id: true,
             email: true,
             name: true,
+            furigana: true,
             gender: true,
-            birthday: true
+            birthday: true,
+            prefecture: true,
+            memo: true
           }
         },
         slot: {
@@ -168,8 +171,11 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
               id: application.id,
               submissionEmail: application.submission.email,
               submissionName: application.submission.name,
+              submissionFurigana: application.submission.furigana,
               submissionGender: application.submission.gender,
               submissionAge: application.submission.birthday ? calculateAge(application.submission.birthday) : null,
+              submissionPrefecture: application.submission.prefecture,
+              submissionMemo: application.submission.memo,
               venueName: application.slot.venue.name,
               startsAt: application.slot.startsAt.toISOString(),
               endsAt: application.slot.endsAt.toISOString(),

@@ -81,6 +81,7 @@ enum Prefecture {
 model Submission {
   id                String           @id @default(cuid())
   name              String
+  furigana          String
   email             String           @unique
   gender            Gender?
   birthday          DateTime?
