@@ -125,7 +125,7 @@ function EventCard({
           href={`/event/apply/?slots=${slot.id}`}
           className="flex h-11 mt-auto items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark"
         >
-          応募する
+          申し込む
         </a>
       )}
       {!isAccepting && (
@@ -176,15 +176,13 @@ export function EventSection({
         className="bg-warm-100 px-4 py-8 md:px-8 md:py-16 overflow-hidden"
       >
         <div className="relative mx-auto flex max-w-6xl flex-col gap-8">
-          <SectionHeading
-            sub="Schedule"
-            label={`イベント日程 全${acceptingSlots.length + comingSlots.length}回`}
-          />
+          <SectionHeading sub="Schedule" label={`開催スケジュール`} />
 
           <p className="text-base leading-7 text-warm-600 md:text-center">
-            参加したいイベントに応募しましょう！
+            以下の​スケジュールで​イベント開催予定です。​参加は​無料で、​応募者多数の​場合は​抽選と​なります。​
             <br />
-            イベントの左上のあるチェックボックスを選択して最大3つまで選んでまとめて応募することができます。
+            各回ごとに​テーマ・内容・​担当者が​異なります。 <br />
+            ​開催内容は​変更に​なる​可能性も​ありますので​ご了承ください。​
           </p>
 
           {acceptingSlots.length > 0 && (
@@ -192,7 +190,7 @@ export function EventSection({
               <div className="flex items-center gap-2.5">
                 <div className="size-2 rounded bg-brand-green-text" />
                 <span className="text-[15px] font-bold text-warm-900">
-                  応募中のイベント
+                  参加申し込み受付中の​イベント
                 </span>
               </div>
               <div className="grid gap-4 md:grid-cols-3">
@@ -228,7 +226,7 @@ export function EventSection({
               <div className="flex items-center gap-2.5">
                 <div className="size-2 rounded bg-warm-500" />
                 <span className="text-[15px] font-bold text-warm-900">
-                  準備中のイベント
+                  参加申し込み準備中のイベント
                 </span>
               </div>
               <div className="grid gap-4 md:grid-cols-3">
@@ -291,7 +289,7 @@ export function EventSection({
             href={`/event/apply?slots=${Array.from(selectedIds).join(",")}`}
             className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark md:w-auto md:px-12"
           >
-            まとめて応募
+            まとめて申し込む
             <Icon className="text-white" name="ChevronRight" size={16} />
           </a>
         </div>

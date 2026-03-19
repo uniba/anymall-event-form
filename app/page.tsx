@@ -163,24 +163,22 @@ export default async function HomePage() {
       {/* Venue */}
       <section className="bg-warm-50 px-4 py-8 md:px-8 md:py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-8">
-          <SectionHeading sub="Venue" label="開催場所" />
+          <SectionHeading sub="Venue" label="会場" />
 
           <div className="relative grid gap-6 md:grid-cols-2">
             {[
               {
-                name: "inumo 芝公園 by Villa Fontaine",
-                nameEn: "inumo Shiba Park by Villa Fontaine",
-                address: "〒105-0014 東京都港区芝１丁目６−５",
+                name: "inumo 芝公園 by ヴィラフォンテーヌ",
+                url: "https://www.hvf.jp/inumo-shibakoen/",
                 description:
-                  "芝公園に隣接するペットフレンドリーな複合施設。 愛犬と一緒にくつろげる開放的な空間で、特別なイベントをお楽しみいただけます。",
+                  "inumo 芝公園 by ヴィラフォンテーヌは、​都心で​愛犬と​一緒に​快適な​滞在を​楽しめる​ドッグファーストな​ホテルです。​館内は​どこでも​愛犬と​過ごせる​設計で、​屋内ドッグランや​グルーミング、​お預かりサービス、​レストランなども​充実。​愛犬との​時間を​心地よく​彩る、​上質な​宿泊体験を​提供します",
                 image: "/images/venue-inumo.png",
               },
               {
-                name: "Dyplus OSAKA KITA",
-                nameEn: "Dyplus OSAKA KITA",
-                address: "〒530-0042 大阪府大阪市北区天満橋3丁目4番25号",
+                name: "Dyplus 大阪北",
+                url: "https://osakakita.dyplus-pet.com/",
                 description:
-                  "芝公園に隣接するペットフレンドリーな複合施設。 愛犬と一緒にくつろげる開放的な空間で、特別なイベントをお楽しみいただけます。",
+                  "Dyplus 大阪北は、​ペットと​飼い主の​健康的な​暮らしを​支える​複合施設です。​未病・予防を​目的とした​メディカルチェックに​加え、​ホテルや​預かり保育、​しつけ相談などを​通じて、​ヘルスケアと​ライフスタイルの​両面から​サポート。​専門スタッフが​連携し、​“ペットとの​暮らしに​プラス”を​届けます。​",
                 image: "/images/venue-dyplus.png",
               },
             ].map((venue) => (
@@ -199,16 +197,15 @@ export default async function HomePage() {
                 <div className="flex flex-col gap-4 px-4 pb-4 pt-2">
                   <div className="flex flex-col gap-2.5">
                     <h3 className="font-serif text-[22px] font-bold text-warm-900">
-                      {venue.name}
+                      <a
+                        href={venue.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {venue.name}
+                      </a>
                     </h3>
-                    <p className="font-serif text-[13px] italic leading-[23.4px] text-warm-500">
-                      {venue.nameEn}
-                    </p>
                   </div>
-                  <p className="flex items-center text-base leading-[23.4px] text-warm-500">
-                    <Icon className="text-warm-500" name="MapPin" size={16} />
-                    {venue.address}
-                  </p>
                   <p className="text-base leading-6 text-warm-500">
                     {venue.description}
                   </p>
@@ -240,7 +237,7 @@ export default async function HomePage() {
       {/* Speaker */}
       <section className="bg-brand-green-bg px-4 py-8 md:px-8 md:py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-8">
-          <SectionHeading sub="Instructor" label="登壇者紹介" />
+          <SectionHeading sub="Instructor" label="担当講師" />
 
           <div className="grid gap-12 md:grid-cols-2 md:gap-8">
             {[

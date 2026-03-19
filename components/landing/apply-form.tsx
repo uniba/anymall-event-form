@@ -98,7 +98,7 @@ function FormField({
     <div className="flex flex-col gap-1">
       <label className="text-[11px] text-warm-500">
         {label}
-        {required && " *"}
+        {required ? " * 必須" : " 任意"}
       </label>
       {children}
     </div>
@@ -238,10 +238,10 @@ function FormStep({
           </FormField>
         </div>
 
-        <FormField label="メモ">
+        <FormField label="ペットに​ついて​">
           <textarea
             className="min-h-[115px] w-full rounded-lg border border-warm-400 bg-white px-3.5 py-2.5 text-[13px] text-warm-900 outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-1"
-            placeholder="ご要望があればご記入ください"
+            placeholder="犬種・猫種・年齢・興味・関心・困りごとなど、飼っている​ペットに​ついて​教えてください。"
             maxLength={memoMaxLength}
             value={formData.memo}
             onChange={(e) => update("memo", e.target.value)}
@@ -266,7 +266,7 @@ function FormStep({
           onClick={onConfirm}
           className="flex h-11 w-[140px] items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark"
         >
-          確認する
+          送信する
         </button>
       </div>
     </div>
@@ -462,7 +462,14 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
 
   return (
     <>
-      <StepIndicator current={step} />
+      <div className="mx-auto max-w-6xl px-4 pb-2 pt-6 md:px-8">
+        <h1 className="text-[28px] font-bold text-warm-900">
+          イベント参加申し込み
+        </h1>
+        <p className="mt-2 text-sm text-warm-500">
+          以下の​項目に​ついて​それぞれご記入ください。​
+        </p>
+      </div>
       {step === "complete" && <CompleteStep />}
       {step === "confirm" && (
         <ConfirmStep

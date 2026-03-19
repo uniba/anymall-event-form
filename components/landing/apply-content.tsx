@@ -135,9 +135,11 @@ export function ApplyContent({
   return (
     <>
       <div className="mx-auto max-w-6xl px-4 pb-2 pt-6 md:px-8">
-        <h1 className="text-[28px] font-bold text-warm-900">イベント応募</h1>
+        <h1 className="text-[28px] font-bold text-warm-900">
+          イベント参加申し込み
+        </h1>
         <p className="mt-2 text-sm text-warm-500">
-          応募したいイベントを確認して、まとめて応募できます
+          気に​なる​イベントを​最大3回まで​申し込むことができます。​
         </p>
       </div>
 
@@ -146,7 +148,7 @@ export function ApplyContent({
           <div className="flex items-center gap-2.5">
             <div className="size-2 rounded bg-brand-green" />
             <span className="text-base font-bold text-warm-900">
-              このイベントに応募する
+              このイベントに申し込む
             </span>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -167,7 +169,7 @@ export function ApplyContent({
           <div className="flex items-center gap-2.5">
             <Icon className="text-warm-900" name="CirclePlus" size={20} />
             <span className="text-base font-bold text-warm-900">
-              その他のイベントにも応募する
+              その他のイベントにも申し込む
             </span>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -229,7 +231,7 @@ export function ApplyContent({
                   : "pointer-events-none bg-warm-400"
               }`}
             >
-              まとめて応募
+              まとめて申し込む
               <Icon className="text-white" name="ChevronRight" size={16} />
             </a>
           </div>
