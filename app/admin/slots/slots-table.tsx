@@ -52,6 +52,8 @@ type VenueOption = {
 };
 
 type SlotsTableProps = {
+  createRequestCount?: number;
+  onSlotCreated?: () => void;
   slots: SlotTableRow[];
 };
 
@@ -74,6 +76,33 @@ const timeOptions = Array.from({ length: 48 }, (_, index) => {
   const minute = index % 2 === 0 ? "00" : "30";
   return `${hour}:${minute}`;
 });
+
+const emptySlotFormState: SlotFormState = {
+  eventName: "",
+  venueId: "",
+  theme: "",
+  instructor: "",
+  capacityText: "",
+  applicationBeginDate: "",
+  applicationBeginTime: "",
+  applicationDeadlineDate: "",
+  applicationDeadlineTime: "",
+  lotteryResultDate: "",
+  lotteryResultTime: "",
+  eventDate: "",
+  startsAtTime: "",
+  endsAtTime: "",
+  state: "ACCEPTING_APPLICATIONS"
+};
+
+type ModalState =
+  | {
+      mode: "create";
+    }
+  | {
+      mode: "edit";
+      slotId: string;
+    };
 
 function getInitialFormState(slot: SlotTableRow): SlotFormState {
   return {
@@ -177,6 +206,10 @@ function buildSlotUpdatePayload(values: SlotFormState): {
     return { error: "応募開始日時は応募締切日時以前にしてください。" };
   }
 
+  if (values.lotteryResultDate >= values.eventDate) {
+    return { error: "抽選日は開催日より前にしてください。" };
+  }
+
   if (new Date(startsAt).getTime() >= new Date(endsAt).getTime()) {
     return { error: "開催終了時間は開催開始時間より後にしてください。" };
   }
@@ -205,13 +238,18 @@ function buildSlotUpdatePayload(values: SlotFormState): {
   };
 }
 
-export function SlotsTable({ slots }: SlotsTableProps) {
+export function SlotsTable({
+  createRequestCount = 0,
+  onSlotCreated,
+  slots
+}: SlotsTableProps) {
   const [slotRows, setSlotRows] = useState(slots);
-  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
+  const [modalState, setModalState] = useState<ModalState | null>(null);
   const [formValues, setFormValues] = useState<SlotFormState | null>(null);
   const [venues, setVenues] = useState<VenueOption[]>([]);
   const [isLoadingVenues, setIsLoadingVenues] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -219,23 +257,34 @@ export function SlotsTable({ slots }: SlotsTableProps) {
   }, [slots]);
 
   const selectedSlot = useMemo(
-    () => slotRows.find((slot) => slot.id === selectedSlotId) ?? null,
-    [selectedSlotId, slotRows],
+    () => (modalState?.mode === "edit" ? slotRows.find((slot) => slot.id === modalState.slotId) ?? null : null),
+    [modalState, slotRows],
   );
 
   useEffect(() => {
-    if (!selectedSlot) {
+    if (!modalState) {
       setFormValues(null);
       setErrorMessage(null);
       return;
     }
 
+    if (modalState.mode === "create") {
+      setFormValues(emptySlotFormState);
+      setErrorMessage(null);
+      return;
+    }
+
+    if (!selectedSlot) {
+      setModalState(null);
+      return;
+    }
+
     setFormValues(getInitialFormState(selectedSlot));
     setErrorMessage(null);
-  }, [selectedSlot]);
+  }, [modalState, selectedSlot]);
 
   useEffect(() => {
-    if (!selectedSlotId) {
+    if (!modalState) {
       return;
     }
 
@@ -279,22 +328,30 @@ export function SlotsTable({ slots }: SlotsTableProps) {
     return () => {
       isCancelled = true;
     };
-  }, [selectedSlotId]);
+  }, [modalState]);
 
   useEffect(() => {
-    if (!selectedSlotId || isSubmitting) {
+    if (createRequestCount < 1) {
+      return;
+    }
+
+    setModalState({ mode: "create" });
+  }, [createRequestCount]);
+
+  useEffect(() => {
+    if (!modalState || isSaving || isDeleting) {
       return;
     }
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setSelectedSlotId(null);
+        setModalState(null);
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSubmitting, selectedSlotId]);
+  }, [isDeleting, isSaving, modalState]);
 
   function updateFormValue<Key extends keyof SlotFormState>(
     key: Key,
@@ -306,19 +363,19 @@ export function SlotsTable({ slots }: SlotsTableProps) {
   }
 
   function closeModal() {
-    if (!isSubmitting) {
-      setSelectedSlotId(null);
+    if (!isSaving && !isDeleting) {
+      setModalState(null);
     }
   }
 
   function openSlot(slot: SlotTableRow) {
-    setSelectedSlotId(slot.id);
+    setModalState({ mode: "edit", slotId: slot.id });
   }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!selectedSlot || !formValues) {
+    if (!modalState || !formValues) {
       return;
     }
 
@@ -334,11 +391,12 @@ export function SlotsTable({ slots }: SlotsTableProps) {
     }
 
     setErrorMessage(null);
-    setIsSubmitting(true);
+    setIsSaving(true);
 
     try {
-      const response = await fetch(`/api/admin/slots/${selectedSlot.id}`, {
-        method: "PATCH",
+      const isCreateMode = modalState.mode === "create";
+      const response = await fetch(isCreateMode ? "/api/admin/slots" : `/api/admin/slots/${modalState.slotId}`, {
+        method: isCreateMode ? "POST" : "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -349,24 +407,76 @@ export function SlotsTable({ slots }: SlotsTableProps) {
         error?: string;
         slot?: SlotTableRow;
       } | null;
+      const slot = payload?.slot;
 
-      if (!response.ok || !payload?.slot) {
-        setErrorMessage(payload?.error ?? "スロットを更新できませんでした。");
+      if (!response.ok || !slot) {
+        setErrorMessage(payload?.error ?? (isCreateMode ? "スロットを追加できませんでした。" : "スロットを更新できませんでした。"));
         return;
       }
 
-      setSlotRows((current) =>
-        current.map((slot) =>
-          slot.id === payload.slot?.id ? payload.slot : slot,
-        ),
-      );
-      setSelectedSlotId(null);
+      if (isCreateMode) {
+        setSlotRows((current) => [...current, slot].sort((left, right) => left.startsAt.localeCompare(right.startsAt)));
+        setModalState(null);
+        onSlotCreated?.();
+      } else {
+        setSlotRows((current) =>
+          current.map((currentSlot) =>
+            currentSlot.id === slot.id ? slot : currentSlot,
+          ),
+        );
+        setModalState(null);
+      }
     } catch {
-      setErrorMessage("スロットを更新できませんでした。");
+      setErrorMessage(modalState.mode === "create" ? "スロットを追加できませんでした。" : "スロットを更新できませんでした。");
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   }
+
+  async function onDelete() {
+    if (modalState?.mode !== "edit" || !selectedSlot) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "このスロットを削除しますか？\n応募データが紐づいているスロットは削除できません。"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(`/api/admin/slots/${modalState.slotId}`, {
+        method: "DELETE"
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string; slotId?: string }
+        | null;
+
+      if (!response.ok || payload?.slotId !== modalState.slotId) {
+        setErrorMessage(payload?.error ?? "スロットを削除できませんでした。");
+        return;
+      }
+
+      setSlotRows((current) => current.filter((slot) => slot.id !== payload.slotId));
+      setModalState(null);
+    } catch {
+      setErrorMessage("スロットを削除できませんでした。");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  const isCreateMode = modalState?.mode === "create";
+  const modalTitle = isCreateMode ? "スロット追加" : "スロット編集";
+  const modalSubtitle = isCreateMode ? "新しいスロット情報を入力してください" : selectedSlot?.eventName ?? "";
+  const isSubmitting = isSaving || isDeleting;
+  const submitLabel = isSaving ? "保存中..." : isCreateMode ? "追加" : "保存";
 
   return (
     <>
@@ -415,7 +525,7 @@ export function SlotsTable({ slots }: SlotsTableProps) {
         </table>
       </div>
 
-      {selectedSlot && formValues ? (
+      {modalState && formValues ? (
         <div
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4"
@@ -429,10 +539,10 @@ export function SlotsTable({ slots }: SlotsTableProps) {
             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  スロット編集
+                  {modalTitle}
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  {selectedSlot.eventName}
+                  {modalSubtitle}
                 </p>
               </div>
               <button
@@ -733,24 +843,39 @@ export function SlotsTable({ slots }: SlotsTableProps) {
                 </p>
               ) : null}
 
-              <div className="flex justify-end gap-3">
-                <button
-                  className={secondaryButtonClassName}
-                  disabled={isSubmitting}
-                  onClick={closeModal}
-                  type="button"
-                >
-                  キャンセル
-                </button>
-                <button
-                  className={primaryButtonClassName}
-                  disabled={
-                    isSubmitting || isLoadingVenues || venues.length === 0
-                  }
-                  type="submit"
-                >
-                  {isSubmitting ? "保存中..." : "保存"}
-                </button>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  {!isCreateMode ? (
+                    <button
+                      className="rounded-md border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:border-rose-200 disabled:bg-rose-50 disabled:text-rose-300"
+                      disabled={isSubmitting}
+                      onClick={onDelete}
+                      type="button"
+                    >
+                      {isDeleting ? "削除中..." : "削除"}
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    className={secondaryButtonClassName}
+                    disabled={isSubmitting}
+                    onClick={closeModal}
+                    type="button"
+                  >
+                    キャンセル
+                  </button>
+                  <button
+                    className={primaryButtonClassName}
+                    disabled={
+                      isSubmitting || isLoadingVenues || venues.length === 0
+                    }
+                    type="submit"
+                  >
+                    {submitLabel}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

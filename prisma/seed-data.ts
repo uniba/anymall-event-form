@@ -24,13 +24,13 @@ export type SeedSlot = {
 export const seedVenues: SeedVenue[] = [
   {
     id: "seed-venue-tokyo-inumo",
-    name: "inumo shibakoen",
-    address: "1 Chome-6番6号 Shibakoen, Minato City, Tokyo, 105-0011",
+    name: "inumo 芝公園 by ヴィラフォンテーヌ",
+    address: "〒105-0011 東京都港区芝公園1-6-6",
   },
   {
     id: "seed-venue-osaka-dyplus",
-    name: "Dyplus OSAKA KITA",
-    address: "3 Chome-4-25 Tenmabashi, Kita Ward, Osaka, 530-0042",
+    name: "Dyplus 大阪北",
+    address: "〒530-0042 大阪府大阪市北区天満橋3-4-25",
   },
 ];
 
@@ -41,7 +41,7 @@ export const seedSlots: SeedSlot[] = [
     eventName: "はじめての愛犬ごはんサロン",
     theme:
       "・初めての手作りトッピングごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "まなみ先生",
+    instructor: "今井まなみ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-04-24T00:00:00+09:00",
@@ -52,11 +52,11 @@ export const seedSlots: SeedSlot[] = [
   },
   {
     id: "seed-slot-osaka-dyplus-may-17",
-    venueId: "seed-venue-osaka-dyplus",
+    venueId: "seed-venue-tokyo-inumo",
     eventName: "愛犬の健康チェックサロン",
     theme:
-      "・仮）篤先生　例：健診、中毒など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "篤先生",
+      "未定",
+    instructor: "未定",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-04-24T00:00:00+09:00",
@@ -71,7 +71,7 @@ export const seedSlots: SeedSlot[] = [
     eventName: "はじめての愛犬ごはんサロン",
     theme:
       "・初めての手作りトッピングごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "まなみ先生",
+    instructor: "今井まなみ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-04-24T00:00:00+09:00",
@@ -82,11 +82,11 @@ export const seedSlots: SeedSlot[] = [
   },
   {
     id: "seed-slot-tokyo-inumo-may-28",
-    venueId: "seed-venue-tokyo-inumo",
+    venueId: "seed-venue-osaka-dyplus",
     eventName: "愛犬ピクニック交流会",
     theme:
       "・ピクニック交流撮影会\n・例）しつけ相談（A'alda内の専門家）、写真撮影\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "スタッフ数人",
+    instructor: "AnyMallスタッフ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-04-24T00:00:00+09:00",
@@ -101,7 +101,7 @@ export const seedSlots: SeedSlot[] = [
     eventName: "皮膚ケアごはんサロン",
     theme:
       "・夏前に！手作り皮膚ケアごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "まなみ先生",
+    instructor: "今井まなみ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-05-15T00:00:00+09:00",
@@ -111,12 +111,12 @@ export const seedSlots: SeedSlot[] = [
     state: SlotState.ACCEPTING_APPLICATIONS,
   },
   {
-    id: "seed-slot-osaka-dyplus-jun-14",
-    venueId: "seed-venue-osaka-dyplus",
+    id: "seed-slot-tokyo-inumo-jun-14",
+    venueId: "seed-venue-tokyo-inumo",
     eventName: "愛犬デンタルケアサロン",
     theme:
       "・愛犬のデンタルケアレッスン\n・QAタイム、歯ブラシ実演など\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "仮）なつこ先生",
+    instructor: "未定",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-05-15T00:00:00+09:00",
@@ -131,7 +131,7 @@ export const seedSlots: SeedSlot[] = [
     eventName: "皮膚ケアごはんサロン",
     theme:
       "・夏前に！手作り皮膚ケアごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "まなみ先生",
+    instructor: "今井まなみ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-05-15T00:00:00+09:00",
@@ -145,8 +145,8 @@ export const seedSlots: SeedSlot[] = [
     venueId: "seed-venue-osaka-dyplus",
     eventName: "愛犬の健康チェックサロン",
     theme:
-      "・仮）篤先生　例：健診、中毒など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "篤先生",
+      "例：健診、中毒など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "中村篤史",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-05-15T00:00:00+09:00",
@@ -161,7 +161,7 @@ export const seedSlots: SeedSlot[] = [
     eventName: "夏バテ対策ごはんサロン",
     theme:
       "・夏バテ対策！食事と水分ケア\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "まなみ先生",
+    instructor: "今井まなみ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-06-12T00:00:00+09:00",
@@ -171,12 +171,12 @@ export const seedSlots: SeedSlot[] = [
     state: SlotState.ACCEPTING_APPLICATIONS,
   },
   {
-    id: "seed-slot-osaka-dyplus-jul-12",
-    venueId: "seed-venue-osaka-dyplus",
+    id: "seed-slot-tokyo-inumo-jul-12",
+    venueId: "seed-venue-tokyo-inumo",
     eventName: "夏の健康管理サロン",
     theme:
-      "・仮）篤先生　例：熱中症対策など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "篤先生",
+      "例：熱中症対策など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "中村篤史",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-06-12T00:00:00+09:00",
@@ -191,7 +191,7 @@ export const seedSlots: SeedSlot[] = [
     eventName: "夏バテ対策ごはんサロン",
     theme:
       "・夏バテ対策！食事と水分ケア\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "まなみ先生",
+    instructor: "今井まなみ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-06-12T00:00:00+09:00",
@@ -206,7 +206,7 @@ export const seedSlots: SeedSlot[] = [
     eventName: "夏まつり交流会",
     theme:
       "・夏祭り交流撮影会\n・例）しつけ相談（A'alda内の専門家）、写真撮影\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "スタッフ数人",
+    instructor: "AnyMallスタッフ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-06-12T00:00:00+09:00",

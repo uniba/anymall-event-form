@@ -144,3 +144,53 @@ export async function PATCH(
     },
   });
 }
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ submissionId: string }> }
+) {
+  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
+  if (!isAdminSessionValid) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  const { submissionId } = await context.params;
+
+  const existingSubmission = await prisma.submission.findUnique({
+    where: {
+      id: submissionId
+    },
+    select: {
+      id: true
+    }
+  });
+
+  if (!existingSubmission) {
+    return NextResponse.json({ error: "申込が見つかりません。" }, { status: 404 });
+  }
+
+  const existingApplication = await prisma.submissionSlot.findFirst({
+    where: {
+      submissionId
+    },
+    select: {
+      id: true
+    }
+  });
+
+  if (existingApplication) {
+    return NextResponse.json(
+      { error: "この申込には応募データが紐づいているため削除できません。先に応募データを削除してください。" },
+      { status: 400 }
+    );
+  }
+
+  await prisma.submission.delete({
+    where: {
+      id: submissionId
+    }
+  });
+
+  return NextResponse.json({ submissionId });
+}

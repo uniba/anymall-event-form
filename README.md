@@ -21,13 +21,23 @@ Simple Next.js app for collecting lunch event applications and sending confirmat
 
 ## Environment Variables
 
+For Local Development:
+
 Create `.env` with the following variables:
 
 - `DATABASE_URL`: Neon pooled connection string for app runtime
-- `DIRECT_URL`: Neon direct connection string for Prisma migrations
-- `DATABASE_URL_UNPOOLED`:
+- `DATABASE_URL_UNPOOLED`: Neon direct connection string for Prisma migrations
 - `SENDGRID_API_KEY`: API key from SendGrid
 - `EMAIL_FROM`: sender email for confirmation mails (must be a verified sender/domain in SendGrid)
+- `APP_URL`: Public base URL for verification links
+- `ADMIN_PIN`: Pin for Admin page
+
+For Production:
+
+The same environment variables as shown above are managed in Vercel:
+
+`Project -> Settings -> Environment Variables`
+
 
 ## Local Development
 

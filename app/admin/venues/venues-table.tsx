@@ -15,6 +15,8 @@ type VenueFormState = {
 };
 
 type VenuesTableProps = {
+  createRequestCount?: number;
+  onVenueCreated?: () => void;
   venues: VenueTableRow[];
 };
 
@@ -48,11 +50,30 @@ function validateVenueForm(values: VenueFormState): string | null {
   return null;
 }
 
-export function VenuesTable({ venues }: VenuesTableProps) {
+const emptyVenueFormState: VenueFormState = {
+  name: "",
+  address: ""
+};
+
+type ModalState =
+  | {
+      mode: "create";
+    }
+  | {
+      mode: "edit";
+      venueId: string;
+    };
+
+export function VenuesTable({
+  createRequestCount = 0,
+  onVenueCreated,
+  venues
+}: VenuesTableProps) {
   const [venueRows, setVenueRows] = useState(venues);
-  const [selectedVenueId, setSelectedVenueId] = useState<string | null>(null);
+  const [modalState, setModalState] = useState<ModalState | null>(null);
   const [formValues, setFormValues] = useState<VenueFormState | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -60,43 +81,62 @@ export function VenuesTable({ venues }: VenuesTableProps) {
   }, [venues]);
 
   const selectedVenue = useMemo(
-    () => venueRows.find((venue) => venue.id === selectedVenueId) ?? null,
-    [selectedVenueId, venueRows]
+    () => (modalState?.mode === "edit" ? venueRows.find((venue) => venue.id === modalState.venueId) ?? null : null),
+    [modalState, venueRows]
   );
 
   useEffect(() => {
-    if (!selectedVenue) {
+    if (!modalState) {
       setFormValues(null);
       setErrorMessage(null);
       return;
     }
 
+    if (modalState.mode === "create") {
+      setFormValues(emptyVenueFormState);
+      setErrorMessage(null);
+      return;
+    }
+
+    if (!selectedVenue) {
+      setModalState(null);
+      return;
+    }
+
     setFormValues(getInitialFormState(selectedVenue));
     setErrorMessage(null);
-  }, [selectedVenue]);
+  }, [modalState, selectedVenue]);
 
   useEffect(() => {
-    if (!selectedVenueId || isSubmitting) {
+    if (createRequestCount < 1) {
+      return;
+    }
+
+    setModalState({ mode: "create" });
+  }, [createRequestCount]);
+
+  useEffect(() => {
+    if (!modalState || isSaving || isDeleting) {
       return;
     }
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setSelectedVenueId(null);
+        setModalState(null);
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSubmitting, selectedVenueId]);
+  }, [isDeleting, isSaving, modalState]);
 
   function openVenue(venue: VenueTableRow) {
-    setSelectedVenueId(venue.id);
+    setModalState({ mode: "edit", venueId: venue.id });
   }
 
   function closeModal() {
-    if (!isSubmitting) {
-      setSelectedVenueId(null);
+    if (!isSaving && !isDeleting) {
+      setModalState(null);
     }
   }
 
@@ -107,7 +147,7 @@ export function VenuesTable({ venues }: VenuesTableProps) {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!selectedVenue || !formValues) {
+    if (!modalState || !formValues) {
       return;
     }
 
@@ -118,11 +158,12 @@ export function VenuesTable({ venues }: VenuesTableProps) {
     }
 
     setErrorMessage(null);
-    setIsSubmitting(true);
+    setIsSaving(true);
 
     try {
-      const response = await fetch(`/api/admin/venues/${selectedVenue.id}`, {
-        method: "PATCH",
+      const isCreateMode = modalState.mode === "create";
+      const response = await fetch(isCreateMode ? "/api/admin/venues" : `/api/admin/venues/${modalState.venueId}`, {
+        method: isCreateMode ? "POST" : "PATCH",
         headers: {
           "Content-Type": "application/json"
         },
@@ -135,20 +176,72 @@ export function VenuesTable({ venues }: VenuesTableProps) {
       const payload = (await response.json().catch(() => null)) as
         | { error?: string; venue?: VenueTableRow }
         | null;
+      const venue = payload?.venue;
 
-      if (!response.ok || !payload?.venue) {
-        setErrorMessage(payload?.error ?? "会場を更新できませんでした。");
+      if (!response.ok || !venue) {
+        setErrorMessage(payload?.error ?? (isCreateMode ? "会場を追加できませんでした。" : "会場を更新できませんでした。"));
         return;
       }
 
-      setVenueRows((current) => current.map((venue) => (venue.id === payload.venue?.id ? payload.venue : venue)));
-      setSelectedVenueId(null);
+      if (isCreateMode) {
+        setVenueRows((current) => [venue, ...current]);
+        setModalState(null);
+        onVenueCreated?.();
+      } else {
+        setVenueRows((current) => current.map((currentVenue) => (currentVenue.id === venue.id ? venue : currentVenue)));
+        setModalState(null);
+      }
     } catch {
-      setErrorMessage("会場を更新できませんでした。");
+      setErrorMessage(modalState.mode === "create" ? "会場を追加できませんでした。" : "会場を更新できませんでした。");
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   }
+
+  async function onDelete() {
+    if (modalState?.mode !== "edit" || !selectedVenue) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "この会場を削除しますか？\n紐づくスロットがある会場は削除できません。"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(`/api/admin/venues/${modalState.venueId}`, {
+        method: "DELETE"
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string; venueId?: string }
+        | null;
+
+      if (!response.ok || payload?.venueId !== modalState.venueId) {
+        setErrorMessage(payload?.error ?? "会場を削除できませんでした。");
+        return;
+      }
+
+      setVenueRows((current) => current.filter((venue) => venue.id !== payload.venueId));
+      setModalState(null);
+    } catch {
+      setErrorMessage("会場を削除できませんでした。");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  const isCreateMode = modalState?.mode === "create";
+  const modalTitle = isCreateMode ? "会場追加" : "会場編集";
+  const modalSubtitle = isCreateMode ? "新しい会場情報を入力してください" : selectedVenue?.name ?? "";
+  const isSubmitting = isSaving || isDeleting;
+  const submitLabel = isSaving ? "保存中..." : isCreateMode ? "追加" : "保存";
 
   return (
     <>
@@ -191,7 +284,7 @@ export function VenuesTable({ venues }: VenuesTableProps) {
         </table>
       </div>
 
-      {selectedVenue && formValues ? (
+      {modalState && formValues ? (
         <div
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4"
@@ -204,8 +297,8 @@ export function VenuesTable({ venues }: VenuesTableProps) {
           >
             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">会場編集</h2>
-                <p className="mt-1 text-sm text-slate-500">{selectedVenue.name}</p>
+                <h2 className="text-lg font-semibold text-slate-900">{modalTitle}</h2>
+                <p className="mt-1 text-sm text-slate-500">{modalSubtitle}</p>
               </div>
               <button
                 className={secondaryButtonClassName}
@@ -254,18 +347,33 @@ export function VenuesTable({ venues }: VenuesTableProps) {
                 </p>
               ) : null}
 
-              <div className="flex justify-end gap-3">
-                <button
-                  className={secondaryButtonClassName}
-                  disabled={isSubmitting}
-                  onClick={closeModal}
-                  type="button"
-                >
-                  キャンセル
-                </button>
-                <button className={primaryButtonClassName} disabled={isSubmitting} type="submit">
-                  {isSubmitting ? "保存中..." : "保存"}
-                </button>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  {!isCreateMode ? (
+                    <button
+                      className="rounded-md border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:border-rose-200 disabled:bg-rose-50 disabled:text-rose-300"
+                      disabled={isSubmitting}
+                      onClick={onDelete}
+                      type="button"
+                    >
+                      {isDeleting ? "削除中..." : "削除"}
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    className={secondaryButtonClassName}
+                    disabled={isSubmitting}
+                    onClick={closeModal}
+                    type="button"
+                  >
+                    キャンセル
+                  </button>
+                  <button className={primaryButtonClassName} disabled={isSubmitting} type="submit">
+                    {submitLabel}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

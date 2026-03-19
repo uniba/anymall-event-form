@@ -2,38 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_SESSION_COOKIE, isValidAdminSessionToken } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { validateSlotUpdateInput, type SlotUpdateInput } from "@/lib/admin-slot-validation";
-
-function toSlotTableRow(slot: {
-  id: string;
-  eventName: string;
-  venueId: string;
-  venue: { name: string };
-  theme: string;
-  instructor: string;
-  capacity: number;
-  applicationBegin: Date;
-  applicationDeadline: Date;
-  lotteryResultTime: Date;
-  startsAt: Date;
-  endsAt: Date;
-  state: "APPLICATIONS_CLOSED" | "ACCEPTING_APPLICATIONS";
-}) {
-  return {
-    id: slot.id,
-    eventName: slot.eventName,
-    venueId: slot.venueId,
-    venueName: slot.venue.name,
-    theme: slot.theme,
-    instructor: slot.instructor,
-    capacity: slot.capacity,
-    applicationBegin: slot.applicationBegin.toISOString(),
-    applicationDeadline: slot.applicationDeadline.toISOString(),
-    lotteryResultTime: slot.lotteryResultTime.toISOString(),
-    startsAt: slot.startsAt.toISOString(),
-    endsAt: slot.endsAt.toISOString(),
-    state: slot.state
-  };
-}
+import { toSlotTableRow } from "../slot-response";
 
 export async function PATCH(
   request: NextRequest,
@@ -103,4 +72,44 @@ export async function PATCH(
   });
 
   return NextResponse.json({ slot: toSlotTableRow(updatedSlot) });
+}
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ slotId: string }> }
+) {
+  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
+  if (!isAdminSessionValid) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  const { slotId } = await context.params;
+
+  const existingSlot = await prisma.slot.findUnique({
+    where: { id: slotId },
+    select: { id: true }
+  });
+
+  if (!existingSlot) {
+    return NextResponse.json({ error: "スロットが見つかりません。" }, { status: 404 });
+  }
+
+  const existingApplication = await prisma.submissionSlot.findFirst({
+    where: { slotId },
+    select: { id: true }
+  });
+
+  if (existingApplication) {
+    return NextResponse.json(
+      { error: "このスロットには応募データが紐づいているため削除できません。先に応募データを削除してください。" },
+      { status: 400 }
+    );
+  }
+
+  await prisma.slot.delete({
+    where: { id: slotId }
+  });
+
+  return NextResponse.json({ slotId });
 }

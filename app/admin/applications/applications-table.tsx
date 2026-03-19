@@ -48,7 +48,8 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
   const [applicationRows, setApplicationRows] = useState(applications);
   const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
   const [statusValue, setStatusValue] = useState<SlotApplicationStatus | "">("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -72,7 +73,7 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
   }, [selectedApplication]);
 
   useEffect(() => {
-    if (!selectedApplicationId || isSubmitting) {
+    if (!selectedApplicationId || isSaving || isDeleting) {
       return;
     }
 
@@ -84,7 +85,7 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSubmitting, selectedApplicationId]);
+  }, [isDeleting, isSaving, selectedApplicationId]);
 
   function openApplication(application: ApplicationTableRow) {
     setSelectedApplicationId(application.id);
@@ -97,7 +98,7 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
     }
 
     setErrorMessage(null);
-    setIsSubmitting(true);
+    setIsSaving(true);
 
     try {
       const response = await fetch(`/api/admin/applications/${selectedApplication.id}`, {
@@ -130,9 +131,49 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
     } catch {
       setErrorMessage("応募状態を更新できませんでした。");
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   }
+
+  async function deleteApplication() {
+    if (!selectedApplication) {
+      return;
+    }
+
+    const confirmed = window.confirm("この応募を削除しますか？");
+    if (!confirmed) {
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(`/api/admin/applications/${selectedApplication.id}`, {
+        method: "DELETE"
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string; applicationId?: string }
+        | null;
+
+      if (!response.ok || payload?.applicationId !== selectedApplication.id) {
+        setErrorMessage(payload?.error ?? "応募を削除できませんでした。");
+        return;
+      }
+
+      setApplicationRows((current) =>
+        current.filter((application) => application.id !== payload.applicationId)
+      );
+      setSelectedApplicationId(null);
+    } catch {
+      setErrorMessage("応募を削除できませんでした。");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  const isSubmitting = isSaving || isDeleting;
 
   return (
     <>
@@ -263,22 +304,36 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
                 </p>
               ) : null}
               <div className="md:col-span-2 flex justify-end gap-3">
-                <button
-                  className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400"
-                  disabled={isSubmitting}
-                  onClick={() => setSelectedApplicationId(null)}
-                  type="button"
-                >
-                  キャンセル
-                </button>
-                <button
-                  className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
-                  disabled={isSubmitting}
-                  onClick={updateApplicationStatus}
-                  type="button"
-                >
-                  {isSubmitting ? "保存中..." : "保存"}
-                </button>
+                <div className="flex w-full items-center justify-between gap-3">
+                  <div>
+                    <button
+                      className="rounded-md border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:border-rose-200 disabled:bg-rose-50 disabled:text-rose-300"
+                      disabled={isSubmitting}
+                      onClick={deleteApplication}
+                      type="button"
+                    >
+                      {isDeleting ? "削除中..." : "削除"}
+                    </button>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400"
+                      disabled={isSubmitting}
+                      onClick={() => setSelectedApplicationId(null)}
+                      type="button"
+                    >
+                      キャンセル
+                    </button>
+                    <button
+                      className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                      disabled={isSubmitting}
+                      onClick={updateApplicationStatus}
+                      type="button"
+                    >
+                      {isSaving ? "保存中..." : "保存"}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

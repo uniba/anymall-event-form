@@ -148,7 +148,8 @@ export function SubmissionsTable({
   const [formValues, setFormValues] = useState<SubmissionFormState | null>(
     null,
   );
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -175,7 +176,7 @@ export function SubmissionsTable({
   }, [selectedSubmission]);
 
   useEffect(() => {
-    if (!selectedSubmissionId || isSubmitting) {
+    if (!selectedSubmissionId || isSaving || isDeleting) {
       return;
     }
 
@@ -187,14 +188,14 @@ export function SubmissionsTable({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSubmitting, selectedSubmissionId]);
+  }, [isDeleting, isSaving, selectedSubmissionId]);
 
   function openSubmission(submission: SubmissionTableRow) {
     setSelectedSubmissionId(submission.id);
   }
 
   function closeModal() {
-    if (!isSubmitting) {
+    if (!isSaving && !isDeleting) {
       setSelectedSubmissionId(null);
     }
   }
@@ -225,7 +226,7 @@ export function SubmissionsTable({
     const birthday = deriveBirthdayFromAge(selectedSubmission.birthday, age);
 
     setErrorMessage(null);
-    setIsSubmitting(true);
+    setIsSaving(true);
 
     try {
       const response = await fetch(
@@ -266,9 +267,55 @@ export function SubmissionsTable({
     } catch {
       setErrorMessage("申込を更新できませんでした。");
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   }
+
+  async function onDelete() {
+    if (!selectedSubmission) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "この申込を削除しますか？\n応募データが紐づいている申込は削除できません。"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(
+        `/api/admin/submissions/${selectedSubmission.id}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string; submissionId?: string }
+        | null;
+
+      if (!response.ok || payload?.submissionId !== selectedSubmission.id) {
+        setErrorMessage(payload?.error ?? "申込を削除できませんでした。");
+        return;
+      }
+
+      setSubmissionRows((current) =>
+        current.filter((submission) => submission.id !== payload.submissionId),
+      );
+      setSelectedSubmissionId(null);
+    } catch {
+      setErrorMessage("申込を削除できませんでした。");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  const isSubmitting = isSaving || isDeleting;
 
   return (
     <>
@@ -479,22 +526,35 @@ export function SubmissionsTable({
                 </p>
               ) : null}
 
-              <div className="flex justify-end gap-3">
-                <button
-                  className={secondaryButtonClassName}
-                  disabled={isSubmitting}
-                  onClick={closeModal}
-                  type="button"
-                >
-                  キャンセル
-                </button>
-                <button
-                  className={primaryButtonClassName}
-                  disabled={isSubmitting}
-                  type="submit"
-                >
-                  {isSubmitting ? "保存中..." : "保存"}
-                </button>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <button
+                    className="rounded-md border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:border-rose-200 disabled:bg-rose-50 disabled:text-rose-300"
+                    disabled={isSubmitting}
+                    onClick={onDelete}
+                    type="button"
+                  >
+                    {isDeleting ? "削除中..." : "削除"}
+                  </button>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    className={secondaryButtonClassName}
+                    disabled={isSubmitting}
+                    onClick={closeModal}
+                    type="button"
+                  >
+                    キャンセル
+                  </button>
+                  <button
+                    className={primaryButtonClassName}
+                    disabled={isSubmitting}
+                    type="submit"
+                  >
+                    {isSaving ? "保存中..." : "保存"}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
