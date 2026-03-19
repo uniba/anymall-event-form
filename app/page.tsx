@@ -6,6 +6,7 @@ import { EventSection } from "@/components/landing/event-section";
 import { Icon } from "@/components/icon";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { VenueGallery } from "@/components/landing/venue-gallery";
 
 export default async function HomePage() {
   const slots = await prisma.slot.findMany({
@@ -174,14 +175,25 @@ export default async function HomePage() {
                   url: "https://www.hvf.jp/inumo-shibakoen/",
                   description:
                     "inumo 芝公園 by ヴィラフォンテーヌは、​都心で​愛犬と​一緒に​快適な​滞在を​楽しめる​ドッグファーストな​ホテルです。​館内は​どこでも​愛犬と​過ごせる​設計で、​屋内ドッグランや​グルーミング、​お預かりサービス、​レストランなども​充実。​愛犬との​時間を​心地よく​彩る、​上質な​宿泊体験を​提供します",
-                  image: "/images/venue-inumo.png",
+                  image:
+                    "/images/venue/inumo_shiba_villa/venue-shiba-villa-1.jpg",
+                  slides: [
+                    "/images/venue/inumo_shiba_villa/venue-shiba-villa-2.jpg",
+                    "/images/venue/inumo_shiba_villa/venue-shiba-villa-3.jpg",
+                    "/images/venue/inumo_shiba_villa/venue-shiba-villa-4.jpg",
+                  ],
                 },
                 {
                   name: "Dyplus 大阪北",
                   url: "https://osakakita.dyplus-pet.com/",
                   description:
                     "Dyplus 大阪北は、​ペットと​飼い主の​健康的な​暮らしを​支える​複合施設です。​未病・予防を​目的とした​メディカルチェックに​加え、​ホテルや​預かり保育、​しつけ相談などを​通じて、​ヘルスケアと​ライフスタイルの​両面から​サポート。​専門スタッフが​連携し、​“ペットとの​暮らしに​プラス”を​届けます。​",
-                  image: "/images/venue-dyplus.png",
+                  image: "/images/venue/dyplus_osaka_kita/venue-dyplus-1.jpg",
+                  slides: [
+                    "/images/venue/dyplus_osaka_kita/venue-dyplus-2.jpg",
+                    "/images/venue/dyplus_osaka_kita/venue-dyplus-3.jpg",
+                    "/images/venue/dyplus_osaka_kita/venue-dyplus-4.jpg",
+                  ],
                 },
               ].map((venue) => (
                 <div
@@ -196,7 +208,7 @@ export default async function HomePage() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="flex flex-col gap-4 px-4 pb-4 pt-2">
+                  <div className="flex flex-col gap-4 p-4">
                     <div className="flex flex-col gap-2.5">
                       <h3 className="font-serif text-[22px] font-bold text-warm-900">
                         <a
@@ -211,14 +223,7 @@ export default async function HomePage() {
                     <p className="text-base leading-6 text-warm-500">
                       {venue.description}
                     </p>
-                    <div className="relative h-[96px] w-full overflow-hidden rounded-lg">
-                      <Image
-                        src="/images/venue-map.png"
-                        alt="Map"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
+                    <VenueGallery images={venue.slides} venueName={venue.name} />
                   </div>
                 </div>
               ))}
