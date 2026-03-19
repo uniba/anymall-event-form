@@ -239,7 +239,7 @@ export function EventSection({
           )}
           <div className="absolute z-10 -bottom-8 md:bottom-48 -right-0 md:-right-20 rotate-180 md:rotate-60">
             <Image
-              className="slideIn"
+              className=""
               src="/images/fig-cat.jpg"
               alt=""
               width={95}
