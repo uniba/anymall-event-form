@@ -53,10 +53,10 @@ export const seedSlots: SeedSlot[] = [
   {
     id: "seed-slot-osaka-dyplus-may-17",
     venueId: "seed-venue-tokyo-inumo",
-    eventName: "愛犬の健康チェックサロン",
+    eventName: "はじめての愛犬ごはんサロン",
     theme:
-      "未定",
-    instructor: "未定",
+      "・初めての手作りトッピングごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
+    instructor: "今井まなみ",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-04-24T00:00:00+09:00",

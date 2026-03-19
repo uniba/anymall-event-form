@@ -96,7 +96,7 @@ export default async function HomePage() {
           <a
             href="#events"
             className="absolute left-1/2 bottom-[32px] -translate-x-1/2 rounded-full bg-brand-green px-8 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-brand-green-dark md:bottom-[30px] fadeIn"
-            // style={{ animationDuration: "3000ms" }}
+          // style={{ animationDuration: "3000ms" }}
           >
             イベントを見る ↓
           </a>
@@ -264,7 +264,7 @@ export default async function HomePage() {
                 {
                   name: "今井 まなみ",
                   title: "獣医師 / 愛犬ごはん研究家",
-                  bio: "「獣医師まなみの愛犬ごはん」主宰。\n栄養学と臨床経験に基づく科学的根拠のある手作りごはんを提唱し、SNS総フォロワー数は数万人規模。\n飼い主目線の実践的アドバイスで圧倒的な支持を集めています。",
+                  bio: "大手ペットフードメーカーで栄養管理に携わり、犬のごはんや栄養について発信しています。手作りごはんやトッピングを中心に、日常に取り入れやすい食事の考え方をお伝えしています。",
                   image: "/images/instructor/instructor-manami.jpg",
                 },
               ].map((speaker) => (
