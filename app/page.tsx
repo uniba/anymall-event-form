@@ -90,17 +90,27 @@ export default async function HomePage() {
                   ランチを楽しみながら、専門家と一緒に学んでみませんか？
                 </span>
                 <br />
-                <span className="inline-block md:bg-white pt-0.5 pb-1 px-2 mt-2 text-orange-600">
-                  ※応募・参加は無料
-                </span>
               </p>
+            </div>
+            <div className="absolute -top-[64px] left-6 md:top-0 md:left-[80px] flex items-center justify-center size-[96px] md:size-[120px] rotate-[-7deg] animate-bounce">
+              <div className="relative z-10 text-center text-white text-lg md:text-[24px] text-shadow-sm font-black leading-[120%]">
+                応募・参加
+                <br />
+                無料
+              </div>
+              <ul className="absolute size-full">
+                <li className="absolute size-full bg-[#FF9D00] rounded-[24px] "></li>
+                <li className="absolute size-full bg-[#FF9D00] rounded-[24px] rotate-[30deg]"></li>
+                <li className="absolute size-full bg-[#FF9D00] rounded-[24px] rotate-[60deg]"></li>
+                <li className="absolute size-full bg-[#FF9D00] rounded-[24px] rotate-[90deg]"></li>
+              </ul>
             </div>
           </div>
 
           <a
             href="#events"
             className="absolute left-1/2 bottom-[24px] -translate-x-1/2 rounded-full bg-brand-green px-8 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-brand-green-dark md:bottom-[30px] fadeIn whitespace-nowrap"
-          // style={{ animationDuration: "3000ms" }}
+            // style={{ animationDuration: "3000ms" }}
           >
             抽選に応募する ↓
           </a>
