@@ -25,7 +25,7 @@ export function formatSlotDate(date: Date): string {
 export function buildSlotListText(slots: SlotInfo[]): string {
   return slots
     .map((slot) => {
-      return `　- ${formatSlotDate(slot.startsAt)} ${slot.venueName}`;
+      return `　- ${formatSlotDate(slot.startsAt)} ${slot.eventName} (${slot.venueName})`;
     })
     .join("\n");
 }
@@ -33,7 +33,7 @@ export function buildSlotListText(slots: SlotInfo[]): string {
 export function buildSlotListHtml(slots: SlotInfo[]): string {
   return slots
     .map((slot) => {
-      return `<li>${formatSlotDate(slot.startsAt)} ${slot.venueName}</li>`;
+      return `<li>${formatSlotDate(slot.startsAt)} ${slot.eventName} (${slot.venueName})</li>`;
     })
     .join("\n");
 }
