@@ -96,7 +96,7 @@ export default async function HomePage() {
           <a
             href="#events"
             className="absolute left-1/2 bottom-[32px] -translate-x-1/2 rounded-full bg-brand-green px-8 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-brand-green-dark md:bottom-[30px] fadeIn"
-            // style={{ animationDuration: "3000ms" }}
+          // style={{ animationDuration: "3000ms" }}
           >
             イベントを見る ↓
           </a>
@@ -125,6 +125,8 @@ export default async function HomePage() {
               <p>
                 ランチを楽しみながら、栄養学、手作りフード、犬種別の健康管理、長寿の秘訣など、
                 愛犬との暮らしに役立つ知識やヒントを学べる特別な時間です。
+                <br />
+                抽選で、各日程20〜25組様をご招待。わんちゃんやねこちゃん、ご家族と一緒にご参加いただけます。
               </p>
             </div>
 
