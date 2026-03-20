@@ -84,8 +84,8 @@ function ApplyCard({
           <span className="text-warm-900">{slot.venue.name}</span>
         </div>
         <div className="flex items-center gap-2 text-[13px]">
-          <div className="text-warm-500 min-w-13">応募期限</div>
-          <span className="text-warm-900">{formatMonthDay(slot.applicationDeadline)}</span>
+          <div className="text-warm-500 min-w-13">応募締切</div>
+          <span className="text-warm-900">{formatMonthDay(slot.applicationDeadline)}まで</span>
         </div>
       </div>
     </div>
