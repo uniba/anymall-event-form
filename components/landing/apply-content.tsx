@@ -35,11 +35,10 @@ function ApplyCard({
 }) {
   return (
     <div
-      className={`flex flex-col gap-2 overflow-hidden rounded-2xl bg-white p-4 outline-brand-green transition-all duration-100 ease-in-out cursor-pointer ${
-        selected
-          ? "border outline border-brand-green shadow-md"
-          : "border border-warm-200"
-      }`}
+      className={`flex flex-col gap-2 overflow-hidden rounded-2xl bg-white p-4 outline-brand-green transition-all duration-100 ease-in-out cursor-pointer ${selected
+        ? "border outline border-brand-green shadow-md"
+        : "border border-warm-200"
+        }`}
       onClick={onToggle}
     >
       <div className="flex items-start">
@@ -48,11 +47,10 @@ function ApplyCard({
             <div className="flex items-center gap-2 cursor-pointer">
               <button
                 type="button"
-                className={`flex size-6 items-center justify-center rounded-full border transition-colors ${
-                  selected
-                    ? "border-white bg-brand-green"
-                    : "border-warm-400 bg-white/70"
-                }`}
+                className={`flex size-6 items-center justify-center rounded-full border transition-colors ${selected
+                  ? "border-white bg-brand-green"
+                  : "border-warm-400 bg-white/70"
+                  }`}
               >
                 {selected && (
                   <Icon className="text-white" name="Check" size={16} />
@@ -121,12 +119,14 @@ export function ApplyContent({
   return (
     <>
       <div className="mx-auto max-w-6xl px-4 pb-2 pt-6 text-center md:py-8">
-        <h1 className="text-[28px] font-bold text-warm-900">
-          イベント参加申し込み
+        <h1 className="font-serif text-[28px] font-semibold tracking-wide text-warm-900">
+          抽選応募ご登録
         </h1>
-        <p className="mt-2 text-sm text-warm-500">
-          気に​なる​イベントを最大3件まで​申し込むことができます。​
-        </p>
+        <div className="mt-4 text-sm leading-6 text-warm-500">
+          ご希望のイベント日程を3件選択して抽選にご応募ください。<br />
+          人数に限りがあるため、必ずしも当選するとは限りません。<br />
+          当選結果はご登録いただいたメールアドレス宛にご連絡いたします。
+        </div>
       </div>
 
       {selectedSlots.length > 0 && (
@@ -134,7 +134,7 @@ export function ApplyContent({
           <div className="flex items-center gap-2.5">
             <div className="size-2 rounded bg-brand-green" />
             <span className="text-base font-bold text-warm-900">
-              このイベントに申し込む
+              選択中のイベント日程
             </span>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -155,7 +155,7 @@ export function ApplyContent({
           <div className="flex items-center gap-2.5">
             <Icon className="text-warm-900" name="CirclePlus" size={20} />
             <span className="text-base font-bold text-warm-900">
-              その他のイベントにも申し込む
+              その他のイベント日程
             </span>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -186,19 +186,17 @@ export function ApplyContent({
               className="flex items-center gap-2.5"
             >
               <div
-                className={`flex size-[22px] items-center justify-center rounded-[5px] bg-brand-green ${
-                  selectedIds.size > 0 ? "opacity-100" : "opacity-0"
-                }`}
+                className={`flex size-[22px] items-center justify-center rounded-[5px] bg-brand-green ${selectedIds.size > 0 ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 <Icon className="text-white" name="Check" size={16} />
               </div>
               <span className="text-sm font-medium text-warm-900">
-                {selectedIds.size}件のイベントを選択中
+                {selectedIds.size}件のイベント日程を選択中
               </span>
               <div
-                className={` ${
-                  selectedIds.size > 0 ? "opacity-100" : "opacity-0"
-                }`}
+                className={` ${selectedIds.size > 0 ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 <Icon className="text-warm-400" name="X" size={14} />
               </div>
@@ -217,13 +215,12 @@ export function ApplyContent({
                   ? `/event/apply/form?slots=${Array.from(selectedIds).join(",")}`
                   : "#"
               }
-              className={`flex h-11 items-center justify-center gap-2 rounded-full px-6 text-sm font-bold text-white transition-colors ${
-                selectedIds.size > 0
-                  ? "bg-brand-green hover:bg-brand-green-dark"
-                  : "pointer-events-none bg-warm-400"
-              }`}
+              className={`flex h-11 items-center justify-center gap-2 rounded-full px-6 text-sm font-bold text-white transition-colors ${selectedIds.size > 0
+                ? "bg-brand-green hover:bg-brand-green-dark"
+                : "pointer-events-none bg-warm-400"
+                }`}
             >
-              まとめて申し込む
+              抽選に応募する
               <Icon className="text-white" name="ChevronRight" size={16} />
             </a>
           </div>
