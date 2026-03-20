@@ -4,26 +4,10 @@ import { LotteryError, runSlotLottery } from "@/lib/lottery";
 
 type RunLotteryBody = {
   targetSlotId?: string;
-  successCount?: number;
 };
 
 function normalizeText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
-}
-
-function parseSuccessCount(value: unknown): number | null {
-  const parsed =
-    typeof value === "number"
-      ? value
-      : typeof value === "string"
-        ? Number.parseInt(value, 10)
-        : Number.NaN;
-
-  if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed < 0) {
-    return null;
-  }
-
-  return parsed;
 }
 
 export async function POST(request: NextRequest) {
@@ -41,23 +25,14 @@ export async function POST(request: NextRequest) {
   }
 
   const targetSlotId = normalizeText(body.targetSlotId);
-  const successCount = parseSuccessCount(body.successCount);
 
   if (!targetSlotId) {
     return NextResponse.json({ error: "Please select a slot." }, { status: 400 });
   }
 
-  if (successCount === null) {
-    return NextResponse.json(
-      { error: "Success count must be a non-negative integer." },
-      { status: 400 }
-    );
-  }
-
   try {
     const result = await runSlotLottery({
-      targetSlotId,
-      successCount
+      targetSlotId
     });
 
     return NextResponse.json({ ok: true, result });
@@ -66,6 +41,7 @@ export async function POST(request: NextRequest) {
       if (error.code === "SLOT_NOT_FOUND") {
         return NextResponse.json({ error: error.message }, { status: 404 });
       }
+
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 

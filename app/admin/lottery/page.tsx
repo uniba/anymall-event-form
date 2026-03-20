@@ -39,7 +39,7 @@ export default async function AdminLotteryPage() {
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <h1 className="text-xl font-semibold text-slate-900">抽選</h1>
         <p className="mt-2 text-sm text-slate-600">
-          受付終了したスロットを選択し、当選人数を入力して抽選を実行します。
+          受付終了したスロットを選択すると、設定された定員に基づいて抽選を実行します。
         </p>
 
         <LotteryRunner slots={slotOptions} />

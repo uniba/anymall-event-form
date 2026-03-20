@@ -20,6 +20,7 @@ export type SlotTableRow = {
   theme: string;
   instructor: string;
   capacity: number;
+  acceptedApplicationCount: number;
   applicationBegin: string;
   applicationDeadline: string;
   lotteryResultTime: string;
@@ -128,7 +129,10 @@ function getInitialFormState(slot: SlotTableRow): SlotFormState {
   };
 }
 
-function buildSlotUpdatePayload(values: SlotFormState): {
+function buildSlotUpdatePayload(
+  values: SlotFormState,
+  selectedSlot?: SlotTableRow | null,
+): {
   error?: string;
   payload?: Record<string, unknown>;
 } {
@@ -175,6 +179,15 @@ function buildSlotUpdatePayload(values: SlotFormState): {
   ) {
     return {
       error: `定員は0から${slotCapacityMax}までの整数で入力してください。`,
+    };
+  }
+
+  if (
+    selectedSlot &&
+    capacity < selectedSlot.acceptedApplicationCount
+  ) {
+    return {
+      error: `定員は当選済み応募数(${selectedSlot.acceptedApplicationCount})未満にできません。`,
     };
   }
 
@@ -379,7 +392,10 @@ export function SlotsTable({
       return;
     }
 
-    const submission = buildSlotUpdatePayload(formValues);
+    const submission = buildSlotUpdatePayload(
+      formValues,
+      modalState.mode === "edit" ? selectedSlot : null,
+    );
     if (!submission.payload) {
       setErrorMessage(submission.error ?? "入力内容を確認してください。");
       return;
