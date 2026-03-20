@@ -19,6 +19,7 @@ export type ApplicationFilterVenueOption = {
 export type ApplicationFilterSlotOption = {
   id: string;
   venueId: string;
+  eventName: string;
   startsAt: string;
   endsAt: string;
   venueName: string;
@@ -35,7 +36,11 @@ type ApplicationFiltersProps = {
 };
 
 function slotLabel(slot: ApplicationFilterSlotOption): string {
-  return `${slot.venueName} | ${new Date(slot.startsAt).toLocaleString()} - ${new Date(slot.endsAt).toLocaleString()}`;
+  const date = new Date(slot.startsAt);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}年${month}月${day}日 ${slot.eventName} (${slot.venueName})`;
 }
 
 export function ApplicationFilters({
@@ -116,7 +121,7 @@ export function ApplicationFilters({
       </div>
       <div className="w-full min-w-0 sm:w-auto">
         <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-slot">
-          スロット
+          イベント
         </label>
         <select
           className={slotSelectClassName}
@@ -148,7 +153,7 @@ export function ApplicationFilters({
         </select>
       </div>
       <button className={secondaryButtonClassName} type="submit">
-        検査
+        検索
       </button>
     </form>
   );

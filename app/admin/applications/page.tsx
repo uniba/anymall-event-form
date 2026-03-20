@@ -137,6 +137,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
   const slotOptions: ApplicationFilterSlotOption[] = slots.map((slot) => ({
     id: slot.id,
     venueId: slot.venueId,
+    eventName: slot.eventName,
     startsAt: slot.startsAt.toISOString(),
     endsAt: slot.endsAt.toISOString(),
     venueName: slot.venue.name
@@ -178,6 +179,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
               submissionBirthday: application.submission.birthday ? application.submission.birthday.toISOString().split('T')[0] : null,
               submissionPrefecture: application.submission.prefecture,
               submissionMemo: application.submission.memo,
+              eventName: application.slot.eventName,
               venueName: application.slot.venue.name,
               startsAt: application.slot.startsAt.toISOString(),
               endsAt: application.slot.endsAt.toISOString(),

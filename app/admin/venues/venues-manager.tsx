@@ -65,7 +65,7 @@ export function VenuesManager({ initialQuery, initialVenues }: VenuesManagerProp
             />
           </div>
           <button className={secondaryButtonClassName} type="submit">
-            検査
+            検索
           </button>
         </div>
 

@@ -16,6 +16,7 @@ export type ApplicationTableRow = {
   submissionBirthday: string | null;
   submissionPrefecture: string | null;
   submissionMemo: string | null;
+  eventName: string;
   venueName: string;
   startsAt: string;
   endsAt: string;
@@ -52,6 +53,14 @@ function formatBirthday(value: string): string {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   return `${year}年${month}月${day}日`;
+}
+
+function formatEventInfo(startsAt: string, eventName: string, venueName: string): string {
+  const date = new Date(startsAt);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}年${month}月${day}日 ${eventName} (${venueName})`;
 }
 
 const detailFieldClassName =
@@ -194,9 +203,9 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
         <table className="min-w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-600">
+              <th className="px-2 py-2">氏名</th>
               <th className="px-2 py-2">メールアドレス</th>
-              <th className="px-2 py-2">会場</th>
-              <th className="px-2 py-2">開催日時</th>
+              <th className="px-2 py-2">イベント</th>
               <th className="px-2 py-2">状態</th>
               <th className="px-2 py-2">応募日時</th>
             </tr>
@@ -217,16 +226,16 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
                 role="button"
                 tabIndex={0}
               >
+                <td className="px-2 py-3">{application.submissionName}</td>
                 <td className="px-2 py-3">{application.submissionEmail}</td>
-                <td className="px-2 py-3">{application.venueName}</td>
-                <td className="px-2 py-3">{formatAdminSlotDateTimeRange(application.startsAt, application.endsAt)}</td>
+                <td className="px-2 py-3">{formatEventInfo(application.startsAt, application.eventName, application.venueName)}</td>
                 <td className="px-2 py-3">{getSlotApplicationStatusLabel(application.status)}</td>
                 <td className="px-2 py-3">{formatApplicationCreatedAt(application.createdAt)}</td>
               </tr>
             ))}
             {applicationRows.length === 0 ? (
               <tr>
-                <td className="px-2 py-4 text-slate-500" colSpan={8}>
+                <td className="px-2 py-4 text-slate-500" colSpan={5}>
                   応募はありません
                 </td>
               </tr>
@@ -299,10 +308,6 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
                 <div className={detailFieldClassName}>{selectedApplication.submissionPrefecture ?? "—"}</div>
               </div>
               <div>
-                <p className="mb-1 text-xs font-medium text-slate-600">会場</p>
-                <div className={detailFieldClassName}>{selectedApplication.venueName}</div>
-              </div>
-              <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">状態</p>
                 <select
                   className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-500"
@@ -316,6 +321,12 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
                     </option>
                   ))}
                 </select>
+              </div>
+              <div className="md:col-span-2">
+                <p className="mb-1 text-xs font-medium text-slate-600">イベント</p>
+                <div className={detailFieldClassName}>
+                  {formatEventInfo(selectedApplication.startsAt, selectedApplication.eventName, selectedApplication.venueName)}
+                </div>
               </div>
               <div className="md:col-span-2">
                 <p className="mb-1 text-xs font-medium text-slate-600">スロット日時</p>
