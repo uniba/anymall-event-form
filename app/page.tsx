@@ -92,7 +92,7 @@ export default async function HomePage() {
                 <br />
               </p>
             </div>
-            <div className="absolute -top-[64px] left-6 md:top-0 md:left-[80px] flex items-center justify-center size-[96px] md:size-[120px] rotate-[-7deg] animate-bounce">
+            <div className="absolute -top-[64px] left-6 md:top-0 md:left-[80px] flex items-center justify-center size-[96px] md:size-[120px] rotate-[-7deg] bounceMicro">
               <div className="relative z-10 text-center text-white text-lg md:text-[24px] text-shadow-sm font-black leading-[120%]">
                 応募・参加
                 <br />
