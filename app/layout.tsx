@@ -36,6 +36,10 @@ export const metadata: Metadata = {
   title: siteTitle,
   description: siteDescription,
   metadataBase: new URL(siteUrl),
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+  },
   openGraph: {
     title: siteTitle,
     description: siteDescription,

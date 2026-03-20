@@ -70,7 +70,7 @@ export default async function HomePage() {
             }}
           />
 
-          <div className="absolute left-0 bottom-0 w-full flex flex-col items-center pb-32 md:pb-0">
+          <div className="absolute left-0 bottom-0 w-full flex flex-col items-center pb-24 md:pb-0">
             <div className="flex flex-col md:block items-center gap-4 px-4 w-[95%] md:max-w-7xl md:pb-52 md:px-0">
               <h1 className="text-center md:text-right font-serif text-[32px] leading-[48px] text-brand-green-accent sm:text-[32px] md:text-[48px] md:leading-[56px] md:leading-[150%]">
                 <span className="inline-block bg-white pt-0.5 pb-1 px-2 md:px-4 md:py-3">
@@ -81,7 +81,7 @@ export default async function HomePage() {
                   特別なひととき。
                 </span>
               </h1>
-              <p className="text-center md:text-right text-[15px] leading-7 text-warm-700 md:text-base md:leading-8 md:mt-8">
+              <p className="text-center md:text-right text-[14px] leading-6 text-warm-700 md:text-base md:leading-8 md:mt-8">
                 <span className="md:inline-block md:bg-white md:pt-0.5 md:pb-1 md:px-2">
                   獣医師監修の特別な少人数制イベントへ、抽選でご招待いたします。
                 </span>
@@ -99,7 +99,7 @@ export default async function HomePage() {
 
           <a
             href="#events"
-            className="absolute left-1/2 bottom-[32px] -translate-x-1/2 rounded-full bg-brand-green px-8 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-brand-green-dark md:bottom-[30px] fadeIn"
+            className="absolute left-1/2 bottom-[24px] -translate-x-1/2 rounded-full bg-brand-green px-8 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-brand-green-dark md:bottom-[30px] fadeIn whitespace-nowrap"
           // style={{ animationDuration: "3000ms" }}
           >
             抽選に応募する ↓
