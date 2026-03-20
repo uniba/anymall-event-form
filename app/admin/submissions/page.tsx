@@ -89,7 +89,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
               gender: submission.gender,
               age: submission.birthday ? calculateAge(submission.birthday) : null,
               prefecture: submission.prefecture,
-              birthday: submission.birthday?.toISOString() ?? "",
+              birthday: submission.birthday?.toISOString() ?? null,
               memo: submission.memo,
               createdAt: submission.createdAt.toISOString()
             })

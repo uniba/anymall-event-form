@@ -14,7 +14,7 @@ export type SubmissionTableRow = {
   gender: Gender | null;
   age: number | null;
   prefecture: Prefecture | null;
-  birthday: string;
+  birthday: string | null;
   memo: string | null;
   createdAt: string;
 };
@@ -430,7 +430,7 @@ export function SubmissionsTable({
                     生年月日
                   </p>
                   <div className={detailFieldClassName}>
-                    {formatBirthday(selectedSubmission.birthday)}
+                    {selectedSubmission.birthday ? formatBirthday(selectedSubmission.birthday) : "—"}
                   </div>
                 </div>
 
