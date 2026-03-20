@@ -33,7 +33,7 @@ export default async function Footer() {
             </div>
             <div className="flex flex-col md:flex-row gap-8 md:gap-4">
               <div className="flex items-center gap-4">
-                <a href="#" aria-label="YouTube" className="text-white">
+                <a href="https://www.instagram.com/anymall.official?igsh=bDhmMTBtbzlxamR4" aria-label="Instagram" target="_blank" rel="noopener noreferrer" className="text-white">
                   <Icon name="Instagram" size="16" />
                 </a>
               </div>
