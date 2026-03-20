@@ -573,12 +573,6 @@ function ConfirmStep({
   return (
     <div className="flex flex-col flex-1 gap-3.5 pt-6">
       <div className="mx-auto flex w-full max-w-lg flex-col gap-3.5 px-4 md:px-0">
-        <div>
-          <h2 className="text-lg font-bold text-warm-900">入力内容の確認</h2>
-          <p className="mt-1 text-sm text-warm-500">
-            以下の内容でよろしければ応募してください
-          </p>
-        </div>
 
         <div className="flex flex-col gap-3">
           <ConfirmRow label="氏名" value={formData.name} />
@@ -601,7 +595,7 @@ function ConfirmStep({
         </div>
 
         <div className="flex flex-col gap-3">
-          <span className="text-[11px] text-warm-500">申し込みイベント</span>
+          <span className="text-[11px] text-warm-500">応募イベント日程</span>
           {slots.map((slot) => (
             <SlotSummaryCard key={slot.id} slot={slot} />
           ))}
@@ -646,10 +640,10 @@ function CompleteStep() {
 
       <div className="flex flex-col items-center gap-3 text-center">
         <h2 className="text-2xl font-bold text-warm-900">
-          お申し込み​ありがとう​ございます
+          ご応募​ありがとう​ございます
         </h2>
         <p className="text-sm leading-6 text-warm-500">
-          お申し込み控え​メールを​送信しましたので​ご確認ください。
+          ご応募控え​メールを​送信しましたので​ご確認ください。
           <br />
           万一メールが​届いていない​場合は、​お問い​合わせください。
           <br />
@@ -746,13 +740,24 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
 
   return (
     <>
-      {step != "complete" && (
+      {step == "form" && (
         <div className="mx-auto max-w-6xl px-4 pb-2 pt-6 text-center md:py-8">
-          <h1 className="text-[28px] font-bold text-warm-900">
-            イベント参加申し込み
+          <h1 className="font-serif text-[28px] font-semibold tracking-wide text-warm-900">
+            抽選応募ご登録
           </h1>
           <p className="mt-2 text-sm text-warm-500">
             以下の​項目に​ついて​それぞれご記入ください。
+          </p>
+        </div>
+      )}
+      {step == "confirm" && (
+        <div className="mx-auto max-w-6xl px-4 pb-2 pt-6 text-center md:py-8">
+          <h1 className="font-serif text-[28px] font-semibold tracking-wide text-warm-900">
+            入力内容のご確認
+          </h1>
+          <p className="mt-2 text-sm text-warm-500">
+            以下の内容をご確認の上、<br />
+            よろしければ送信して応募登録を完了してください。
           </p>
         </div>
       )}

@@ -41,11 +41,10 @@ function EventCard({
 
   return (
     <div
-      className={`flex flex-col gap-2 overflow-hidden rounded-2xl bg-white p-4 outline-brand-green transition-all duration-100 ease-in-out ${
-        selected
-          ? "border outline border-brand-green shadow-md"
-          : "border border-warm-200"
-      }`}
+      className={`flex flex-col gap-2 overflow-hidden rounded-2xl bg-white p-4 outline-brand-green transition-all duration-100 ease-in-out ${selected
+        ? "border outline border-brand-green shadow-md"
+        : "border border-warm-200"
+        }`}
       onClick={onToggle}
     >
       <div className="flex items-start">
@@ -54,11 +53,10 @@ function EventCard({
             <div className="flex items-center gap-2 cursor-pointer">
               <button
                 type="button"
-                className={`flex size-6 items-center justify-center rounded-full border transition-colors cursor-pointer ${
-                  selected
-                    ? "border-white bg-brand-green"
-                    : "border-warm-400 bg-white/70"
-                }`}
+                className={`flex size-6 items-center justify-center rounded-full border transition-colors cursor-pointer ${selected
+                  ? "border-white bg-brand-green"
+                  : "border-warm-400 bg-white/70"
+                  }`}
               >
                 {selected && (
                   <Icon className="text-white" name="Check" size={16} />
@@ -108,7 +106,7 @@ function EventCard({
           onClick={(e) => e.stopPropagation()}
           className="flex h-11 mt-auto items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark cursor-pointer"
         >
-          参加を申し込む
+          抽選に応募する
         </a>
       )}
       {!isAccepting && (
@@ -171,14 +169,14 @@ export function EventSection({
           </div>
 
           <p className="text-base leading-7 text-warm-600 md:text-center">
-            以下の​スケジュールで​イベント開催予定です。
+            以下の各日程にてイベント開催予定です。
             <br />
-            ​参加は​無料で、​応募者多数の​場合は​抽選と​なります。​
+            参加費は​無料ですが、人数に限りがあるため、必ずしも当選するとは限りません。
             <br />
-            各回ごとに​テーマ・内容・​担当者が​異なります。 <br />
-            日付横の丸をチェックすることで最大3件まで​申し込むことができます。​
+            各回ごとに​テーマ・内容・会場・​担当者が​異なりますので、<br />
+            参加可能な日程で興味のあるテーマの日程を3件選択してご応募ください。
             <br />
-            ​開催内容は​変更に​なる​可能性も​ありますので​ご了承ください。​
+            開催内容は​変更に​なる​可能性も​ありますので​ご了承ください。
           </p>
 
           {acceptingSlots.length > 0 && (
@@ -186,7 +184,7 @@ export function EventSection({
               <div className="flex items-center gap-2.5">
                 <div className="size-2 rounded bg-brand-green-text" />
                 <span className="text-[15px] font-bold text-warm-900">
-                  参加申し込み受付中の​イベント
+                  抽選応募受付中の​イベント
                 </span>
               </div>
               <div className="grid gap-4 md:grid-cols-3">
@@ -222,7 +220,7 @@ export function EventSection({
               <div className="flex items-center gap-2.5">
                 <div className="size-2 rounded bg-warm-500" />
                 <span className="text-[15px] font-bold text-warm-900">
-                  参加申し込み準備中のイベント
+                  抽選応募準備中のイベント
                 </span>
               </div>
               <div className="grid gap-4 md:grid-cols-3">
@@ -250,11 +248,10 @@ export function EventSection({
       </section>
 
       <div
-        className={`sticky bottom-0 z-50 bg-white px-4 transition-all duration-500 ease-in-out overflow-hidden ${
-          selectedIds.size > 0
-            ? "h-[106px] translate-y-0 opacity-100"
-            : "h-0 min-h-0 pointer-events-none translate-y-full opacity-0"
-        }`}
+        className={`sticky bottom-0 z-50 bg-white px-4 transition-all duration-500 ease-in-out overflow-hidden ${selectedIds.size > 0
+          ? "h-[106px] translate-y-0 opacity-100"
+          : "h-0 min-h-0 pointer-events-none translate-y-full opacity-0"
+          }`}
         style={{
           boxShadow:
             "0 0 15px -3px rgb(0 0 0 / 0.1), 0 0 6px -4px rgb(0 0 0 / 0.1)",
@@ -267,9 +264,8 @@ export function EventSection({
             className="flex items-center gap-2.5"
           >
             <div
-              className={`flex size-[22px] items-center justify-center rounded-[5px] bg-brand-green ${
-                selectedIds.size > 0 ? "opacity-100" : "opacity-0"
-              }`}
+              className={`flex size-[22px] items-center justify-center rounded-[5px] bg-brand-green ${selectedIds.size > 0 ? "opacity-100" : "opacity-0"
+                }`}
             >
               <Icon className="text-white" name="Check" size={16} />
             </div>
@@ -282,7 +278,7 @@ export function EventSection({
             href={`/event/apply?slots=${Array.from(selectedIds).join(",")}`}
             className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-brand-green text-sm font-bold text-white transition-colors hover:bg-brand-green-dark md:w-auto md:px-12"
           >
-            まとめて申し込む
+            まとめて応募する
             <Icon className="text-white" name="ChevronRight" size={16} />
           </a>
         </div>
