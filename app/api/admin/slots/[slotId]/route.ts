@@ -1,3 +1,4 @@
+import { SlotApplicationStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_SESSION_COOKIE, isValidAdminSessionToken } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
@@ -28,7 +29,7 @@ export async function PATCH(
 
   const { slotId } = await context.params;
 
-  const [slot, venue] = await Promise.all([
+  const [slot, venue, acceptedApplicationCount] = await Promise.all([
     prisma.slot.findUnique({
       where: { id: slotId },
       select: { id: true }
@@ -36,6 +37,12 @@ export async function PATCH(
     prisma.venue.findUnique({
       where: { id: validated.data.venueId },
       select: { id: true }
+    }),
+    prisma.submissionSlot.count({
+      where: {
+        slotId,
+        status: SlotApplicationStatus.ACCEPTED
+      }
     })
   ]);
 
@@ -45,6 +52,13 @@ export async function PATCH(
 
   if (!venue) {
     return NextResponse.json({ error: "会場が見つかりません。" }, { status: 404 });
+  }
+
+  if (validated.data.capacity < acceptedApplicationCount) {
+    return NextResponse.json(
+      { error: `定員は当選済み応募数(${acceptedApplicationCount})未満にできません。` },
+      { status: 400 }
+    );
   }
 
   const updatedSlot = await prisma.slot.update({
@@ -66,6 +80,15 @@ export async function PATCH(
       venue: {
         select: {
           name: true
+        }
+      },
+      _count: {
+        select: {
+          applications: {
+            where: {
+              status: SlotApplicationStatus.ACCEPTED
+            }
+          }
         }
       }
     }
