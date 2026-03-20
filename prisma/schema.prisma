@@ -82,7 +82,7 @@ model Submission {
   id                String           @id @default(cuid())
   name              String
   furigana          String
-  email             String           @unique
+  email             String
   gender            Gender?
   birthday          DateTime?
   prefecture        Prefecture?

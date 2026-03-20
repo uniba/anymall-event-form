@@ -84,11 +84,13 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
             (submission): SubmissionTableRow => ({
               id: submission.id,
               name: submission.name,
+              furigana: submission.furigana,
               email: submission.email,
               gender: submission.gender,
               age: submission.birthday ? calculateAge(submission.birthday) : null,
               prefecture: submission.prefecture,
               birthday: submission.birthday?.toISOString() ?? "",
+              memo: submission.memo,
               createdAt: submission.createdAt.toISOString()
             })
           )}

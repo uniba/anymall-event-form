@@ -30,34 +30,6 @@ function normalizeText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-async function createDuplicateSubmissionAttemptRows(
-  submissionId: string,
-  selectedSlotIds: string[],
-  submissionAttemptId: string
-): Promise<void> {
-  const existingSlotApplications = await prisma.submissionSlot.findMany({
-    where: { submissionId },
-    select: { slotId: true, status: true}
-  });
-  const existingSlotIdSet = new Set(existingSlotApplications.map((row) => row.slotId));
-
-  const hasAcceptedSlot = existingSlotApplications.some(
-    (row) => row.status === SlotApplicationStatus.ACCEPTED
-  );
-
-  await prisma.submissionSlot.createMany({
-    data: selectedSlotIds.map((slotId) => ({
-      submissionId,
-      slotId,
-      submissionAttemptId,
-      status: hasAcceptedSlot || existingSlotIdSet.has(slotId)
-        ? SlotApplicationStatus.REJECTED
-        : SlotApplicationStatus.APPLIED
-    })),
-    skipDuplicates: true
-  });
-}
-
 async function markAttemptReceiptSent(submissionId: string, submissionAttemptId: string): Promise<void> {
   await prisma.submissionSlot.updateMany({
     where: {
@@ -212,21 +184,6 @@ export async function POST(request: NextRequest) {
   }
 
   const submissionAttemptId = randomUUID();
-  const existing = await prisma.submission.findUnique({
-    where: { email },
-    select: { id: true }
-  });
-  if (existing) {
-    await createDuplicateSubmissionAttemptRows(existing.id, selectedSlotIds, submissionAttemptId);
-    const receiptResult = await sendReceiptOrRejectAttempt(
-      existing.id,
-      submissionAttemptId,
-      email,
-      name,
-      selectedSlotIds
-    );
-    return NextResponse.json({ ok: true, ...receiptResult }, { status: 200 });
-  }
 
   try {
     const created = await prisma.submission.create({
@@ -257,32 +214,7 @@ export async function POST(request: NextRequest) {
     );
     return NextResponse.json({ ok: true, ...receiptResult }, { status: 201 });
   } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002"
-    ) {
-      const existingSubmission = await prisma.submission.findUnique({
-        where: { email },
-        select: { id: true }
-      });
-
-      if (existingSubmission) {
-        await createDuplicateSubmissionAttemptRows(
-          existingSubmission.id,
-          selectedSlotIds,
-          submissionAttemptId
-        ).catch(() => {});
-        const receiptResult = await sendReceiptOrRejectAttempt(
-          existingSubmission.id,
-          submissionAttemptId,
-          email,
-          name,
-          selectedSlotIds
-        );
-        return NextResponse.json({ ok: true, ...receiptResult }, { status: 200 });
-      }
-    }
-
+    console.error("Error creating submission:", error);
     return NextResponse.json(
       { error: "Unable to process your submission right now." },
       { status: 500 }

@@ -169,11 +169,13 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
           applications={applications.map(
             (application): ApplicationTableRow => ({
               id: application.id,
+              submissionId: application.submission.id,
               submissionEmail: application.submission.email,
               submissionName: application.submission.name,
               submissionFurigana: application.submission.furigana,
               submissionGender: application.submission.gender,
               submissionAge: application.submission.birthday ? calculateAge(application.submission.birthday) : null,
+              submissionBirthday: application.submission.birthday ? application.submission.birthday.toISOString().split('T')[0] : null,
               submissionPrefecture: application.submission.prefecture,
               submissionMemo: application.submission.memo,
               venueName: application.slot.venue.name,

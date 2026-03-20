@@ -14,10 +14,12 @@ import {
 
 type SubmissionUpdateInput = {
   name?: unknown;
+  furigana?: unknown;
   email?: unknown;
   gender?: unknown;
   birthday?: unknown;
   prefecture?: unknown;
+  memo?: unknown;
 };
 
 const genderOptions = Object.values(Gender);
@@ -51,13 +53,15 @@ export async function PATCH(
   }
 
   const name = normalizeText(body.name);
+  const furigana = normalizeText(body.furigana);
   const email = normalizeText(body.email);
   const gender = normalizeText(body.gender);
   const birthdayInput = normalizeText(body.birthday);
   const prefecture = normalizeText(body.prefecture);
+  const memo = typeof body.memo === "string" ? body.memo.trim() : null;
   const birthday = parseBirthday(birthdayInput);
 
-  if (!name || !email || !gender || !birthdayInput || !prefecture) {
+  if (!name || !furigana || !email || !gender || !birthdayInput || !prefecture) {
     return NextResponse.json(
       { error: "必須項目を入力してください。" },
       { status: 400 },
@@ -115,18 +119,22 @@ export async function PATCH(
     },
     data: {
       name,
+      furigana,
       email,
       gender,
       birthday,
       prefecture: prefecture as Prefecture,
+      memo: memo || null,
     },
     select: {
       id: true,
       name: true,
+      furigana: true,
       email: true,
       gender: true,
       birthday: true,
       prefecture: true,
+      memo: true,
       createdAt: true,
     },
   });
@@ -135,11 +143,13 @@ export async function PATCH(
     submission: {
       id: submission.id,
       name: submission.name,
+      furigana: submission.furigana,
       email: submission.email,
       gender: submission.gender,
       age: submission.birthday ? calculateAge(submission.birthday) : null,
       prefecture: submission.prefecture,
       birthday: submission.birthday?.toISOString() ?? "",
+      memo: submission.memo,
       createdAt: submission.createdAt.toISOString(),
     },
   });

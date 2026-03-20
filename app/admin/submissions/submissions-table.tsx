@@ -9,20 +9,23 @@ import { isValidEmail, isValidPrefecture } from "@/lib/validation";
 export type SubmissionTableRow = {
   id: string;
   name: string;
+  furigana: string;
   email: string;
   gender: Gender | null;
   age: number | null;
   prefecture: Prefecture | null;
   birthday: string;
+  memo: string | null;
   createdAt: string;
 };
 
 type SubmissionFormState = {
   name: string;
+  furigana: string;
   email: string;
   gender: Gender | "";
-  ageText: string;
   prefecture: Prefecture | "";
+  memo: string;
 };
 
 type SubmissionsTableProps = {
@@ -31,8 +34,6 @@ type SubmissionsTableProps = {
   prefectureOptions: Prefecture[];
 };
 
-const minSubmissionAge = 18;
-const maxSubmissionAge = 100;
 const detailFieldClassName =
   "rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800";
 const textInputClassName =
@@ -62,33 +63,12 @@ function formatSubmissionCreatedAt(value: string): string {
   return `${dateText} ${timeText}`;
 }
 
-function deriveBirthdayFromAge(
-  existingBirthdayIso: string,
-  age: number,
-): string {
-  const today = new Date();
-  const existingBirthday = new Date(existingBirthdayIso);
-  const nextBirthday = new Date(
-    today.getFullYear(),
-    existingBirthday.getUTCMonth(),
-    existingBirthday.getUTCDate(),
-  );
-
-  let birthYear = today.getFullYear() - age;
-  if (nextBirthday > today) {
-    birthYear -= 1;
-  }
-
-  const nextBirthdayMonth = String(existingBirthday.getUTCMonth() + 1).padStart(
-    2,
-    "0",
-  );
-  const nextBirthdayDay = String(existingBirthday.getUTCDate()).padStart(
-    2,
-    "0",
-  );
-
-  return `${birthYear}-${nextBirthdayMonth}-${nextBirthdayDay}`;
+function formatBirthday(value: string): string {
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}年${month}月${day}日`;
 }
 
 function getInitialFormState(
@@ -96,37 +76,25 @@ function getInitialFormState(
 ): SubmissionFormState {
   return {
     name: submission.name,
+    furigana: submission.furigana,
     email: submission.email,
     gender: submission.gender ?? "",
-    ageText: submission.age != null ? String(submission.age) : "",
     prefecture: submission.prefecture ?? "",
+    memo: submission.memo ?? "",
   };
 }
 
 function validateSubmissionForm(values: SubmissionFormState): string | null {
   const name = values.name.trim();
+  const furigana = values.furigana.trim();
   const email = values.email.trim();
-  const ageText = values.ageText.trim();
 
-  if (!name || !email || !values.gender || !values.prefecture) {
+  if (!name || !furigana || !email || !values.gender || !values.prefecture) {
     return "必須項目を入力してください。";
   }
 
   if (!isValidEmail(email)) {
     return "有効なメールアドレスを入力してください。";
-  }
-
-  if (!/^\d+$/.test(ageText)) {
-    return "年齢は数字のみで入力してください。";
-  }
-
-  const age = Number.parseInt(ageText, 10);
-  if (
-    !Number.isInteger(age) ||
-    age < minSubmissionAge ||
-    age > maxSubmissionAge
-  ) {
-    return `年齢は${minSubmissionAge}から${maxSubmissionAge}までの整数で入力してください。`;
   }
 
   if (!isValidPrefecture(values.prefecture)) {
@@ -222,9 +190,6 @@ export function SubmissionsTable({
       return;
     }
 
-    const age = Number.parseInt(formValues.ageText, 10);
-    const birthday = deriveBirthdayFromAge(selectedSubmission.birthday, age);
-
     setErrorMessage(null);
     setIsSaving(true);
 
@@ -238,10 +203,11 @@ export function SubmissionsTable({
           },
           body: JSON.stringify({
             name: formValues.name.trim(),
+            furigana: formValues.furigana.trim(),
             email: formValues.email.trim(),
             gender: formValues.gender,
-            birthday,
             prefecture: formValues.prefecture,
+            memo: formValues.memo.trim() || null,
           }),
         },
       );
@@ -389,6 +355,9 @@ export function SubmissionsTable({
                 <p className="mt-1 text-sm text-slate-500">
                   {selectedSubmission.name}
                 </p>
+                <p className="mt-0.5 text-xs text-slate-400">
+                  ID: {selectedSubmission.id}
+                </p>
               </div>
               <button
                 className={secondaryButtonClassName}
@@ -423,6 +392,24 @@ export function SubmissionsTable({
                 <div>
                   <label
                     className="mb-1 block text-xs font-medium text-slate-600"
+                    htmlFor="submission-furigana"
+                  >
+                    フリガナ
+                  </label>
+                  <input
+                    className={textInputClassName}
+                    id="submission-furigana"
+                    onChange={(event) =>
+                      updateFormValue("furigana", event.target.value)
+                    }
+                    type="text"
+                    value={formValues.furigana}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    className="mb-1 block text-xs font-medium text-slate-600"
                     htmlFor="submission-email"
                   >
                     メールアドレス
@@ -439,48 +426,21 @@ export function SubmissionsTable({
                 </div>
 
                 <div>
-                  <label
-                    className="mb-1 block text-xs font-medium text-slate-600"
-                    htmlFor="submission-gender"
-                  >
-                    性別
-                  </label>
-                  <select
-                    className={selectInputClassName}
-                    id="submission-gender"
-                    onChange={(event) =>
-                      updateFormValue("gender", event.target.value as Gender)
-                    }
-                    value={formValues.gender}
-                  >
-                    {genderOptions.map((gender) => (
-                      <option key={gender} value={gender}>
-                        {getGenderLabel(gender)}
-                      </option>
-                    ))}
-                  </select>
+                  <p className="mb-1 text-xs font-medium text-slate-600">
+                    生年月日
+                  </p>
+                  <div className={detailFieldClassName}>
+                    {formatBirthday(selectedSubmission.birthday)}
+                  </div>
                 </div>
 
                 <div>
-                  <label
-                    className="mb-1 block text-xs font-medium text-slate-600"
-                    htmlFor="submission-age"
-                  >
+                  <p className="mb-1 text-xs font-medium text-slate-600">
                     年齢
-                  </label>
-                  <input
-                    className={textInputClassName}
-                    id="submission-age"
-                    inputMode="numeric"
-                    onChange={(event) =>
-                      updateFormValue(
-                        "ageText",
-                        event.target.value.replace(/\D/g, ""),
-                      )
-                    }
-                    type="text"
-                    value={formValues.ageText}
-                  />
+                  </p>
+                  <div className={detailFieldClassName}>
+                    {selectedSubmission.age ?? "—"}
+                  </div>
                 </div>
 
                 <div>
@@ -508,6 +468,47 @@ export function SubmissionsTable({
                       </option>
                     ))}
                   </select>
+                </div>
+
+                <div>
+                  <label
+                    className="mb-1 block text-xs font-medium text-slate-600"
+                    htmlFor="submission-gender"
+                  >
+                    性別
+                  </label>
+                  <select
+                    className={selectInputClassName}
+                    id="submission-gender"
+                    onChange={(event) =>
+                      updateFormValue("gender", event.target.value as Gender)
+                    }
+                    value={formValues.gender}
+                  >
+                    {genderOptions.map((gender) => (
+                      <option key={gender} value={gender}>
+                        {getGenderLabel(gender)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="md:col-span-3">
+                  <label
+                    className="mb-1 block text-xs font-medium text-slate-600"
+                    htmlFor="submission-memo"
+                  >
+                    ペットについて
+                  </label>
+                  <textarea
+                    className={textInputClassName}
+                    id="submission-memo"
+                    onChange={(event) =>
+                      updateFormValue("memo", event.target.value)
+                    }
+                    rows={3}
+                    value={formValues.memo}
+                  />
                 </div>
 
                 <div>

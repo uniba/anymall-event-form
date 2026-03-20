@@ -18,9 +18,9 @@ export const slotApplicationStatusLabels: Record<SlotApplicationStatus, string> 
 };
 
 export const genderLabels: Record<StoredGender, string> = {
-  MALE: "男",
-  FEMALE: "女",
-  UNSPECIFIED: "未"
+  MALE: "男性",
+  FEMALE: "女性",
+  UNSPECIFIED: "未回答"
 };
 
 export const genderInputToEnum: Record<GenderInput, StoredGender> = {

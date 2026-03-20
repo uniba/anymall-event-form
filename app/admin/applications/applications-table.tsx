@@ -7,11 +7,13 @@ import { formatAdminSlotDateTimeRange } from "@/lib/slot-display";
 
 export type ApplicationTableRow = {
   id: string;
+  submissionId: string;
   submissionEmail: string;
   submissionName: string;
   submissionFurigana: string;
   submissionGender: StoredGender | null;
   submissionAge: number | null;
+  submissionBirthday: string | null;
   submissionPrefecture: string | null;
   submissionMemo: string | null;
   venueName: string;
@@ -42,6 +44,14 @@ function formatApplicationCreatedAt(value: string): string {
   }).format(date);
 
   return `${dateText} ${timeText}`;
+}
+
+function formatBirthday(value: string): string {
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}年${month}月${day}日`;
 }
 
 const detailFieldClassName =
@@ -256,6 +266,10 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
             </div>
 
             <div className="grid gap-4 px-6 py-5 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <p className="mb-1 text-xs font-medium text-slate-600">Submission ID</p>
+                <div className={detailFieldClassName}>{selectedApplication.submissionId}</div>
+              </div>
               <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">メールアドレス</p>
                 <div className={detailFieldClassName}>{selectedApplication.submissionEmail}</div>
@@ -275,6 +289,10 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
               <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">年齢</p>
                 <div className={detailFieldClassName}>{selectedApplication.submissionAge ?? "—"}</div>
+              </div>
+              <div>
+                <p className="mb-1 text-xs font-medium text-slate-600">生年月日</p>
+                <div className={detailFieldClassName}>{selectedApplication.submissionBirthday ? formatBirthday(selectedApplication.submissionBirthday) : "—"}</div>
               </div>
               <div>
                 <p className="mb-1 text-xs font-medium text-slate-600">居住地</p>
