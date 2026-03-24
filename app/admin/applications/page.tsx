@@ -5,7 +5,7 @@ import {
   type ApplicationFilterVenueOption
 } from "@/components/application-filters";
 import { AdminNav } from "@/components/admin-nav";
-import { requireAdminSession } from "@/lib/admin-guard";
+import { requireAdminAccess } from "@/lib/admin-page-access";
 import { prisma } from "@/lib/prisma";
 import { ApplicationsTable, type ApplicationTableRow } from "./applications-table";
 
@@ -36,7 +36,7 @@ function calculateAge(birthDate: Date): number {
 }
 
 export default async function AdminApplicationsPage({ searchParams }: ApplicationsPageProps) {
-  await requireAdminSession();
+  await requireAdminAccess();
 
   const params = await searchParams;
   const emailFilter = params?.email?.trim() ?? "";

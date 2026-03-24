@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ADMIN_SESSION_COOKIE, isValidAdminSessionToken } from "@/lib/admin-auth";
+import { ensureAdminApiAccess } from "@/lib/admin-access";
 import { prisma } from "@/lib/prisma";
 import { parseVenueInput } from "./venue-input";
 
 export async function GET(request: NextRequest) {
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
-  if (!isAdminSessionValid) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const authorization = await ensureAdminApiAccess(request);
+  if (!authorization.ok) {
+    return authorization.response;
   }
 
   const venues = await prisma.venue.findMany({
@@ -29,10 +28,9 @@ type VenueCreateInput = {
 };
 
 export async function POST(request: NextRequest) {
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
-  if (!isAdminSessionValid) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const authorization = await ensureAdminApiAccess(request);
+  if (!authorization.ok) {
+    return authorization.response;
   }
 
   let body: VenueCreateInput;

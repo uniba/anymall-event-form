@@ -1,13 +1,13 @@
 import { SlotState } from "@prisma/client";
 import { AdminNav } from "@/components/admin-nav";
-import { requireAdminSession } from "@/lib/admin-guard";
+import { requireAdminAccess } from "@/lib/admin-page-access";
 import { getSlotStateLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 import { formatAdminSlotDateTimeRange, getCapacityLabel } from "@/lib/slot-display";
 import { LotteryRunner } from "./lottery-runner";
 
 export default async function AdminLotteryPage() {
-  await requireAdminSession();
+  await requireAdminAccess();
 
   const slots = await prisma.slot.findMany({
     where: {

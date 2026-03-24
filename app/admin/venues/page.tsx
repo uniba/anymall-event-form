@@ -1,5 +1,5 @@
 import { AdminNav } from "@/components/admin-nav";
-import { requireAdminSession } from "@/lib/admin-guard";
+import { requireAdminAccess } from "@/lib/admin-page-access";
 import { prisma } from "@/lib/prisma";
 import { VenuesManager } from "./venues-manager";
 import type { VenueTableRow } from "./venues-table";
@@ -9,7 +9,7 @@ type VenuesPageProps = {
 };
 
 export default async function AdminVenuesPage({ searchParams }: VenuesPageProps) {
-  await requireAdminSession();
+  await requireAdminAccess();
 
   const params = await searchParams;
   const query = params?.q?.trim() ?? "";

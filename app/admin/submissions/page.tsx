@@ -1,6 +1,6 @@
 import { Gender } from "@prisma/client";
 import { AdminNav } from "@/components/admin-nav";
-import { requireAdminSession } from "@/lib/admin-guard";
+import { requireAdminAccess } from "@/lib/admin-page-access";
 import { prefectureOptions } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 import { calculateAge } from "@/lib/validation";
@@ -16,7 +16,7 @@ const secondaryButtonClassName =
   "rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50";
 
 export default async function AdminSubmissionsPage({ searchParams }: SubmissionsPageProps) {
-  await requireAdminSession();
+  await requireAdminAccess();
 
   const params = await searchParams;
   const query = params?.q?.trim() ?? "";

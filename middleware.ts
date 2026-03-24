@@ -1,24 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ADMIN_SESSION_COOKIE, isValidAdminSessionToken } from "@/lib/admin-auth";
+import { getRequestAdminAuthorization } from "@/lib/admin-access";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/admin/login" || pathname.startsWith("/admin/login/")) {
+  if (
+    pathname === "/admin/login" ||
+    pathname.startsWith("/admin/login/") ||
+    pathname === "/admin/unauthorized" ||
+    pathname.startsWith("/admin/unauthorized/")
+  ) {
     return NextResponse.next();
   }
 
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const isValidSession = await isValidAdminSessionToken(sessionToken);
+  const authorization = await getRequestAdminAuthorization(request);
 
-  if (isValidSession) {
+  if (authorization.status === "authorized") {
     return NextResponse.next();
   }
 
-  const loginUrl = new URL("/admin/login", request.url);
-  return NextResponse.redirect(loginUrl);
+  const destination = authorization.status === "unauthenticated" ? "/admin/login" : "/admin/unauthorized";
+  return NextResponse.redirect(new URL(destination, request.url));
 }
 
 export const config = {
+  runtime: "nodejs",
   matcher: ["/admin/:path*"]
 };

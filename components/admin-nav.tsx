@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { AdminSignOutButton } from "@/components/admin-sign-out-button";
 
 type AdminNavProps = {
   active?: "dashboard" | "submissions" | "applications" | "venues" | "slots" | "lottery";
@@ -35,14 +38,7 @@ export function AdminNav({ active }: AdminNavProps) {
         </Link>
       </nav>
 
-      <form action="/api/admin/logout" method="post">
-        <button
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-          type="submit"
-        >
-          ログアウト
-        </button>
-      </form>
+      <AdminSignOutButton className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60" />
     </header>
   );
 }

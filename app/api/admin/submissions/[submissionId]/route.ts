@@ -1,9 +1,6 @@
 import { Gender, Prefecture } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  ADMIN_SESSION_COOKIE,
-  isValidAdminSessionToken,
-} from "@/lib/admin-auth";
+import { ensureAdminApiAccess } from "@/lib/admin-access";
 import { prisma } from "@/lib/prisma";
 import {
   calculateAge,
@@ -36,10 +33,9 @@ export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ submissionId: string }> },
 ) {
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
-  if (!isAdminSessionValid) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const authorization = await ensureAdminApiAccess(request);
+  if (!authorization.ok) {
+    return authorization.response;
   }
 
   let body: SubmissionUpdateInput;
@@ -159,10 +155,9 @@ export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ submissionId: string }> }
 ) {
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
-  if (!isAdminSessionValid) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const authorization = await ensureAdminApiAccess(request);
+  if (!authorization.ok) {
+    return authorization.response;
   }
 
   const { submissionId } = await context.params;

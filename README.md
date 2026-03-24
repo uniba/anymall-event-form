@@ -30,7 +30,10 @@ Create `.env` with the following variables:
 - `SENDGRID_API_KEY`: API key from SendGrid
 - `EMAIL_FROM`: sender email for confirmation mails (must be a verified sender/domain in SendGrid)
 - `APP_URL`: Public base URL for verification links
-- `ADMIN_PIN`: Pin for Admin page
+- `BETTER_AUTH_URL`: Public base URL for BetterAuth callbacks, typically the same as `APP_URL`
+- `BETTER_AUTH_SECRET`: Secret used to sign BetterAuth sessions
+- `GOOGLE_CLIENT_ID`: Google OAuth client ID for admin sign-in
+- `GOOGLE_CLIENT_SECRET`: Google OAuth client secret for admin sign-in
 
 For Production:
 

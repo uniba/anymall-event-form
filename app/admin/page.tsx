@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AdminNav } from "@/components/admin-nav";
-import { requireAdminSession } from "@/lib/admin-guard";
+import { requireAdminAccess } from "@/lib/admin-page-access";
 
 const cards = [
   {
@@ -31,7 +31,7 @@ const cards = [
 ];
 
 export default async function AdminDashboardPage() {
-  await requireAdminSession();
+  await requireAdminAccess();
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">

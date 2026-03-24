@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ADMIN_SESSION_COOKIE, isValidAdminSessionToken } from "@/lib/admin-auth";
+import { ensureAdminApiAccess } from "@/lib/admin-access";
 import { LotteryError, runSlotLottery } from "@/lib/lottery";
 
 type RunLotteryBody = {
@@ -27,10 +27,9 @@ function parseSuccessCount(value: unknown): number | null {
 }
 
 export async function POST(request: NextRequest) {
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
-  if (!isAdminSessionValid) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const authorization = await ensureAdminApiAccess(request);
+  if (!authorization.ok) {
+    return authorization.response;
   }
 
   let body: RunLotteryBody;

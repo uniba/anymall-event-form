@@ -1,6 +1,6 @@
 import { SlotApplicationStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { ADMIN_SESSION_COOKIE, isValidAdminSessionToken } from "@/lib/admin-auth";
+import { ensureAdminApiAccess } from "@/lib/admin-access";
 import { prisma } from "@/lib/prisma";
 
 type ApplicationUpdateInput = {
@@ -21,10 +21,9 @@ export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ applicationId: string }> }
 ) {
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
-  if (!isAdminSessionValid) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const authorization = await ensureAdminApiAccess(request);
+  if (!authorization.ok) {
+    return authorization.response;
   }
 
   let body: ApplicationUpdateInput;
@@ -74,10 +73,9 @@ export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ applicationId: string }> }
 ) {
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const isAdminSessionValid = await isValidAdminSessionToken(sessionToken);
-  if (!isAdminSessionValid) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  const authorization = await ensureAdminApiAccess(request);
+  if (!authorization.ok) {
+    return authorization.response;
   }
 
   const { applicationId } = await context.params;

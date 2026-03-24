@@ -1,5 +1,5 @@
 import { AdminNav } from "@/components/admin-nav";
-import { requireAdminSession } from "@/lib/admin-guard";
+import { requireAdminAccess } from "@/lib/admin-page-access";
 import { slotStateOptions } from "@/lib/admin-slot-validation";
 import { prisma } from "@/lib/prisma";
 import { SlotsManager } from "./slots-manager";
@@ -14,7 +14,7 @@ function isSlotState(value: string): value is (typeof slotStateOptions)[number] 
 }
 
 export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
-  await requireAdminSession();
+  await requireAdminAccess();
 
   const params = await searchParams;
   const venueFilter = params?.venue?.trim() ?? "";
