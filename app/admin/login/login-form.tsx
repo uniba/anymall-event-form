@@ -25,7 +25,11 @@ export function AdminLoginForm({
       });
 
       if (result.error) {
+<<<<<<< HEAD
         setErrorMessage("サインインできませんでした。もう一度お試しください。");
+=======
+        setErrorMessage(result.error.message ?? "サインインできませんでした。");
+>>>>>>> 18fd90b (Migrated from env var auth to OAuth (Better Auth))
         return;
       }
     } finally {
