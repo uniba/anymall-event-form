@@ -28,6 +28,12 @@ enum Gender {
   UNSPECIFIED
 }
 
+enum AuthSessionEventType {
+  SIGN_IN
+  SIGN_OUT
+  SESSION_EXPIRED
+}
+
 enum Prefecture {
   北海道
   青森県
@@ -146,15 +152,16 @@ model SubmissionSlot {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+  id                String             @id
+  name              String
+  email             String
+  emailVerified     Boolean            @default(false)
+  image             String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  sessions          Session[]
+  accounts          Account[]
+  authSessionEvents AuthSessionEvent[]
 
   @@unique([email])
   @@map("user")
@@ -206,6 +213,20 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model AuthSessionEvent {
+  id        String               @id @default(cuid())
+  userId    String?
+  user      User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionId String
+  eventType AuthSessionEventType
+  email     String?
+  createdAt DateTime             @default(now())
+
+  @@index([userId, createdAt])
+  @@index([sessionId, createdAt])
+  @@index([eventType, createdAt])
 }
 
 model AdminAllowlist {

@@ -2,6 +2,7 @@ import { prismaAdapter } from "@better-auth/prisma-adapter";
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { prisma } from "@/lib/prisma";
+import { authSessionEventHooks } from "@/lib/auth-session-events";
 
 function getBaseURL(): string {
   return process.env.BETTER_AUTH_URL ?? process.env.APP_URL ?? "http://localhost:3000";
@@ -11,6 +12,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql"
   }),
+  databaseHooks: authSessionEventHooks,
   baseURL: getBaseURL(),
   secret: process.env.BETTER_AUTH_SECRET ?? "development-only-secret-change-me",
   socialProviders: {
