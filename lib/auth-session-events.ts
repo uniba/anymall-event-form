@@ -76,20 +76,28 @@ export const authSessionEventHooks = {
   session: {
     create: {
       async after(session: BetterAuthSessionRecord, context: GenericEndpointContext | null) {
-        await recordAuthSessionEvent({
+        try {
+          await recordAuthSessionEvent({
           session,
           eventType: AUTH_SESSION_EVENT_TYPES.SIGN_IN,
           context
-        });
+          });
+        } catch (error) {
+          console.error("Failed to record auth session event (CREATE)", error);
+        }
       }
     },
     delete: {
       async after(session: BetterAuthSessionRecord, context: GenericEndpointContext | null) {
-        await recordAuthSessionEvent({
+        try {
+          await recordAuthSessionEvent({
           session,
           eventType: classifyDeletedSessionEvent(session, context),
           context
-        });
+          });
+        } catch (error) {
+          console.error("Failed to record auth session event (DELETE)", error);
+        }
       }
     }
   }

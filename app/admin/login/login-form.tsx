@@ -25,7 +25,7 @@ export function AdminLoginForm({
       });
 
       if (result.error) {
-        setErrorMessage(result.error.message ?? "サインインできませんでした。");
+        setErrorMessage("サインインできませんでした。もう一度お試しください。");
         return;
       }
     } finally {

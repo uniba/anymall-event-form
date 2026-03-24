@@ -41,6 +41,24 @@ The same environment variables as shown above are managed in Vercel:
 
 `Project -> Settings -> Environment Variables`
 
+## Auth Cookie Policy
+
+- Production requires HTTPS for the public app origin.
+- Better Auth cookies are configured as `HttpOnly`.
+- Better Auth cookies are configured as `Secure` in production.
+- Better Auth cookies use `SameSite=Lax`.
+- Better Auth cookies are scoped to `path=/`.
+- Cross-subdomain cookie sharing is not configured.
+
+### Deployment Verification Checklist
+
+- Complete an admin login over HTTPS in the deployed environment.
+- Inspect the auth `Set-Cookie` headers in browser devtools or network traces.
+- Confirm the auth cookies are `HttpOnly`.
+- Confirm the auth cookies are `Secure`.
+- Confirm the auth cookies use `SameSite=Lax`.
+- Confirm the cookie scope matches the expected host and `path=/`.
+- Confirm `APP_URL` and `BETTER_AUTH_URL` match the real public HTTPS origin.
 
 ## Local Development
 
