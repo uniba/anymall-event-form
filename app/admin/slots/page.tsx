@@ -1,3 +1,4 @@
+import { SlotApplicationStatus } from "@prisma/client";
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdminSession } from "@/lib/admin-guard";
 import { slotStateOptions } from "@/lib/admin-slot-validation";
@@ -33,7 +34,16 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
         ...(stateFilter ? { state: stateFilter } : {})
       },
       include: {
-        venue: true
+        venue: true,
+        _count: {
+          select: {
+            applications: {
+              where: {
+                status: SlotApplicationStatus.ACCEPTED
+              }
+            }
+          }
+        }
       },
       orderBy: {
         startsAt: "asc"
@@ -58,6 +68,7 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
               theme: slot.theme,
               instructor: slot.instructor,
               capacity: slot.capacity,
+              acceptedApplicationCount: slot._count.applications,
               applicationBegin: slot.applicationBegin.toISOString(),
               applicationDeadline: slot.applicationDeadline.toISOString(),
               lotteryResultTime: slot.lotteryResultTime.toISOString(),

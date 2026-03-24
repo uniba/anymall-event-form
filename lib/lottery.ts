@@ -15,8 +15,11 @@ export type LotteryRunResult = {
     startsAt: Date;
     endsAt: Date;
     state: SlotState;
+    capacity: number;
   };
   eligibleCount: number;
+  alreadyAcceptedCount: number;
+  remainingCapacity: number;
   acceptedCount: number;
   waitlistedCount: number;
   accepted: LotteryRowResult[];
@@ -24,9 +27,9 @@ export type LotteryRunResult = {
 };
 
 export class LotteryError extends Error {
-  code: "SLOT_NOT_FOUND" | "SLOT_NOT_CLOSED";
+  code: "SLOT_NOT_FOUND" | "SLOT_NOT_CLOSED" | "INVALID_SLOT_CAPACITY";
 
-  constructor(code: "SLOT_NOT_FOUND" | "SLOT_NOT_CLOSED", message: string) {
+  constructor(code: "SLOT_NOT_FOUND" | "SLOT_NOT_CLOSED" | "INVALID_SLOT_CAPACITY", message: string) {
     super(message);
     this.code = code;
   }
@@ -43,10 +46,9 @@ function shuffleArray<T>(items: T[]): T[] {
 
 export async function runSlotLottery(params: {
   targetSlotId: string;
-  successCount: number;
   prismaClient?: PrismaClient;
 }): Promise<LotteryRunResult> {
-  const { targetSlotId, successCount, prismaClient = prisma } = params;
+  const { targetSlotId, prismaClient = prisma } = params;
 
   return prismaClient.$transaction(async (tx) => {
     const slot = await tx.slot.findUnique({
@@ -69,6 +71,19 @@ export async function runSlotLottery(params: {
     if (slot.state !== SlotState.APPLICATIONS_CLOSED) {
       throw new LotteryError("SLOT_NOT_CLOSED", "Lottery can only run for APPLICATIONS_CLOSED slots.");
     }
+
+    if (slot.capacity <= 0) {
+      throw new LotteryError("INVALID_SLOT_CAPACITY", "Slot capacity must be greater than zero to run the lottery.");
+    }
+
+    const existingAcceptedCount = await tx.submissionSlot.count({
+      where: {
+        slotId: targetSlotId,
+        status: SlotApplicationStatus.ACCEPTED
+      }
+    });
+
+    const remainingCapacity = Math.max(slot.capacity - existingAcceptedCount, 0);
 
     const eligibleApplications = await tx.submissionSlot.findMany({
       where: {
@@ -100,7 +115,7 @@ export async function runSlotLottery(params: {
     });
 
     const shuffled = shuffleArray(eligibleApplications);
-    const acceptedCount = Math.min(successCount, shuffled.length);
+    const acceptedCount = Math.min(remainingCapacity, shuffled.length);
     const acceptedRows = shuffled.slice(0, acceptedCount);
     const waitlistedRows = shuffled.slice(acceptedCount);
 
@@ -152,9 +167,12 @@ export async function runSlotLottery(params: {
         venueName: slot.venue.name,
         startsAt: slot.startsAt,
         endsAt: slot.endsAt,
-        state: slot.state
+        state: slot.state,
+        capacity: slot.capacity
       },
       eligibleCount: shuffled.length,
+      alreadyAcceptedCount: existingAcceptedCount,
+      remainingCapacity,
       acceptedCount: acceptedRows.length,
       waitlistedCount: waitlistedRows.length,
       accepted: acceptedRows.map((row) => toResultRow(row, SlotApplicationStatus.ACCEPTED)),

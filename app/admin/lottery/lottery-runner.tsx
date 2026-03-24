@@ -1,7 +1,7 @@
 "use client";
 
 import type { SlotState } from "@prisma/client";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import { getSlotApplicationStatusLabel, getSlotStateLabel } from "@/lib/labels";
 import { formatAdminSlotDateTimeRange } from "@/lib/slot-display";
 
@@ -24,8 +24,11 @@ type LotteryResult = {
     startsAt: string;
     endsAt: string;
     state: SlotState;
+    capacity: number;
   };
   eligibleCount: number;
+  alreadyAcceptedCount: number;
+  remainingCapacity: number;
   acceptedCount: number;
   waitlistedCount: number;
   accepted: LotteryRowResult[];
@@ -38,13 +41,11 @@ type LotteryRunnerProps = {
 
 export function LotteryRunner({ slots }: LotteryRunnerProps) {
   const [targetSlotId, setTargetSlotId] = useState("");
-  const [successCountText, setSuccessCountText] = useState("0");
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<LotteryResult | null>(null);
 
   const hasSlots = slots.length > 0;
-  const parsedSuccessCount = useMemo(() => Number.parseInt(successCountText, 10), [successCountText]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,12 +57,7 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
       return;
     }
 
-    if (!Number.isInteger(parsedSuccessCount) || parsedSuccessCount < 0) {
-      setError("当選人数は0以上の整数で入力してください。");
-      return;
-    }
-
-    if (!window.confirm("抽選を実行しますか？選択したスロットの応募状況が更新されます。")) {
+    if (!window.confirm("抽選を実行しますか？選択したスロットの定員に基づいて応募状況が更新されます。")) {
       return;
     }
 
@@ -74,8 +70,7 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          targetSlotId,
-          successCount: parsedSuccessCount
+          targetSlotId
         })
       });
 
@@ -98,7 +93,7 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
 
   return (
     <div className="mt-4 space-y-6">
-      <form className="grid gap-3 rounded-lg border border-slate-200 p-4 md:grid-cols-3" onSubmit={onSubmit}>
+      <form className="grid gap-3 rounded-lg border border-slate-200 p-4 md:grid-cols-[1fr_auto]" onSubmit={onSubmit}>
         <select
           className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
           disabled={!hasSlots || isRunning}
@@ -113,16 +108,6 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
             </option>
           ))}
         </select>
-
-        <input
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
-          disabled={!hasSlots || isRunning}
-          min={0}
-          onChange={(event) => setSuccessCountText(event.target.value)}
-          step={1}
-          type="number"
-          value={successCountText}
-        />
 
         <button
           className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
@@ -144,6 +129,15 @@ export function LotteryRunner({ slots }: LotteryRunnerProps) {
             <p>
               <span className="font-medium">スロット</span> {result.slot.venueName} |{" "}
               {formatAdminSlotDateTimeRange(result.slot.startsAt, result.slot.endsAt)} | {getSlotStateLabel(result.slot.state)}
+            </p>
+            <p>
+              <span className="font-medium">定員:</span> {result.slot.capacity}
+            </p>
+            <p>
+              <span className="font-medium">抽選前の当選済み数:</span> {result.alreadyAcceptedCount}
+            </p>
+            <p>
+              <span className="font-medium">今回の残席数:</span> {result.remainingCapacity}
             </p>
             <p>
               <span className="font-medium">抽選対象応募数:</span> {result.eligibleCount}

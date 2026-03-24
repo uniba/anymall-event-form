@@ -6,6 +6,9 @@ export function toSlotTableRow(slot: {
   theme: string;
   instructor: string;
   capacity: number;
+  _count?: {
+    applications: number;
+  };
   applicationBegin: Date;
   applicationDeadline: Date;
   lotteryResultTime: Date;
@@ -21,6 +24,7 @@ export function toSlotTableRow(slot: {
     theme: slot.theme,
     instructor: slot.instructor,
     capacity: slot.capacity,
+    acceptedApplicationCount: slot._count?.applications ?? 0,
     applicationBegin: slot.applicationBegin.toISOString(),
     applicationDeadline: slot.applicationDeadline.toISOString(),
     lotteryResultTime: slot.lotteryResultTime.toISOString(),
