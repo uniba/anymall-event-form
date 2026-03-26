@@ -275,7 +275,7 @@ export default async function HomePage() {
           <div className="mx-auto flex max-w-6xl flex-col gap-8">
             <SectionHeading sub="Instructor" label="担当講師" />
 
-            <div className="grid gap-12 md:grid-cols-2 md:gap-8">
+            <div className="grid gap-12 md:grid-cols-3 md:gap-8">
               {[
                 {
                   name: "中村 篤史",
@@ -288,6 +288,12 @@ export default async function HomePage() {
                   title: "獣医師 / 愛犬ごはん研究家",
                   bio: "大手ペットフードメーカーで栄養管理に携わり、犬のごはんや栄養について発信しています。手作りごはんやトッピングを中心に、日常に取り入れやすい食事の考え方をお伝えしています。",
                   image: "/images/instructor/instructor-manami.jpg",
+                },
+                {
+                  name: "服部 夏子",
+                  title: "獣医師",
+                  bio: "獣医師としての臨床経験を活かし、現在はA'aldaにて獣医療アプリの開発と飼い主向けイベントを企画中。アプリを通じて獣医師の診療をサポートしながら、飼い主様がペットの病気予防・早期発見に取り組める環境づくりを目指しています。",
+                  image: "/images/instructor/instructor-natsuko.jpg",
                 },
               ].map((speaker) => (
                 <div
