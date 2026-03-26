@@ -116,7 +116,7 @@ export const seedSlots: SeedSlot[] = [
     eventName: "愛犬デンタルケアサロン",
     theme:
       "・愛犬のデンタルケアレッスン\n・QAタイム、歯ブラシ実演など\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
-    instructor: "未定",
+    instructor: "服部夏子",
     capacity: 20,
     applicationBegin: "2026-03-19T00:00:00+09:00",
     applicationDeadline: "2026-05-15T00:00:00+09:00",
