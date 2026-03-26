@@ -152,6 +152,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Memo must be 150 characters or fewer." }, { status: 400 });
   }
 
+  if (referralSource && referralSource.length > 100) {
+    return NextResponse.json({ error: "Referral source too long." }, { status: 400 });
+  }
+
+  if (referralSource && !/^[a-zA-Z0-9_-]+$/.test(referralSource)) {
+    return NextResponse.json({ error: "Invalid referral source format." }, { status: 400 });
+  }
+
   if (!Array.isArray(selectedSlotIdsInput)) {
     return NextResponse.json({ error: "At least one slot must be selected." }, { status: 400 });
   }

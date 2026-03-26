@@ -1,4 +1,6 @@
 const REFERRAL_SOURCE_KEY = "anymall_referral_source";
+const MAX_REF_LENGTH = 100;
+const VALID_REF_PATTERN = /^[a-zA-Z0-9_-]+$/;
 
 /**
  * Get the referral source from localStorage
@@ -37,6 +39,23 @@ export function clearReferralSource(): void {
 }
 
 /**
+ * Validate and sanitize referral source value
+ */
+function isValidReferralSource(value: string): boolean {
+  // Check length
+  if (value.length === 0 || value.length > MAX_REF_LENGTH) {
+    return false;
+  }
+
+  // Check for valid characters (alphanumeric, underscore, hyphen only)
+  if (!VALID_REF_PATTERN.test(value)) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
  * Capture referral source from URL query parameter
  * Should be called on the client side when the page loads
  */
@@ -47,6 +66,14 @@ export function captureReferralFromURL(): void {
   const ref = params.get("ref");
 
   if (ref && ref.trim()) {
-    setReferralSource(ref.trim());
+    const sanitized = ref.trim().toLowerCase();
+
+    // Validate the referral source
+    if (!isValidReferralSource(sanitized)) {
+      console.warn('Invalid referral source:', ref);
+      return;
+    }
+
+    setReferralSource(sanitized);
   }
 }
