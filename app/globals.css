@@ -28,6 +28,11 @@ body {
   @apply bg-cover;
 }
 
+*[data-instructor="服部夏子"] {
+  background-image: url(/images/instructor/instructor-natsuko.jpg);
+  @apply bg-cover;
+}
+
 .slideIn {
   animation: slideIn 1s ease both;
   animation-timeline: view(block);
