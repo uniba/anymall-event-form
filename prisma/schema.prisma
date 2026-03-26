@@ -87,6 +87,7 @@ model Submission {
   birthday          DateTime?
   prefecture        Prefecture?
   memo              String?
+  referralSource    String?
   slotApplications  SubmissionSlot[]
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt

@@ -6,6 +6,7 @@ import { prefectureOptions } from "@/lib/labels";
 import { getMemoMaxLength } from "@/lib/validation";
 import { Icon } from "@/components/icon";
 import { formatMonthDay } from "@/lib/format-date";
+import { getReferralSource } from "@/lib/referral-tracking";
 
 type SlotData = {
   id: string;
@@ -716,6 +717,7 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
           gender: formData.gender || "",
           prefecture: formData.prefecture.trim(),
           memo: formData.memo.trim(),
+          referralSource: getReferralSource() || "",
           selectedSlotIds: slots.map((s) => s.id),
         }),
       });
