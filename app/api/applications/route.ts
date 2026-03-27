@@ -23,6 +23,7 @@ type CreateApplicationBody = {
   gender?: string;
   prefecture?: string;
   memo?: string;
+  referralSource?: string;
   selectedSlotIds?: unknown;
 };
 
@@ -115,6 +116,7 @@ export async function POST(request: NextRequest) {
   const gender = normalizeText(body.gender);
   const prefecture = normalizeText(body.prefecture);
   const memo = normalizeMemo(normalizeText(body.memo));
+  const referralSource = normalizeText(body.referralSource);
   const selectedSlotIdsInput = body.selectedSlotIds;
   const birthday = birthdayInput ? parseBirthday(birthdayInput) : null;
 
@@ -148,6 +150,14 @@ export async function POST(request: NextRequest) {
 
   if (memo && !isValidMemo(memo)) {
     return NextResponse.json({ error: "Memo must be 150 characters or fewer." }, { status: 400 });
+  }
+
+  if (referralSource && referralSource.length > 100) {
+    return NextResponse.json({ error: "Referral source too long." }, { status: 400 });
+  }
+
+  if (referralSource && !/^[a-zA-Z0-9_-]+$/.test(referralSource)) {
+    return NextResponse.json({ error: "Invalid referral source format." }, { status: 400 });
   }
 
   if (!Array.isArray(selectedSlotIdsInput)) {
@@ -195,6 +205,7 @@ export async function POST(request: NextRequest) {
         birthday: birthday ?? undefined,
         prefecture: prefecture ? (prefecture as Prefecture) : undefined,
         memo: memo || undefined,
+        referralSource: referralSource || undefined,
         slotApplications: {
           create: selectedSlotIds.map((slotId) => ({
             slotId,

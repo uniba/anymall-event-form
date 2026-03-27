@@ -7,6 +7,7 @@ import { Icon } from "@/components/icon";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { VenueGallery } from "@/components/landing/venue-gallery";
+import { ReferralTracker } from "@/components/referral-tracker";
 
 export default async function HomePage() {
   const slots = await prisma.slot.findMany({
@@ -48,6 +49,7 @@ export default async function HomePage() {
 
   return (
     <main className="flex flex-col min-h-screen bg-white font-sans">
+      <ReferralTracker />
       <Header />
 
       <div className="flex flex-col flex-1">

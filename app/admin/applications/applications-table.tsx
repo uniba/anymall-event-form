@@ -16,6 +16,7 @@ export type ApplicationTableRow = {
   submissionBirthday: string | null;
   submissionPrefecture: string | null;
   submissionMemo: string | null;
+  submissionReferralSource: string | null;
   eventName: string;
   venueName: string;
   startsAt: string;
@@ -206,6 +207,7 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
               <th className="px-2 py-2">氏名</th>
               <th className="px-2 py-2">メールアドレス</th>
               <th className="px-2 py-2">イベント</th>
+              <th className="px-2 py-2">流入元</th>
               <th className="px-2 py-2">状態</th>
               <th className="px-2 py-2">応募日時</th>
             </tr>
@@ -229,13 +231,14 @@ export function ApplicationsTable({ applications, statusOptions }: ApplicationsT
                 <td className="px-2 py-3">{application.submissionName}</td>
                 <td className="px-2 py-3">{application.submissionEmail}</td>
                 <td className="px-2 py-3">{formatEventInfo(application.startsAt, application.eventName, application.venueName)}</td>
+                <td className="px-2 py-3">{application.submissionReferralSource || "—"}</td>
                 <td className="px-2 py-3">{getSlotApplicationStatusLabel(application.status)}</td>
                 <td className="px-2 py-3">{formatApplicationCreatedAt(application.createdAt)}</td>
               </tr>
             ))}
             {applicationRows.length === 0 ? (
               <tr>
-                <td className="px-2 py-4 text-slate-500" colSpan={5}>
+                <td className="px-2 py-4 text-slate-500" colSpan={6}>
                   応募はありません
                 </td>
               </tr>

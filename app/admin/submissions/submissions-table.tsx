@@ -16,6 +16,7 @@ export type SubmissionTableRow = {
   prefecture: Prefecture | null;
   birthday: string | null;
   memo: string | null;
+  referralSource: string | null;
   createdAt: string;
 };
 
@@ -294,6 +295,7 @@ export function SubmissionsTable({
               <th className="px-2 py-2">性別</th>
               <th className="px-2 py-2">年齢</th>
               <th className="px-2 py-2">居住地</th>
+              <th className="px-2 py-2">流入元</th>
               <th className="px-2 py-2">申込日時</th>
             </tr>
           </thead>
@@ -320,6 +322,7 @@ export function SubmissionsTable({
                 </td>
                 <td className="px-2 py-3">{submission.age}</td>
                 <td className="px-2 py-3">{submission.prefecture}</td>
+                <td className="px-2 py-3">{submission.referralSource || "—"}</td>
                 <td className="px-2 py-3">
                   {formatSubmissionCreatedAt(submission.createdAt)}
                 </td>
@@ -327,7 +330,7 @@ export function SubmissionsTable({
             ))}
             {submissionRows.length === 0 ? (
               <tr>
-                <td className="px-2 py-4 text-slate-500" colSpan={6}>
+                <td className="px-2 py-4 text-slate-500" colSpan={7}>
                   申込はありません
                 </td>
               </tr>
