@@ -135,6 +135,7 @@ export async function PATCH(
       birthday: true,
       prefecture: true,
       memo: true,
+      referralSource: true,
       createdAt: true,
     },
   });
@@ -150,6 +151,7 @@ export async function PATCH(
       prefecture: submission.prefecture,
       birthday: submission.birthday?.toISOString() ?? "",
       memo: submission.memo,
+      referralSource: submission.referralSource,
       createdAt: submission.createdAt.toISOString(),
     },
   });
