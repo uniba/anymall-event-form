@@ -7,3 +7,6 @@ coverage
 dist
 *.log
 .claude/skills
+
+# Playwright Testcontainers state
+e2e/.e2e-state.json
