@@ -235,4 +235,117 @@ describe("POST /api/applications", () => {
       });
     });
   });
+
+  describe("Referral Source Validation", () => {
+    it("should reject referralSource exceeding 100 characters", async () => {
+      const request = new NextRequest("http://localhost:3000/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "山田太郎",
+          furigana: "ヤマダタロウ",
+          email: "test@example.com",
+          referralSource: "a".repeat(101),
+          selectedSlotIds: ["slot-1"],
+        }),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toBe("Referral source too long.");
+    });
+
+    it("should reject referralSource with invalid characters", async () => {
+      const request = new NextRequest("http://localhost:3000/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "山田太郎",
+          furigana: "ヤマダタロウ",
+          email: "test@example.com",
+          referralSource: "<script>alert('xss')</script>",
+          selectedSlotIds: ["slot-1"],
+        }),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toBe("Invalid referral source format.");
+    });
+
+    it("should accept valid referralSource and store in database", async () => {
+      const { prisma } = await import("@/lib/prisma");
+      const { sendApplicationReceivedEmail } = await import("@/lib/mailer");
+
+      vi.mocked(prisma.slot.findMany).mockResolvedValue([{ id: "slot-1" }] as any);
+      vi.mocked(prisma.submission.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.submission.create).mockResolvedValue({
+        id: "sub-1",
+        name: "山田太郎",
+        furigana: "ヤマダタロウ",
+        email: "test@example.com",
+      } as any);
+      vi.mocked(sendApplicationReceivedEmail).mockResolvedValue(undefined);
+
+      const request = new NextRequest("http://localhost:3000/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "山田太郎",
+          furigana: "ヤマダタロウ",
+          email: "test@example.com",
+          referralSource: "diners_club",
+          selectedSlotIds: ["slot-1"],
+        }),
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(201);
+      expect(prisma.submission.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          referralSource: "diners_club",
+        }),
+      });
+    });
+
+    it("should not include referralSource when not provided", async () => {
+      const { prisma } = await import("@/lib/prisma");
+      const { sendApplicationReceivedEmail } = await import("@/lib/mailer");
+
+      vi.mocked(prisma.slot.findMany).mockResolvedValue([{ id: "slot-1" }] as any);
+      vi.mocked(prisma.submission.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.submission.create).mockResolvedValue({
+        id: "sub-1",
+        name: "山田太郎",
+        furigana: "ヤマダタロウ",
+        email: "test@example.com",
+      } as any);
+      vi.mocked(sendApplicationReceivedEmail).mockResolvedValue(undefined);
+
+      const request = new NextRequest("http://localhost:3000/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "山田太郎",
+          furigana: "ヤマダタロウ",
+          email: "test@example.com",
+          selectedSlotIds: ["slot-1"],
+        }),
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(201);
+      expect(prisma.submission.create).toHaveBeenCalledWith({
+        data: expect.not.objectContaining({
+          referralSource: expect.any(String),
+        }),
+      });
+    });
+  });
 });
