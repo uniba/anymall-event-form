@@ -4,6 +4,9 @@ test.describe("Referral Tracking", () => {
   test.describe("URL parameter capture", () => {
     test("captures ref parameter into localStorage on homepage", async ({ page }) => {
       await page.goto("/?ref=diners_club");
+      await page.waitForFunction(
+        () => localStorage.getItem("anymall_referral_source") === "diners_club"
+      );
       const stored = await page.evaluate(() =>
         localStorage.getItem("anymall_referral_source")
       );
@@ -12,6 +15,9 @@ test.describe("Referral Tracking", () => {
 
     test("captures ref parameter on event apply page", async ({ page }) => {
       await page.goto("/event/apply?ref=fpc_insurance");
+      await page.waitForFunction(
+        () => localStorage.getItem("anymall_referral_source") === "fpc_insurance"
+      );
       const stored = await page.evaluate(() =>
         localStorage.getItem("anymall_referral_source")
       );
@@ -20,6 +26,9 @@ test.describe("Referral Tracking", () => {
 
     test("normalizes ref to lowercase", async ({ page }) => {
       await page.goto("/?ref=Diners_Club");
+      await page.waitForFunction(
+        () => localStorage.getItem("anymall_referral_source") === "diners_club"
+      );
       const stored = await page.evaluate(() =>
         localStorage.getItem("anymall_referral_source")
       );
@@ -28,6 +37,8 @@ test.describe("Referral Tracking", () => {
 
     test("does not store invalid ref (special characters)", async ({ page }) => {
       await page.goto("/?ref=<script>alert(1)</script>");
+      // Wait for React hydration to complete
+      await page.waitForTimeout(1000);
       const stored = await page.evaluate(() =>
         localStorage.getItem("anymall_referral_source")
       );
@@ -37,6 +48,7 @@ test.describe("Referral Tracking", () => {
     test("does not store ref exceeding 100 characters", async ({ page }) => {
       const longRef = "a".repeat(101);
       await page.goto(`/?ref=${longRef}`);
+      await page.waitForTimeout(1000);
       const stored = await page.evaluate(() =>
         localStorage.getItem("anymall_referral_source")
       );
@@ -45,8 +57,10 @@ test.describe("Referral Tracking", () => {
 
     test("persists ref across page navigation", async ({ page }) => {
       await page.goto("/?ref=tanaka_instagram");
+      await page.waitForFunction(
+        () => localStorage.getItem("anymall_referral_source") === "tanaka_instagram"
+      );
 
-      // Navigate to another page
       await page.goto("/event/apply");
 
       const stored = await page.evaluate(() =>
@@ -57,7 +71,14 @@ test.describe("Referral Tracking", () => {
 
     test("overwrites previous ref with new valid ref (last-touch)", async ({ page }) => {
       await page.goto("/?ref=old_source");
+      await page.waitForFunction(
+        () => localStorage.getItem("anymall_referral_source") === "old_source"
+      );
+
       await page.goto("/event/apply?ref=new_source");
+      await page.waitForFunction(
+        () => localStorage.getItem("anymall_referral_source") === "new_source"
+      );
 
       const stored = await page.evaluate(() =>
         localStorage.getItem("anymall_referral_source")
@@ -67,7 +88,12 @@ test.describe("Referral Tracking", () => {
 
     test("does not overwrite existing ref with invalid ref", async ({ page }) => {
       await page.goto("/?ref=valid_source");
+      await page.waitForFunction(
+        () => localStorage.getItem("anymall_referral_source") === "valid_source"
+      );
+
       await page.goto("/event/apply?ref=invalid!");
+      await page.waitForTimeout(1000);
 
       const stored = await page.evaluate(() =>
         localStorage.getItem("anymall_referral_source")
@@ -77,25 +103,15 @@ test.describe("Referral Tracking", () => {
   });
 
   test.describe("Form submission includes referralSource", () => {
-    test("sends referralSource in API request body", async ({ page }) => {
-      // Pre-set localStorage before navigating
-      await page.goto("/");
-      await page.evaluate(() => {
-        localStorage.setItem("anymall_referral_source", "diners_club");
-      });
-
-      // Navigate to form page (need valid slot IDs from the page)
-      await page.goto("/event/apply");
-
-      // Intercept the API call to verify referralSource is included
-      const apiRequestPromise = page.waitForRequest(
-        (req) =>
-          req.url().includes("/api/applications") && req.method() === "POST",
-        { timeout: 5000 }
+    test("referralSource persists in localStorage for form use", async ({ page }) => {
+      await page.goto("/?ref=diners_club");
+      await page.waitForFunction(
+        () => localStorage.getItem("anymall_referral_source") === "diners_club"
       );
 
-      // We can't fully submit without valid slots, but we can verify
-      // the referralSource is read from localStorage
+      // Navigate to form page
+      await page.goto("/event/apply");
+
       const referralSource = await page.evaluate(() =>
         localStorage.getItem("anymall_referral_source")
       );
@@ -105,7 +121,6 @@ test.describe("Referral Tracking", () => {
     test("clears referralSource from localStorage after successful submission", async ({
       page,
     }) => {
-      // Set up: pre-populate localStorage
       await page.goto("/");
       await page.evaluate(() => {
         localStorage.setItem("anymall_referral_source", "test_source");
@@ -120,14 +135,7 @@ test.describe("Referral Tracking", () => {
         });
       });
 
-      // Navigate to the form page with mocked slot data
-      await page.goto("/event/apply/form?slots=mock-slot-id");
-
-      // The form may not render without valid slots from DB,
-      // but we can test the clearing behavior via direct API mock
-      // by executing the form's submission logic
       const cleared = await page.evaluate(async () => {
-        // Simulate what the form does on successful submission
         const response = await fetch("/api/applications", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
