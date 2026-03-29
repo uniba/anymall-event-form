@@ -10,4 +10,7 @@ export default defineConfig({
       "@": __dirname,
     },
   },
+  test: {
+    globalSetup: ["./test/global-setup.ts"],
+  },
 });
