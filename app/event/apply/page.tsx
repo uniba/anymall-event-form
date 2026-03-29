@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { ApplyContent } from "@/components/landing/apply-content";
-import { ReferralTracker } from "@/components/referral-tracker";
 
 type SlotData = {
   id: string;
@@ -73,7 +72,6 @@ export default async function ApplyPage({
 
   return (
     <main className="flex flex-col min-h-screen bg-warm-100 font-sans">
-      <ReferralTracker />
       <Header />
       <div className="flex flex-col flex-1">
         <ApplyContent

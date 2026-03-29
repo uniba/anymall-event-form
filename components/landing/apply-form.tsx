@@ -6,7 +6,7 @@ import { prefectureOptions } from "@/lib/labels";
 import { getMemoMaxLength } from "@/lib/validation";
 import { Icon } from "@/components/icon";
 import { formatMonthDay } from "@/lib/format-date";
-import { getReferralSource } from "@/lib/referral-tracking";
+import { getReferralSource, clearReferralSource } from "@/lib/referral-tracking";
 
 type SlotData = {
   id: string;
@@ -717,7 +717,7 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
           gender: formData.gender || "",
           prefecture: formData.prefecture.trim(),
           memo: formData.memo.trim(),
-          referralSource: getReferralSource() || "",
+          referralSource: getReferralSource() || undefined,
           selectedSlotIds: slots.map((s) => s.id),
         }),
       });
@@ -727,6 +727,7 @@ export function ApplyForm({ slots }: { slots: SlotData[] }) {
       } | null;
 
       if (response.ok) {
+        clearReferralSource();
         setStep("complete");
         window.scrollTo(0, 0);
         return;

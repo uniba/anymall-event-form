@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { ApplyForm } from "@/components/landing/apply-form";
-import { ReferralTracker } from "@/components/referral-tracker";
 
 type SlotData = {
   id: string;
@@ -39,7 +38,6 @@ export default async function ApplyFormPage({
 
   return (
     <main className="flex flex-col min-h-screen bg-warm-100 font-sans">
-      <ReferralTracker />
       <Header />
       <div className="flex flex-col flex-1">
         <ApplyForm slots={serializedSlots} />

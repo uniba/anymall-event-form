@@ -38,26 +38,12 @@ export function clearReferralSource(): void {
   }
 }
 
-/**
- * Validate and sanitize referral source value
- */
 function isValidReferralSource(value: string): boolean {
-  // Check length
-  if (value.length === 0 || value.length > MAX_REF_LENGTH) {
-    return false;
-  }
-
-  // Check for valid characters (alphanumeric, underscore, hyphen only)
-  if (!VALID_REF_PATTERN.test(value)) {
-    return false;
-  }
-
-  return true;
+  return value.length > 0 && value.length <= MAX_REF_LENGTH && VALID_REF_PATTERN.test(value);
 }
 
 /**
- * Capture referral source from URL query parameter
- * Should be called on the client side when the page loads
+ * Capture referral source from URL query parameter on page load
  */
 export function captureReferralFromURL(): void {
   if (typeof window === "undefined") return;
@@ -67,13 +53,8 @@ export function captureReferralFromURL(): void {
 
   if (ref && ref.trim()) {
     const sanitized = ref.trim().toLowerCase();
-
-    // Validate the referral source
-    if (!isValidReferralSource(sanitized)) {
-      console.warn('Invalid referral source:', ref);
-      return;
+    if (isValidReferralSource(sanitized)) {
+      setReferralSource(sanitized);
     }
-
-    setReferralSource(sanitized);
   }
 }
