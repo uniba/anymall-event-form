@@ -24,6 +24,7 @@ function createSlotInput(slot: SeedSlot) {
   return {
     venueId: slot.venueId,
     eventName: slot.eventName,
+    hidden: slot.hidden,
     theme: slot.theme,
     instructor: slot.instructor,
     capacity: slot.capacity,

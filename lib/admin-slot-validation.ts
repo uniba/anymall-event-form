@@ -8,6 +8,7 @@ export const slotCapacityMax = 100;
 export type SlotUpdateInput = {
   eventName?: unknown;
   venueId?: unknown;
+  hidden?: unknown;
   theme?: unknown;
   instructor?: unknown;
   capacity?: unknown;
@@ -22,6 +23,7 @@ export type SlotUpdateInput = {
 export type ValidatedSlotUpdate = {
   eventName: string;
   venueId: string;
+  hidden: boolean;
   theme: string;
   instructor: string;
   capacity: number;
@@ -52,6 +54,24 @@ function parseCapacity(value: unknown): number | null {
   return parsed;
 }
 
+function parseHidden(value: unknown): boolean | null {
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    if (value === "true") {
+      return true;
+    }
+
+    if (value === "false") {
+      return false;
+    }
+  }
+
+  return null;
+}
+
 function parseDateTime(value: unknown): Date | null {
   if (typeof value !== "string" || value.trim().length === 0) {
     return null;
@@ -75,6 +95,7 @@ export function validateSlotUpdateInput(input: SlotUpdateInput): {
 } {
   const eventName = normalizeText(input.eventName);
   const venueId = normalizeText(input.venueId);
+  const hidden = parseHidden(input.hidden);
   const theme = normalizeText(input.theme);
   const instructor = normalizeText(input.instructor);
   const stateValue = normalizeText(input.state);
@@ -85,7 +106,7 @@ export function validateSlotUpdateInput(input: SlotUpdateInput): {
   const startsAt = parseDateTime(input.startsAt);
   const endsAt = parseDateTime(input.endsAt);
 
-  if (!eventName || !venueId || !theme || !instructor || !stateValue) {
+  if (!eventName || !venueId || hidden === null || !theme || !instructor || !stateValue) {
     return { error: "必須項目を入力してください。" };
   }
 
@@ -125,6 +146,7 @@ export function validateSlotUpdateInput(input: SlotUpdateInput): {
     data: {
       eventName,
       venueId,
+      hidden,
       theme,
       instructor,
       capacity,

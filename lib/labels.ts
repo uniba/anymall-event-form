@@ -9,6 +9,11 @@ export const slotStateLabels: Record<SlotState, string> = {
   APPLICATIONS_CLOSED: "受付終了"
 };
 
+export const slotVisibilityLabels = {
+  visible: "公開中",
+  hidden: "非表示"
+} as const;
+
 export const slotApplicationStatusLabels: Record<SlotApplicationStatus, string> = {
   APPLIED: "応募済み",
   WAITLISTED: "キャンセル待ち",
@@ -33,6 +38,10 @@ export const prefectureOptions = Object.values(Prefecture);
 
 export function getSlotStateLabel(value: SlotState): string {
   return slotStateLabels[value];
+}
+
+export function getSlotVisibilityLabel(hidden: boolean): string {
+  return hidden ? slotVisibilityLabels.hidden : slotVisibilityLabels.visible;
 }
 
 export function getSlotApplicationStatusLabel(value: SlotApplicationStatus): string {

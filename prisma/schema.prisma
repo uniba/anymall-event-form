@@ -106,6 +106,7 @@ model Slot {
   venueId             String
   venue               Venue            @relation(fields: [venueId], references: [id], onDelete: Cascade)
   eventName           String           @default("未設定イベント")
+  hidden              Boolean          @default(true)
   theme               String           @default("Not decided")
   instructor          String           @default("Not decided")
   capacity            Int              @default(0)

@@ -15,6 +15,7 @@ type SlotsManagerProps = {
   initialSlots: SlotTableRow[];
   initialStateFilter: string;
   initialVenueFilter: string;
+  initialVisibilityFilter: string;
   venues: VenueFilterOption[];
 };
 
@@ -29,12 +30,14 @@ export function SlotsManager({
   initialSlots,
   initialStateFilter,
   initialVenueFilter,
+  initialVisibilityFilter,
   venues
 }: SlotsManagerProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [venueFilter, setVenueFilter] = useState(initialVenueFilter);
   const [stateFilter, setStateFilter] = useState(initialStateFilter);
+  const [visibilityFilter, setVisibilityFilter] = useState(initialVisibilityFilter);
   const [createRequestCount, setCreateRequestCount] = useState(0);
 
   useEffect(() => {
@@ -44,6 +47,10 @@ export function SlotsManager({
   useEffect(() => {
     setStateFilter(initialStateFilter);
   }, [initialStateFilter]);
+
+  useEffect(() => {
+    setVisibilityFilter(initialVisibilityFilter);
+  }, [initialVisibilityFilter]);
 
   function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -55,6 +62,9 @@ export function SlotsManager({
     if (stateFilter) {
       params.set("state", stateFilter);
     }
+    if (visibilityFilter) {
+      params.set("visibility", visibilityFilter);
+    }
 
     const url = params.size > 0 ? `${pathname}?${params.toString()}` : pathname;
     router.replace(url);
@@ -64,6 +74,7 @@ export function SlotsManager({
   function onSlotCreated() {
     setVenueFilter("");
     setStateFilter("");
+    setVisibilityFilter("");
     router.replace(pathname);
     router.refresh();
   }
@@ -109,6 +120,23 @@ export function SlotsManager({
                   {getSlotStateLabel(state)}
                 </option>
               ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium text-slate-600" htmlFor="filter-visibility">
+              公開状態
+            </label>
+            <select
+              className={inputClassName}
+              id="filter-visibility"
+              name="visibility"
+              onChange={(event) => setVisibilityFilter(event.target.value)}
+              value={visibilityFilter}
+            >
+              <option value="">全部</option>
+              <option value="visible">公開中</option>
+              <option value="hidden">非表示</option>
             </select>
           </div>
 
