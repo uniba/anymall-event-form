@@ -10,6 +10,9 @@ import { VenueGallery } from "@/components/landing/venue-gallery";
 
 export default async function HomePage() {
   const slots = await prisma.slot.findMany({
+    where: {
+      hidden: false,
+    },
     include: {
       venue: {
         select: { name: true, address: true },
