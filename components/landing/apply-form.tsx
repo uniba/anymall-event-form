@@ -303,7 +303,10 @@ function FormStep({
   function handleSubmitClick() {
     const errors = validateFields();
     setFieldErrors(errors);
-    if (Object.keys(errors).length > 0) return;
+    if (Object.keys(errors).length > 0) {
+      window.scrollTo(0, 0);
+      return;
+    }
     onConfirm();
   }
 
