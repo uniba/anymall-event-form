@@ -4,6 +4,7 @@ import { Inter, Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Suspense } from "react";
 import { GtmPageView } from "@/components/gtm-page-view";
+import { ReferralTracker } from "@/components/referral-tracker";
 import "./globals.css";
 
 const inter = Inter({
@@ -81,6 +82,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Suspense fallback={null}>
           <GtmPageView />
         </Suspense>
+        <ReferralTracker />
         {children}
       </body>
     </html>

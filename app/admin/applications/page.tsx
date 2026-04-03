@@ -116,7 +116,8 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
             gender: true,
             birthday: true,
             prefecture: true,
-            memo: true
+            memo: true,
+            referralSource: true
           }
         },
         slot: {
@@ -180,6 +181,7 @@ export default async function AdminApplicationsPage({ searchParams }: Applicatio
               submissionBirthday: application.submission.birthday ? application.submission.birthday.toISOString().split('T')[0] : null,
               submissionPrefecture: application.submission.prefecture,
               submissionMemo: application.submission.memo,
+              submissionReferralSource: application.submission.referralSource,
               eventName: application.slot.eventName,
               venueName: application.slot.venue.name,
               startsAt: application.slot.startsAt.toISOString(),

@@ -91,6 +91,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Submissions
               prefecture: submission.prefecture,
               birthday: submission.birthday?.toISOString() ?? null,
               memo: submission.memo,
+              referralSource: submission.referralSource,
               createdAt: submission.createdAt.toISOString()
             })
           )}

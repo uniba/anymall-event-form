@@ -10,8 +10,13 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "prisma db seed",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d && npx prisma migrate dev && npx prisma db seed",
+    "dev:setup": "docker compose up -d && npx prisma migrate dev && npx prisma db seed",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.0",
@@ -24,10 +29,15 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@testcontainers/postgresql": "^11.13.0",
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@vitest/browser": "^4.1.2",
     "autoprefixer": "^10.4.20",
+    "happy-dom": "^20.8.9",
+    "jsdom": "^27.0.1",
     "postcss": "^8.5.3",
     "prisma": "^6.4.1",
     "tailwindcss": "^4.2.2",
