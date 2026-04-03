@@ -10,6 +10,7 @@ export type SeedSlot = {
   id: string;
   venueId: SeedVenue["id"];
   eventName: string;
+  hidden: boolean;
   theme: string;
   instructor: string;
   capacity: number;
@@ -39,6 +40,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-may-16",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "はじめての愛犬ごはんサロン",
+    hidden: true,
     theme:
       "・初めての手作りトッピングごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "今井まなみ",
@@ -54,6 +56,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-osaka-dyplus-may-17",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "はじめての愛犬ごはんサロン",
+    hidden: true,
     theme:
       "・初めての手作りトッピングごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "今井まなみ",
@@ -69,6 +72,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-may-27",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "はじめての愛犬ごはんサロン",
+    hidden: true,
     theme:
       "・初めての手作りトッピングごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "今井まなみ",
@@ -84,6 +88,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-may-28",
     venueId: "seed-venue-osaka-dyplus",
     eventName: "愛犬ピクニック交流会",
+    hidden: true,
     theme:
       "・ピクニック交流撮影会\n・例）しつけ相談（A'alda内の専門家）、写真撮影\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "AnyMallスタッフ",
@@ -99,6 +104,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-jun-13",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "皮膚ケアごはんサロン",
+    hidden: true,
     theme:
       "・夏前に！手作り皮膚ケアごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "今井まなみ",
@@ -114,6 +120,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-jun-14",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "愛犬デンタルケアサロン",
+    hidden: true,
     theme:
       "・愛犬のデンタルケアレッスン\n・QAタイム、歯ブラシ実演など\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "服部夏子",
@@ -129,6 +136,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-jun-17",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "皮膚ケアごはんサロン",
+    hidden: true,
     theme:
       "・夏前に！手作り皮膚ケアごはん（試食あり）\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "今井まなみ",
@@ -144,6 +152,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-osaka-dyplus-jun-18",
     venueId: "seed-venue-osaka-dyplus",
     eventName: "愛犬の健康チェックサロン",
+    hidden: true,
     theme:
       "例：健診、中毒など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "中村篤史",
@@ -159,6 +168,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-jul-11",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "夏バテ対策ごはんサロン",
+    hidden: true,
     theme:
       "・夏バテ対策！食事と水分ケア\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "今井まなみ",
@@ -174,6 +184,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-jul-12",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "夏の健康管理サロン",
+    hidden: true,
     theme:
       "例：熱中症対策など\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "中村篤史",
@@ -189,6 +200,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-tokyo-inumo-jul-15",
     venueId: "seed-venue-tokyo-inumo",
     eventName: "夏バテ対策ごはんサロン",
+    hidden: true,
     theme:
       "・夏バテ対策！食事と水分ケア\n・QAタイム\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "今井まなみ",
@@ -204,6 +216,7 @@ export const seedSlots: SeedSlot[] = [
     id: "seed-slot-osaka-dyplus-jul-16",
     venueId: "seed-venue-osaka-dyplus",
     eventName: "夏まつり交流会",
+    hidden: true,
     theme:
       "・夏祭り交流撮影会\n・例）しつけ相談（A'alda内の専門家）、写真撮影\n・飼い主さん同士の交流会（名刺交換など）\n・記念コンテンツ（簡易なワークショップ）",
     instructor: "AnyMallスタッフ",

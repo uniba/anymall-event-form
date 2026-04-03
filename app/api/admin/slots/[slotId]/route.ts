@@ -52,6 +52,7 @@ export async function PATCH(
     data: {
       eventName: validated.data.eventName,
       venueId: validated.data.venueId,
+      hidden: validated.data.hidden,
       theme: validated.data.theme,
       instructor: validated.data.instructor,
       capacity: validated.data.capacity,

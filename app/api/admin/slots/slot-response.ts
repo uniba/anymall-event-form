@@ -3,6 +3,7 @@ export function toSlotTableRow(slot: {
   eventName: string;
   venueId: string;
   venue: { name: string };
+  hidden: boolean;
   theme: string;
   instructor: string;
   capacity: number;
@@ -18,6 +19,7 @@ export function toSlotTableRow(slot: {
     eventName: slot.eventName,
     venueId: slot.venueId,
     venueName: slot.venue.name,
+    hidden: slot.hidden,
     theme: slot.theme,
     instructor: slot.instructor,
     capacity: slot.capacity,

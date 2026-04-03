@@ -2,7 +2,7 @@
 
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { getSlotStateLabel } from "@/lib/labels";
+import { getSlotStateLabel, getSlotVisibilityLabel } from "@/lib/labels";
 import {
   combineAdminSlotDateAndTime,
   formatAdminSlotDate,
@@ -17,6 +17,7 @@ export type SlotTableRow = {
   eventName: string;
   venueId: string;
   venueName: string;
+  hidden: boolean;
   theme: string;
   instructor: string;
   capacity: number;
@@ -31,6 +32,7 @@ export type SlotTableRow = {
 type SlotFormState = {
   eventName: string;
   venueId: string;
+  hidden: boolean;
   theme: string;
   instructor: string;
   capacityText: string;
@@ -80,6 +82,7 @@ const timeOptions = Array.from({ length: 48 }, (_, index) => {
 const emptySlotFormState: SlotFormState = {
   eventName: "",
   venueId: "",
+  hidden: true,
   theme: "",
   instructor: "",
   capacityText: "",
@@ -108,6 +111,7 @@ function getInitialFormState(slot: SlotTableRow): SlotFormState {
   return {
     eventName: slot.eventName,
     venueId: slot.venueId,
+    hidden: slot.hidden,
     theme: slot.theme,
     instructor: slot.instructor,
     capacityText: String(slot.capacity),
@@ -225,6 +229,7 @@ function buildSlotUpdatePayload(values: SlotFormState): {
     payload: {
       eventName,
       venueId,
+      hidden: values.hidden,
       theme,
       instructor,
       capacity,
@@ -487,6 +492,7 @@ export function SlotsTable({
               <th className="px-2 py-2">開催日時</th>
               <th className="px-2 py-2">イベント名</th>
               <th className="px-2 py-2">会場</th>
+              <th className="px-2 py-2">公開状態</th>
               <th className="px-2 py-2">状態</th>
             </tr>
           </thead>
@@ -511,12 +517,13 @@ export function SlotsTable({
                 </td>
                 <td className="px-2 py-3">{slot.eventName}</td>
                 <td className="px-2 py-3">{slot.venueName}</td>
+                <td className="px-2 py-3">{getSlotVisibilityLabel(slot.hidden)}</td>
                 <td className="px-2 py-3">{getSlotStateLabel(slot.state)}</td>
               </tr>
             ))}
             {slotRows.length === 0 ? (
               <tr>
-                <td className="px-2 py-4 text-slate-500" colSpan={4}>
+                <td className="px-2 py-4 text-slate-500" colSpan={5}>
                   スロットはありません
                 </td>
               </tr>
@@ -603,6 +610,26 @@ export function SlotsTable({
                         {venue.name}
                       </option>
                     ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    className="mb-1 block text-xs font-medium text-slate-600"
+                    htmlFor="slot-hidden"
+                  >
+                    公開状態
+                  </label>
+                  <select
+                    className={selectInputClassName}
+                    id="slot-hidden"
+                    onChange={(event) =>
+                      updateFormValue("hidden", event.target.value === "true")
+                    }
+                    value={String(formValues.hidden)}
+                  >
+                    <option value="true">非表示</option>
+                    <option value="false">公開中</option>
                   </select>
                 </div>
 

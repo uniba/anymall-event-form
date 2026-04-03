@@ -6,11 +6,15 @@ import { SlotsManager } from "./slots-manager";
 import type { SlotTableRow } from "./slots-table";
 
 type SlotsPageProps = {
-  searchParams?: Promise<{ venue?: string; state?: string }>;
+  searchParams?: Promise<{ venue?: string; state?: string; visibility?: string }>;
 };
 
 function isSlotState(value: string): value is (typeof slotStateOptions)[number] {
   return slotStateOptions.includes(value as (typeof slotStateOptions)[number]);
+}
+
+function isVisibilityFilter(value: string): value is "visible" | "hidden" {
+  return value === "visible" || value === "hidden";
 }
 
 export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
@@ -20,6 +24,8 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
   const venueFilter = params?.venue?.trim() ?? "";
   const stateFilterRaw = params?.state?.trim() ?? "";
   const stateFilter = isSlotState(stateFilterRaw) ? stateFilterRaw : "";
+  const visibilityFilterRaw = params?.visibility?.trim() ?? "";
+  const visibilityFilter = isVisibilityFilter(visibilityFilterRaw) ? visibilityFilterRaw : "";
 
   const [venues, slots] = await Promise.all([
     prisma.venue.findMany({
@@ -30,7 +36,8 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
     prisma.slot.findMany({
       where: {
         ...(venueFilter ? { venueId: venueFilter } : {}),
-        ...(stateFilter ? { state: stateFilter } : {})
+        ...(stateFilter ? { state: stateFilter } : {}),
+        ...(visibilityFilter ? { hidden: visibilityFilter === "hidden" } : {})
       },
       include: {
         venue: true
@@ -55,6 +62,7 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
               eventName: slot.eventName,
               venueId: slot.venueId,
               venueName: slot.venue.name,
+              hidden: slot.hidden,
               theme: slot.theme,
               instructor: slot.instructor,
               capacity: slot.capacity,
@@ -66,6 +74,7 @@ export default async function AdminSlotsPage({ searchParams }: SlotsPageProps) {
               state: slot.state
             })
           )}
+          initialVisibilityFilter={visibilityFilter}
           initialStateFilter={stateFilter}
           initialVenueFilter={venueFilter}
           venues={venues.map((venue) => ({
